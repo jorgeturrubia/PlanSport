@@ -3,42 +3,6 @@
   <!-- Left Section: User Info + Sidebar Toggle -->
   <div class="flex items-center space-x-4">
     
-    <!-- Sidebar Toggle Button -->
-    <button
-      type="button"
-      [class]="getToggleButtonClasses()"
-      (click)="onToggleSidebar()"
-      [attr.aria-label]="isSidebarExpanded() ? 'Ocultar menú lateral' : 'Mostrar menú lateral'"
-      [attr.aria-expanded]="isSidebarExpanded()"
-      data-testid="sidebar-toggle"
-    >
-      <!-- Hamburger/Menu Icon for Mobile or Collapse Icon for Desktop -->
-      @if (isSidebarExpanded()) {
-        <!-- Collapse Icon (when expanded) -->
-        <svg 
-          class="h-5 w-5" 
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24"
-          data-testid="sidebar-collapse-icon"
-          aria-hidden="true"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-        </svg>
-      } @else {
-        <!-- Expand/Hamburger Icon (when collapsed) -->
-        <svg 
-          class="h-5 w-5" 
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24"
-          data-testid="sidebar-expand-icon"
-          aria-hidden="true"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      }
-    </button>
 
     <!-- User Information -->
     <div [class]="getUserInfoClasses()" data-testid="user-info">

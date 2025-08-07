@@ -1,3 +1,4 @@
+
 import { Component, signal, computed, output, ChangeDetectionStrategy, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LayoutService } from '../../../../shared/services/layout.service';
@@ -58,7 +59,7 @@ export class HeaderComponent {
   /**
    * Get sidebar expanded state from layout service
    */
-  isSidebarExpanded = computed(() => this.layoutService.isSidebarExpanded());
+  isSidebarCollapsed = computed(() => this.layoutService.isSidebarCollapsed());
 
   /**
    * Get dark mode state from theme service

@@ -5,9 +5,9 @@ import { BREAKPOINTS } from '../constants/breakpoints.constant';
   providedIn: 'root'
 })
 export class LayoutService {
-  private sidebarExpandedSignal = signal<boolean>(true);
+  private isSidebarCollapsedSignal = signal<boolean>(false);
   
-  readonly isSidebarExpanded = this.sidebarExpandedSignal.asReadonly();
+  readonly isSidebarCollapsed = this.isSidebarCollapsedSignal.asReadonly();
   
   constructor() {
     // Initialize responsive behavior
@@ -19,21 +19,21 @@ export class LayoutService {
    * Toggle sidebar between expanded and collapsed states
    */
   toggleSidebar(): void {
-    this.sidebarExpandedSignal.update(expanded => !expanded);
+    this.isSidebarCollapsedSignal.update(collapsed => !collapsed);
   }
   
   /**
    * Expand the sidebar
    */
   expandSidebar(): void {
-    this.sidebarExpandedSignal.set(true);
+    this.isSidebarCollapsedSignal.set(false);
   }
   
   /**
    * Collapse the sidebar
    */
   collapseSidebar(): void {
-    this.sidebarExpandedSignal.set(false);
+    this.isSidebarCollapsedSignal.set(true);
   }
   
   /**
@@ -117,7 +117,7 @@ export class LayoutService {
    * @returns Sidebar width in pixels
    */
   getSidebarWidth(): number {
-    if (!this.isSidebarExpanded()) {
+    if (this.isSidebarCollapsed()) {
       return BREAKPOINTS.sidebarCollapsed; // Collapsed width
     }
     
@@ -133,7 +133,7 @@ export class LayoutService {
    * @returns true if sidebar should overlay content
    */
   shouldSidebarOverlay(): boolean {
-    return this.isMobileView() && this.isSidebarExpanded();
+    return this.isMobileView() && !this.isSidebarCollapsed();
   }
   
   /**
@@ -146,10 +146,10 @@ export class LayoutService {
     if (this.shouldSidebarOverlay()) {
       // Mobile overlay - full width content
       classes.push('w-full');
-    } else if (this.isSidebarExpanded() && !this.isMobileView()) {
+    } else if (!this.isSidebarCollapsed() && !this.isMobileView()) {
       // Desktop expanded - adjust for sidebar width
       classes.push('ml-64'); // Standard sidebar width
-    } else if (!this.isSidebarExpanded() && !this.isMobileView()) {
+    } else if (this.isSidebarCollapsed() && !this.isMobileView()) {
       // Desktop collapsed - adjust for collapsed sidebar width
       classes.push('ml-16'); // Collapsed sidebar width
     }
@@ -181,7 +181,7 @@ export class LayoutService {
         'transform',
         'translate-x-0'
       );
-    } else if (this.isMobileView() && !this.isSidebarExpanded()) {
+    } else if (this.isMobileView() && this.isSidebarCollapsed()) {
       classes.push(
         'fixed',
         'inset-y-0',
@@ -195,7 +195,7 @@ export class LayoutService {
       // Desktop behavior
       classes.push('fixed', 'inset-y-0', 'left-0', 'z-40');
       
-      if (this.isSidebarExpanded()) {
+      if (!this.isSidebarCollapsed()) {
         classes.push('w-64');
       } else {
         classes.push('w-16');
