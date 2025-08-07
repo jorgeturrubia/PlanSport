@@ -1,17 +1,35 @@
 using Microsoft.EntityFrameworkCore;
 using SportPlannerApi.Data;
+using SportPlannerApi.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// Configure Settings
+builder.Services.Configure<SupabaseSettings>(builder.Configuration.GetSection(SupabaseSettings.SectionName));
+builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection(DatabaseSettings.SectionName));
+
 // Configure Entity Framework
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    var databaseSettings = builder.Configuration.GetSection(DatabaseSettings.SectionName).Get<DatabaseSettings>();
+    
+    // Choose connection string based on configuration
+    string connectionStringKey = databaseSettings?.UseSupabase == true 
+        ? "DefaultConnection" // Using Supabase in development without SSL for now
+        : "DefaultConnection";
+        
+    var connectionString = builder.Configuration.GetConnectionString(connectionStringKey);
+    
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new InvalidOperationException($"Connection string '{connectionStringKey}' not found.");
+    }
+    
     options.UseNpgsql(connectionString, npgsqlOptions =>
     {
-        npgsqlOptions.CommandTimeout(30);
+        npgsqlOptions.CommandTimeout(databaseSettings?.CommandTimeout ?? 30);
     });
     
     // Enable sensitive data logging in development
@@ -19,6 +37,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     {
         options.EnableSensitiveDataLogging();
         options.EnableDetailedErrors();
+        options.LogTo(Console.WriteLine, LogLevel.Information);
     }
 });
 
@@ -64,7 +83,11 @@ app.MapGet("/health/database", async (ApplicationDbContext context) =>
     try
     {
         await context.Database.CanConnectAsync();
-        return Results.Ok(new { Status = "Database Connected", Timestamp = DateTime.UtcNow });
+        return Results.Ok(new { 
+            Status = "Database Connected", 
+            Provider = context.Database.ProviderName,
+            Timestamp = DateTime.UtcNow 
+        });
     }
     catch (Exception ex)
     {
@@ -74,6 +97,21 @@ app.MapGet("/health/database", async (ApplicationDbContext context) =>
             statusCode: 503
         );
     }
+});
+
+// Add Supabase configuration endpoint
+app.MapGet("/health/supabase", (IConfiguration config) =>
+{
+    var supabaseSettings = config.GetSection(SupabaseSettings.SectionName).Get<SupabaseSettings>();
+    var databaseSettings = config.GetSection(DatabaseSettings.SectionName).Get<DatabaseSettings>();
+    
+    return Results.Ok(new {
+        SupabaseConfigured = !string.IsNullOrEmpty(supabaseSettings?.Url),
+        UseSupabase = databaseSettings?.UseSupabase ?? false,
+        SupabaseUrl = supabaseSettings?.Url ?? "Not configured",
+        HasSupabaseKey = !string.IsNullOrEmpty(supabaseSettings?.Key),
+        Timestamp = DateTime.UtcNow
+    });
 });
 
 app.Run();
