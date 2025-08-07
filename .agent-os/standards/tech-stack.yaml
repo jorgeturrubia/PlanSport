@@ -1,0 +1,254 @@
+---
+title: Tech Stack
+description: Global tech stack defaults for Agent OS projects
+version: 2.0
+strict_mode: true
+---
+
+# Tech Stack
+
+```yaml
+meta:
+  context: "Global tech stack defaults for Agent OS projects, overridable in project-specific `.agent-os/product/tech-stack.md`"
+  version: 2.0
+  updated: "2025-08-06"
+```
+
+## Backend Stack
+
+```yaml
+backend:
+  framework:
+    name: ".NET"
+    version: "8+"
+    url: "https://dotnet.microsoft.com/"
+  
+  language:
+    name: "C#"
+    version: "12+"
+    url: "https://docs.microsoft.com/en-us/dotnet/csharp/"
+  
+  runtime:
+    name: ".NET Runtime"
+    version: "8+"
+    url: "https://dotnet.microsoft.com/download"
+  
+  database:
+    primary:
+      name: "Supabase (PostgreSQL)"
+      version: "Latest"
+      url: "https://supabase.com/"
+    
+    orm:
+      name: "Entity Framework Core"
+      version: "8+"
+      url: "https://docs.microsoft.com/en-us/ef/core/"
+  
+  authentication:
+    name: "Supabase Auth"
+    url: "https://supabase.com/auth"
+  
+  real_time:
+    name: "Supabase Realtime"
+    url: "https://supabase.com/realtime"
+  
+  storage:
+    name: "Supabase Storage"
+    url: "https://supabase.com/storage"
+```
+
+## Frontend Stack
+
+```yaml
+frontend:
+  framework:
+    name: "Angular"
+    version: "20+"
+    url: "https://angular.io/"
+  
+  language:
+    name: "TypeScript"
+    version: "5.6+"
+    url: "https://www.typescriptlang.org/"
+  
+  build_tool:
+    name: "Angular CLI with esbuild"
+    url: "https://angular.io/cli"
+  
+  package_manager:
+    name: "npm"
+    url: "https://www.npmjs.com/"
+  
+  node:
+    name: "Node.js"
+    version: "22 LTS"
+    url: "https://nodejs.org/"
+  
+  css_framework:
+    name: "TailwindCSS"
+    version: "4.0+"
+    url: "https://tailwindcss.com/"
+  
+  ui_components:
+    options:
+      - name: "Angular Material"
+        version: "20+"
+        url: "https://material.angular.io/"
+      - name: "PrimeNG"
+        url: "https://primeng.org/"
+  
+  state_management:
+    options:
+      - name: "NgRx"
+        description: "For complex apps"
+        url: "https://ngrx.io/"
+      - name: "Angular Signals"
+        description: "For simpler apps"
+        url: "https://angular.io/guide/signals"
+  
+  http_client:
+    name: "Angular HttpClient with interceptors"
+    url: "https://angular.io/guide/http"
+  
+  font_provider:
+    name: "Google Fonts"
+    loading: "Self-hosted for performance"
+    url: "https://fonts.google.com/"
+  
+  icons:
+    options:
+      - name: "Lucide Angular components"
+        url: "https://lucide.dev/guide/packages/lucide-angular"
+      - name: "Material Icons"
+        url: "https://material.io/resources/icons/"
+```
+
+## Infrastructure
+
+```yaml
+infrastructure:
+  hosting:
+    frontend:
+      name: "Vercel"
+      url: "https://vercel.com/"
+    
+    backend:
+      name: "Azure App Service (.NET API)"
+      url: "https://azure.microsoft.com/en-us/services/app-service/"
+  
+  database:
+    hosting:
+      name: "Supabase Cloud"
+      url: "https://supabase.com/"
+    
+    backups:
+      name: "Supabase automated backups"
+      url: "https://supabase.com/"
+  
+  storage:
+    assets:
+      name: "Supabase Storage"
+      url: "https://supabase.com/storage"
+    
+    cdn:
+      options:
+        - name: "Vercel Edge Network"
+          url: "https://vercel.com/docs/edge-network/overview"
+        - name: "Supabase CDN"
+          url: "https://supabase.com/"
+    
+    access_control:
+      name: "Supabase Row Level Security (RLS)"
+      url: "https://supabase.com/docs/guides/auth/row-level-security"
+```
+
+## DevOps
+
+```yaml
+devops:
+  ci_cd:
+    platform:
+      name: "GitHub Actions"
+      url: "https://github.com/features/actions"
+    
+    trigger:
+      description: "Push to main/staging branches"
+  
+  testing:
+    backend:
+      name: ".NET xUnit"
+      url: "https://xunit.net/"
+    
+    frontend:
+      name: "Angular Jasmine/Karma"
+      url: "https://jasmine.github.io/"
+  
+  environments:
+    production:
+      branch: "main"
+    
+    staging:
+      branch: "staging"
+```
+
+## Version Requirements
+
+```yaml
+version_requirements:
+  - component: ".NET"
+    minimum: "8.0.0"
+    recommended: "8.1.0+"
+    
+  - component: "C#"
+    minimum: "12.0.0"
+    recommended: "12.0.0+"
+    
+  - component: "Angular"
+    minimum: "20.0.0"
+    recommended: "20.1.0+"
+    
+  - component: "TypeScript"
+    minimum: "5.6.0"
+    recommended: "5.6.2+"
+    
+  - component: "TailwindCSS"
+    minimum: "4.0.0"
+    recommended: "4.0.0+"
+    
+  - component: "Node.js"
+    minimum: "22.0.0"
+    recommended: "22.4.0+"
+```
+
+## Technology Selection Criteria
+
+```yaml
+selection_criteria:
+  - id: "maturity"
+    description: "Prefer mature, well-established technologies"
+    weight: "high"
+    
+  - id: "community"
+    description: "Prefer technologies with active communities"
+    weight: "high"
+    
+  - id: "documentation"
+    description: "Prefer technologies with comprehensive documentation"
+    weight: "medium"
+    
+  - id: "ecosystem"
+    description: "Prefer technologies with rich ecosystems of libraries and tools"
+    weight: "medium"
+    
+  - id: "future_proof"
+    description: "Prefer technologies with clear future roadmaps"
+    weight: "medium"
+    
+  - id: "performance"
+    description: "Consider performance characteristics for the use case"
+    weight: "medium"
+    
+  - id: "learning_curve"
+    description: "Consider learning curve for the team"
+    weight: "low"
+```

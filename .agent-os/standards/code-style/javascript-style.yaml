@@ -1,0 +1,281 @@
+---
+title: JavaScript Style Guide
+description: JavaScript coding standards and best practices for Agent OS projects
+version: 2.0
+strict_mode: true
+---
+
+# JavaScript Style Guide
+
+```yaml
+meta:
+  context: "JavaScript coding standards and best practices for Agent OS projects"
+  version: 2.0
+  updated: "2025-08-06"
+```
+
+## Core Conventions
+
+```yaml
+file_organization:
+  naming:
+    - "Use kebab-case for file names: `user-profile.js`"
+    - "Keep files focused on a single responsibility"
+    - "Use index.js for barrel exports"
+  
+  structure:
+    - "Group related functions and classes together"
+    - "Export public API at the bottom of the file"
+    - "Keep files under 300 lines of code"
+
+variable_declarations:
+  best_practices:
+    - id: "const_default"
+      rule: "Use const by default"
+      example: "const userName = 'john_doe';"
+    
+    - id: "let_reassignment"
+      rule: "Use let when reassignment is needed"
+      example: "let isActive = false;"
+    
+    - id: "avoid_var"
+      rule: "Avoid var entirely"
+      example: "// var deprecated = 'use const/let instead';"
+  
+  examples: |
+    ```javascript
+    // Use const by default
+    const userName = 'john_doe';
+    
+    // Use let when reassignment is needed
+    let isActive = false;
+    
+    // Avoid var entirely
+    // var deprecated = 'use const/let instead';
+    ```
+
+function_definitions:
+  best_practices:
+    - id: "arrow_callbacks"
+      rule: "Prefer arrow functions for callbacks"
+      example: "const users = data.map(item => item.user);"
+    
+    - id: "function_declarations"
+      rule: "Use function declarations for top-level functions"
+      example: "function processUserData(userData) { return userData.filter(user => user.isActive); }"
+    
+    - id: "async_await"
+      rule: "Use async/await over promises"
+      example: "async function fetchUserData(userId) { try { const response = await fetch(`/api/users/${userId}`); return await response.json(); } catch (error) { console.error('Failed to fetch user:', error); throw error; } }"
+  
+  examples: |
+    ```javascript
+    // Prefer arrow functions for callbacks
+    const users = data.map(item => item.user);
+    
+    // Use function declarations for top-level functions
+    function processUserData(userData) {
+      return userData.filter(user => user.isActive);
+    }
+    
+    // Use async/await over promises
+    async function fetchUserData(userId) {
+      try {
+        const response = await fetch(`/api/users/${userId}`);
+        return await response.json();
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+        throw error;
+      }
+    }
+    ```
+
+object_array_handling:
+  best_practices:
+    - id: "destructuring"
+      rule: "Use destructuring"
+      example: "const { name, email } = user; const [first, second] = items;"
+    
+    - id: "spread_operator"
+      rule: "Use spread operator"
+      example: "const newUser = { ...user, isActive: true }; const newItems = [...items, newItem];"
+    
+    - id: "template_literals"
+      rule: "Use template literals"
+      example: "const message = `Hello ${name}, your email is ${email}`;"
+  
+  examples: |
+    ```javascript
+    // Use destructuring
+    const { name, email } = user;
+    const [first, second] = items;
+    
+    // Use spread operator
+    const newUser = { ...user, isActive: true };
+    const newItems = [...items, newItem];
+    
+    // Use template literals
+    const message = `Hello ${name}, your email is ${email}`;
+    ```
+
+error_handling:
+  best_practices:
+    - "Always handle errors explicitly"
+    - "Use try/catch blocks with async/await"
+    - "Include useful error messages"
+    - "Log errors with appropriate context"
+  
+  examples: |
+    ```javascript
+    // Always handle errors explicitly
+    try {
+      const result = await riskyOperation();
+      return result;
+    } catch (error) {
+      logger.error('Operation failed:', error);
+      throw new Error(`Operation failed: ${error.message}`);
+    }
+    ```
+
+comments_documentation:
+  best_practices:
+    - "Use JSDoc for function documentation"
+    - "Include parameter types and return types"
+    - "Add brief descriptions for non-obvious code"
+    - "Document complex algorithms with step-by-step comments"
+  
+  examples: |
+    ```javascript
+    /**
+     * Calculates user engagement score based on activity metrics
+     * @param {Object} user - User object with activity data
+     * @param {number} timeframe - Time period in days
+     * @returns {number} Engagement score between 0-100
+     */
+    function calculateEngagementScore(user, timeframe) {
+      // Implementation details...
+    }
+    ```
+```
+
+## Framework-Specific Rules
+
+```yaml
+angular_typescript:
+  - "Use TypeScript interfaces for type definitions"
+  - "Implement OnInit, OnDestroy lifecycle hooks properly"
+  - "Use RxJS operators for reactive programming"
+  - "Follow Angular style guide naming conventions"
+  - "Always unsubscribe from observables to prevent memory leaks"
+  - "Use OnPush change detection strategy for performance"
+  - "Organize imports by type and alphabetically"
+  - "Use dependency injection for services"
+
+react:
+  - "Use functional components with hooks"
+  - "Implement proper dependency arrays in useEffect"
+  - "Use React.memo for performance optimization when needed"
+  - "Follow React hooks rules"
+  - "Use prop-types or TypeScript for type checking"
+  - "Keep components small and focused"
+  - "Use key prop for lists with stable values"
+  - "Implement error boundaries for robustness"
+```
+
+## Testing Guidelines
+
+```yaml
+testing:
+  best_practices:
+    - "Use descriptive test names"
+    - "Follow AAA pattern (Arrange, Act, Assert)"
+    - "Test both success and failure cases"
+    - "Mock external dependencies"
+    - "Keep tests independent of each other"
+    - "Use setup and teardown for common test scenarios"
+  
+  examples: |
+    ```javascript
+    // Use descriptive test names
+    describe('UserService', () => {
+      it('should return active users when filtering by status', async () => {
+        // Arrange
+        const mockUsers = [/* test data */];
+        
+        // Act
+        const result = await userService.getActiveUsers(mockUsers);
+        
+        // Assert
+        expect(result).toHaveLength(2);
+        expect(result[0]).toEqual(expect.objectContaining({ isActive: true }));
+      });
+    });
+    ```
+```
+
+## Performance Best Practices
+
+```yaml
+performance:
+  - id: "object_nesting"
+    rule: "Avoid deep object nesting (max 3 levels)"
+    rationale: "Improves code readability and performance"
+  
+  - id: "early_returns"
+    rule: "Use early returns to reduce complexity"
+    rationale: "Reduces cognitive load and potential for bugs"
+  
+  - id: "memoization"
+    rule: "Implement proper memoization for expensive calculations"
+    example: "useMemo, useCallback in React, memoized selectors in NgRx"
+  
+  - id: "lazy_loading"
+    rule: "Use lazy loading for non-critical modules"
+    rationale: "Improves initial load time"
+  
+  - id: "bundle_optimization"
+    rule: "Optimize bundle size with tree shaking"
+    rationale: "Reduces downloaded JavaScript size"
+```
+
+## Accessibility Best Practices
+
+```yaml
+accessibility:
+  - id: "semantic_html"
+    rule: "Use semantic HTML elements"
+    example: "Use <button> instead of <div> for clickable elements"
+  
+  - id: "aria_attributes"
+    rule: "Include ARIA attributes where needed"
+    example: "aria-label, aria-labelledby, aria-describedby"
+  
+  - id: "keyboard_navigation"
+    rule: "Ensure keyboard navigation works"
+    rationale: "All interactive elements should be accessible via keyboard"
+  
+  - id: "color_contrast"
+    rule: "Maintain sufficient color contrast"
+    standard: "WCAG 2.1 AA (4.5:1 for normal text, 3:1 for large text)"
+```
+
+## Security Best Practices
+
+```yaml
+security:
+  - id: "input_validation"
+    rule: "Validate all user input"
+    rationale: "Prevents XSS and injection attacks"
+  
+  - id: "sanitize_output"
+    rule: "Sanitize output displayed to users"
+    example: "Use Angular's DomSanitizer or React's dangerouslySetInnerHTML with caution"
+  
+  - id: "secure_http"
+    rule: "Use HTTPS for all API requests"
+    rationale: "Prevents man-in-the-middle attacks"
+  
+  - id: "csp"
+    rule: "Implement Content Security Policy"
+    rationale: "Reduces XSS attack surface"
+```

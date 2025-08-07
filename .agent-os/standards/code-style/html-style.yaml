@@ -1,0 +1,212 @@
+---
+title: HTML Style Guide
+description: HTML formatting and structure rules for Agent OS projects
+version: 2.0
+strict_mode: true
+---
+
+# HTML Style Guide
+
+```yaml
+meta:
+  context: "HTML formatting and structure rules for Agent OS projects"
+  version: 2.0
+  updated: "2025-08-06"
+```
+
+## Structure Rules
+
+```yaml
+structure_rules:
+  - "Use 2 spaces for indentation"
+  - "Place nested elements on new lines with proper indentation"
+  - "Content between tags should be on its own line when multi-line"
+  - "Close self-closing tags with a trailing slash (e.g., <img />, <input />)"
+  - "Use lowercase for all HTML tags and attributes"
+```
+
+## Attribute Formatting
+
+```yaml
+attribute_formatting:
+  - "Place each HTML attribute on its own line when there are multiple attributes"
+  - "Align attributes vertically for readability"
+  - "Keep the closing `>` on the same line as the last attribute"
+  - "Use double quotes for attribute values"
+  - "Always include alt text for images"
+```
+
+## Example HTML Structure
+
+```yaml
+example: |
+  ```html
+  <div class="container">
+    <header class="flex flex-col space-y-2
+                   md:flex-row md:space-y-0 md:space-x-4">
+      <h1 class="text-primary dark:text-primary-300">
+        Page Title
+      </h1>
+      <nav class="flex flex-col space-y-2
+                  md:flex-row md:space-y-0 md:space-x-4">
+        <a href="/"
+           class="btn-ghost">
+          Home
+        </a>
+        <a href="/about"
+           class="btn-ghost">
+          About
+        </a>
+      </nav>
+    </header>
+  </div>
+  ```
+```
+
+## Semantic HTML
+
+```yaml
+semantic_html:
+  - id: "headings"
+    rule: "Use heading tags (h1-h6) in sequential order"
+    rationale: "Improves document outline and accessibility"
+  
+  - id: "sectioning"
+    rule: "Use semantic sectioning elements"
+    example: "header, nav, main, section, article, aside, footer"
+  
+  - id: "interactive_elements"
+    rule: "Use appropriate interactive elements"
+    example: "Use <button> for actions, <a> for navigation"
+  
+  - id: "landmarks"
+    rule: "Include ARIA landmarks when semantic HTML isn't enough"
+    example: "role=\"search\", role=\"banner\", role=\"contentinfo\""
+```
+
+## Angular Templates
+
+```yaml
+angular_templates:
+  - id: "structural_directives"
+    rule: "Place structural directives on their own line"
+    example: |
+      ```html
+      <div
+        *ngIf="isVisible"
+        class="container">
+        Content
+      </div>
+      ```
+  
+  - id: "event_binding"
+    rule: "Place event bindings on their own line"
+    example: |
+      ```html
+      <button
+        (click)="handleClick()"
+        class="btn-primary">
+        Click Me
+      </button>
+      ```
+  
+  - id: "property_binding"
+    rule: "Place property bindings on their own line"
+    example: |
+      ```html
+      <img
+        [src]="imageUrl"
+        [alt]="imageAlt"
+        class="rounded-lg" />
+      ```
+  
+  - id: "component_tags"
+    rule: "Place component tags on their own line"
+    example: |
+      ```html
+      <app-header
+        [title]="pageTitle"
+        [showNav]="true">
+      </app-header>
+      ```
+```
+
+## Forms
+
+```yaml
+forms:
+  - id: "labels"
+    rule: "Always include labels for form controls"
+    example: |
+      ```html
+      <label for="username">Username</label>
+      <input
+        id="username"
+        name="username"
+        type="text" />
+      ```
+  
+  - id: "accessibility"
+    rule: "Include accessible attributes for form elements"
+    example: "aria-required, aria-invalid, aria-describedby"
+  
+  - id: "validation"
+    rule: "Include validation attributes"
+    example: "required, minlength, maxlength, pattern"
+  
+  - id: "fieldsets"
+    rule: "Group related form controls with fieldset and legend"
+    example: |
+      ```html
+      <fieldset>
+        <legend>Contact Information</legend>
+        <!-- form controls -->
+      </fieldset>
+      ```
+```
+
+## Performance Considerations
+
+```yaml
+performance:
+  - id: "lazy_loading"
+    rule: "Use lazy loading for images and iframes"
+    example: "<img loading=\"lazy\" src=\"image.jpg\" alt=\"Description\" />"
+  
+  - id: "image_dimensions"
+    rule: "Always specify width and height attributes on images"
+    rationale: "Prevents layout shifts during page load"
+  
+  - id: "resource_hints"
+    rule: "Use resource hints for critical assets"
+    example: "<link rel=\"preload\" href=\"critical.css\" as=\"style\" />"
+  
+  - id: "defer_scripts"
+    rule: "Defer non-critical JavaScript"
+    example: "<script src=\"non-critical.js\" defer></script>"
+```
+
+## Accessibility Best Practices
+
+```yaml
+accessibility:
+  - id: "landmarks"
+    rule: "Use HTML5 semantic landmarks"
+    example: "header, main, nav, section, article, aside, footer"
+  
+  - id: "alt_text"
+    rule: "Provide meaningful alt text for images"
+    example: "alt=\"Person using a screen reader with a laptop\""
+  
+  - id: "aria_attributes"
+    rule: "Use ARIA attributes when HTML semantics aren't enough"
+    example: "aria-label, aria-labelledby, aria-describedby"
+  
+  - id: "keyboard_navigation"
+    rule: "Ensure all interactive elements are keyboard accessible"
+    example: "Ensure proper tabindex usage, manage focus properly"
+  
+  - id: "skip_links"
+    rule: "Include skip links for keyboard navigation"
+    example: "<a href=\"#main-content\" class=\"skip-link\">Skip to main content</a>"
+```

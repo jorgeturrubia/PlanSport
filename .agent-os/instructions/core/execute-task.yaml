@@ -1,0 +1,389 @@
+---
+description: Rules to execute a task and its sub-tasks using Agent OS
+version: 2.0
+encoding: UTF-8
+strict_mode: true
+---
+
+# Task Execution Rules
+
+```yaml
+command:
+  name: execute-task
+  version: 2.0
+  description: "Execute a specific task along with its sub-tasks systematically following a TDD development workflow."
+```
+
+## 📋 Definición de Pasos Estructurada
+
+```yaml
+steps:
+  - id: task_understanding
+    name: "Task Understanding"
+    type: execute
+    task_analysis:
+      read_from_tasks_md:
+        - "Parent task description"
+        - "All sub-task descriptions"
+        - "Task dependencies"
+        - "Expected outcomes"
+    
+    actions:
+      - "Read the specific parent task and all its sub-tasks"
+      - "Analyze full scope of implementation required"
+      - "Understand dependencies and expected deliverables"
+      - "Note test requirements for each sub-task"
+    
+    output_variables:
+      - parent_task
+      - subtasks
+      - task_dependencies
+      - expected_outcomes
+    
+  - id: technical_spec_review
+    name: "Technical Specification Review"
+    type: execute
+    selective_reading:
+      search_technical_spec_md_for:
+        - "Current task functionality"
+        - "Implementation approach for this feature"
+        - "Integration requirements"
+        - "Performance criteria"
+    
+    actions:
+      - "Search technical-spec.md for task-relevant sections"
+      - "Extract only implementation details for current task"
+      - "Skip unrelated technical specifications"
+      - "Focus on technical approach for this specific feature"
+    
+    output_variables:
+      - technical_approach
+      - integration_requirements
+      - performance_criteria
+    
+  - id: best_practices_review
+    name: "Best Practices Review"
+    type: execute
+    commands:
+      - cmd: "invoke_subagent context-fetcher"
+        params:
+          action: "read"
+          file: ".agent-os/standards/best-practices.md"
+          query: "{current_tech}, {current_feature_type}, testing approaches, code organization patterns"
+    
+    selective_reading:
+      search_best_practices_md_for:
+        - "Task's technology stack"
+        - "Feature type being implemented"
+        - "Testing approaches needed"
+        - "Code organization patterns"
+    
+    actions:
+      - "Use context-fetcher subagent"
+      - "Request relevant best practices sections"
+      - "Process returned best practices"
+      - "Apply relevant patterns to implementation"
+    
+    output_variables:
+      - relevant_best_practices
+    
+  - id: code_style_review
+    name: "Code Style Review"
+    type: execute
+    commands:
+      - cmd: "invoke_subagent context-fetcher"
+        params:
+          action: "read"
+          file: ".agent-os/standards/code-style.md"
+          query: "{languages_in_task}, {file_types_being_modified}, {patterns_being_implemented}, testing style guidelines"
+    
+    selective_reading:
+      search_code_style_md_for:
+        - "Languages used in this task"
+        - "File types being modified"
+        - "Component patterns being implemented"
+        - "Testing style guidelines"
+    
+    actions:
+      - "Use context-fetcher subagent"
+      - "Request code style rules for task's languages and file types"
+      - "Process returned style rules"
+      - "Apply relevant formatting and patterns"
+    
+    output_variables:
+      - relevant_code_style_rules
+    
+  - id: task_execution
+    name: "Task and Sub-task Execution"
+    type: loop
+    loop_over: "subtasks"
+    
+    typical_task_structure:
+      - "First sub-task: Write tests for [feature]"
+      - "Middle sub-tasks: Implementation steps"
+      - "Final sub-task: Verify all tests pass"
+    
+    execution_order:
+      subtask_1_tests: |
+        if [[ "$SUBTASK_1" == *"Write tests"* ]]; then
+          echo "Writing all tests for the parent feature"
+          # Include unit tests, integration tests, edge cases
+          # Run tests to ensure they fail appropriately
+          # Mark sub-task 1 complete
+        fi
+      
+      middle_subtasks_implementation: |
+        for subtask in "${MIDDLE_SUBTASKS[@]}"; do
+          echo "Implementing: $subtask"
+          # Implement the specific functionality
+          # Make relevant tests pass
+          # Update any adjacent/related tests if needed
+          # Refactor while keeping tests green
+          # Mark sub-task complete
+        done
+      
+      final_subtask_verification: |
+        if [[ "$FINAL_SUBTASK" == *"Verify all tests pass"* ]]; then
+          echo "Running entire test suite"
+          # Fix any remaining failures
+          # Ensure no regressions
+          # Mark final sub-task complete
+        fi
+    
+    test_management:
+      new_tests:
+        - "Written in first sub-task"
+        - "Cover all aspects of parent feature"
+        - "Include edge cases and error handling"
+      
+      test_updates:
+        - "Made during implementation sub-tasks"
+        - "Update expectations for changed behavior"
+        - "Maintain backward compatibility"
+    
+    actions:
+      - "Execute sub-tasks in their defined order"
+      - "Recognize first sub-task typically writes all tests"
+      - "Implement middle sub-tasks to build functionality"
+      - "Verify final sub-task ensures all tests pass"
+      - "Update task status after each sub-task completion"
+    
+  - id: test_verification
+    name: "Task-Specific Test Verification"
+    type: execute
+    commands:
+      - cmd: "invoke_subagent test-runner"
+        params:
+          action: "run_task_tests"
+          task: "{parent_task}"
+    
+    focused_test_execution:
+      run_only:
+        - "All new tests written for this parent task"
+        - "All tests updated during this task"
+        - "Tests directly related to this feature"
+      
+      skip:
+        - "Full test suite (done later in execute-tasks.md)"
+        - "Unrelated test files"
+    
+    final_verification: |
+      if [ "$TEST_FAILURES" -gt 0 ]; then
+        echo "Debug and fix the specific issue"
+        # Re-run only the failed tests
+      else
+        echo "All task tests passing"
+        # Ready to proceed
+      fi
+    
+    actions:
+      - "Use test-runner subagent"
+      - "Run tests for this parent task's test files"
+      - "Process returned failure information"
+      - "Verify 100% pass rate for task-specific tests"
+      - "Confirm this feature's tests are complete"
+    
+  - id: task_status_updates
+    name: "Task Status Updates"
+    type: execute
+    update_format:
+      completed: "- [x] Task description"
+      incomplete: "- [ ] Task description"
+      blocked: |
+        - [ ] Task description
+        ⚠️ Blocking issue: [DESCRIPTION]
+    
+    blocking_criteria:
+      attempts: "Maximum 3 different approaches"
+      action: "Document blocking issue"
+      emoji: "⚠️"
+    
+    actions:
+      - "Update tasks.md after each task completion"
+      - "Mark [x] for completed items immediately"
+      - "Document blocking issues with ⚠️ emoji"
+      - "Limit to 3 attempts before marking as blocked"
+```
+
+## 🔐 Sistema de Manejo de Errores
+
+```yaml
+error_handling:
+  test_failures:
+    max_attempts: 3
+    strategy:
+      - "First attempt: Fix the most obvious issue"
+      - "Second attempt: Rewrite the test approach"
+      - "Third attempt: Reconsider the implementation"
+    documentation: |
+      After 3 failed attempts to fix a test:
+      - Mark sub-task with ⚠️ emoji
+      - Document specific error in tasks.md
+      - Continue to next sub-task if possible
+  
+  integration_issues:
+    strategies:
+      - "Check for missing dependencies"
+      - "Verify component interfaces match"
+      - "Test isolated functionality first"
+    documentation: |
+      For integration failures:
+      - Document specific components that fail to integrate
+      - Note expected vs. actual behavior
+      - Include any error messages
+```
+
+## 🤖 Invocación Explícita de Subagentes
+
+```yaml
+subagent_calls:
+  context_fetcher:
+    trigger: "for_documentation_lookup"
+    syntax: |
+      ```invoke-agent
+      agent: context-fetcher
+      action: read
+      params:
+        file: "{target_file}"
+        query: "{search_terms}"
+        return: "relevant_sections"
+      ```
+  
+  test_runner:
+    trigger: "after_implementation"
+    syntax: |
+      ```invoke-agent
+      agent: test-runner
+      action: run_task_tests
+      params:
+        task: "{parent_task}"
+        fix_failures: true
+      ```
+```
+
+## 🎯 Puntos de Control Obligatorios
+
+```yaml
+checkpoints:
+  - id: "CP1"
+    after_step: "task_understanding"
+    validation_prompt: |
+      ✋ CHECKPOINT #1: Comprensión de la Tarea
+      
+      CONFIRMA antes de continuar:
+      ✅ Tarea principal: {parent_task}
+      ✅ Sub-tareas: {subtasks}
+      ✅ Resultados esperados: {expected_outcomes}
+      
+      ¿Has entendido completamente el alcance de esta tarea? (sí/no)
+    on_no: "repeat_step"
+  
+  - id: "CP2"
+    after_step: "technical_spec_review"
+    validation_prompt: |
+      ✋ CHECKPOINT #2: Enfoque Técnico
+      
+      VERIFICA:
+      ✅ Enfoque de implementación: {technical_approach}
+      ✅ Requisitos de integración: {integration_requirements}
+      
+      ¿Está claro el enfoque técnico para esta tarea? (sí/no)
+    on_no: "gather_more_info"
+```
+
+## 📊 Sistema de Logging y Debug
+
+```yaml
+logging:
+  level: "verbose"
+  format: |
+    [STEP {step_id}] {step_name}
+    Status: {status}
+    Duration: {duration}ms
+    Output: {output_summary}
+    
+  on_error: |
+    ❌ ERROR en Paso {step_id}
+    Descripción: {error_message}
+    Acción sugerida: {suggested_action}
+    
+    ¿Reintentar? (sí/no/abortar)
+```
+
+## 🔄 Flujo de Ejecución Visual
+
+```mermaid
+graph TD
+    A[Inicio] --> B[Comprensión de la Tarea]
+    B --> C[Checkpoint #1]
+    C --> D[Revisión de Especificación Técnica]
+    D --> E[Checkpoint #2]
+    E --> F[Revisión de Mejores Prácticas]
+    F --> G[Revisión de Estilo de Código]
+    G --> H[Ejecución de Sub-tareas]
+    H --> I{¿Primera Sub-tarea?}
+    I -->|Sí| J[Escribir Tests]
+    I -->|No| K{¿Última Sub-tarea?}
+    J --> L[Actualizar Estado]
+    K -->|Sí| M[Verificar Todos los Tests]
+    K -->|No| N[Implementar Funcionalidad]
+    M --> O[Verificación de Tests]
+    N --> L
+    L --> P{¿Más Sub-tareas?}
+    P -->|Sí| H
+    P -->|No| Q[Fin]
+```
+
+## Test-Driven Development Approach
+
+```yaml
+tdd_workflow:
+  - step: "Write failing tests first"
+    description: "Create comprehensive tests that cover all aspects of the feature"
+    purpose: "Define expected behavior before implementation"
+  
+  - step: "Implement minimum code to pass"
+    description: "Write just enough code to make tests pass"
+    purpose: "Ensure functionality meets requirements"
+  
+  - step: "Refactor while maintaining passing tests"
+    description: "Improve code quality without breaking functionality"
+    purpose: "Clean, maintainable code that still works"
+  
+  - step: "Repeat for each sub-task"
+    description: "Follow the same pattern for each implementation step"
+    purpose: "Consistent, test-verified development process"
+```
+
+## Final Checklist
+
+```yaml
+final_checklist:
+  verify:
+    - "All sub-tasks completed"
+    - "All task-specific tests passing"
+    - "Code follows style guidelines"
+    - "Implementation follows best practices"
+    - "tasks.md updated with current status"
+    - "No regressions in related functionality"
+```

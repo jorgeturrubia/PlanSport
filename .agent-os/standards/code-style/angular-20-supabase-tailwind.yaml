@@ -1,0 +1,844 @@
+---
+title: Angular 20 + Supabase + TailwindCSS 4 Style Guide
+description: Angular 20 coding standards with Supabase and TailwindCSS 4 for SportAgentoos
+version: 1.0
+strict_mode: true
+---
+
+# Angular 20 + Supabase + TailwindCSS 4 Style Guide
+
+```yaml
+meta:
+  context: "Angular 20 coding standards with Supabase and TailwindCSS 4 for SportAgentoos"
+  version: 1.0
+  updated: "2025-08-06"
+  angular_version: "20.1.0"
+  integrations: ["Supabase", "TailwindCSS", "Angular Material"]
+```
+
+## Project Structure
+
+```yaml
+project_structure:
+  base_structure:
+    - "src/app/core/                    # Singleton services, guards, interceptors"
+    - "src/app/shared/                  # Shared components, pipes, directives"
+    - "src/app/features/                # Feature modules (lazy-loaded)"
+    - "src/app/components/              # Page-level components"
+    - "src/app/models/                  # TypeScript interfaces"
+    - "src/app/services/                # Application services"
+    - "src/app/app.config.ts           # Application configuration"
+    - "src/app/app.routes.ts           # Route configuration"
+
+  core_folder:
+    - "guards/                          # Route guards"
+    - "interceptors/                    # HTTP interceptors"
+    - "services/                        # Core services (auth, etc.)"
+
+  shared_folder:
+    - "components/                      # Reusable UI components"
+    - "pipes/                          # Custom pipes"
+    - "directives/                     # Custom directives"
+    - "models/                         # Shared interfaces"
+
+  features_folder:
+    - "dashboard/                      # Dashboard feature module"
+    - "teams/                          # Teams feature module"
+    - "auth/                           # Authentication feature"
+    - "marketplace/                    # Marketplace feature"
+
+  feature_structure:
+    - "components/                     # Feature-specific components"
+    - "services/                       # Feature-specific services"
+    - "models/                         # Feature-specific models"
+    - "pages/                          # Feature pages/containers"
+```
+
+## Naming Conventions
+
+```yaml
+naming_conventions:
+  files_components:
+    - id: "file_naming"
+      rule: "Use kebab-case for files"
+      example: "user-profile.component.ts, team-management.service.ts"
+    
+    - id: "file_separation"
+      rule: "ALWAYS separate HTML, TypeScript, and CSS files"
+      example: "user-profile.component.ts, user-profile.component.html, user-profile.component.css"
+      priority: "mandatory"
+    
+    - id: "class_naming"
+      rule: "Use PascalCase for classes"
+      example: "export class UserProfileComponent, TeamManagementService"
+    
+    - id: "component_selector"
+      rule: "Use app- prefix for selectors"
+      example: "selector: 'app-user-profile'"
+
+  properties_methods:
+    - id: "property_naming"
+      rule: "Use camelCase for properties and methods"
+      example: "firstName: string, getUserProfile(): Observable<UserProfile>"
+    
+    - id: "observable_suffix"
+      rule: "Suffix observables with $"
+      example: "user$: Observable<User>, teams$: Observable<Team[]>"
+    
+    - id: "signal_naming"
+      rule: "Use descriptive names for signals"
+      example: "userProfile = signal<UserProfile | null>(null)"
+
+  constants_enums:
+    - id: "const_naming"
+      rule: "Use UPPER_SNAKE_CASE for constants"
+      example: "export const API_BASE_URL = 'https://api.sportagentoos.com'"
+    
+    - id: "enum_naming"
+      rule: "Use PascalCase for enums"
+      example: "export enum SubscriptionPlan { Free = 'free', Coach = 'coach' }"
+
+  examples: |
+    ```typescript
+    // ✅ Good naming
+    // user-profile.component.ts
+    @Component({
+      selector: 'app-user-profile',
+      templateUrl: './user-profile.component.html'
+    })
+    export class UserProfileComponent {
+      firstName: string = '';
+      userProfile = signal<UserProfile | null>(null);
+      user$: Observable<User>;
+      
+      getUserProfile(): Observable<UserProfile> { }
+    }
+
+    export const API_BASE_URL = 'https://api.sportagentoos.com';
+    export enum SubscriptionPlan { Free = 'free', Coach = 'coach' }
+
+    // ❌ Bad naming
+    // UserProfile.component.ts
+    @Component({
+      selector: 'user-profile' // Missing app- prefix
+    })
+    export class UserProfileComponent {
+      FirstName: string = ''; // PascalCase instead of camelCase
+      userProfile: Observable<UserProfile>; // Missing $ suffix for observable
+    }
+    ```
+```
+
+## Component Architecture
+
+```yaml
+component_architecture:
+  component_structure:
+    - id: "onpush_strategy"
+      rule: "Use OnPush change detection strategy"
+      example: "changeDetection: ChangeDetectionStrategy.OnPush"
+    
+    - id: "lifecycle_hooks"
+      rule: "Implement lifecycle hooks properly"
+      example: "implements OnInit, OnDestroy"
+    
+    - id: "signal_usage"
+      rule: "Use Angular signals for reactive state"
+      example: "profile = signal<UserProfile | null>(null)"
+    
+    - id: "inject_function"
+      rule: "Use inject() function instead of constructor injection"
+      example: "private readonly userService = inject(UserProfileService)"
+
+  template_patterns:
+    - id: "async_pipe"
+      rule: "Use async pipe for observables in templates"
+      example: "*ngIf=\"user$ | async; as user\""
+    
+    - id: "trackby_functions"
+      rule: "Always use trackBy functions for *ngFor"
+      example: "*ngFor=\"let item of items; trackBy: trackByItemId\""
+    
+    - id: "conditional_rendering"
+      rule: "Use proper conditional rendering patterns"
+      example: "*ngIf=\"condition; else elseTemplate\""
+
+  performance_optimizations:
+    - id: "subscription_management"
+      rule: "Always unsubscribe from observables"
+      example: "Use takeUntil(destroy$) pattern"
+    
+    - id: "change_detection"
+      rule: "Minimize change detection cycles"
+      example: "Use OnPush and immutable data patterns"
+    
+    - id: "lazy_loading"
+      rule: "Implement lazy loading for feature modules"
+      example: "loadChildren: () => import('./feature/feature.module')"
+
+  examples: |
+    ```typescript
+    // ✅ Good component structure
+    @Component({
+      selector: 'app-user-profile',
+      templateUrl: './user-profile.component.html',
+      changeDetection: ChangeDetectionStrategy.OnPush
+    })
+    export class UserProfileComponent implements OnInit, OnDestroy {
+      // Public properties (template bindings)
+      profile = signal<UserProfile | null>(null);
+      isLoading = signal<boolean>(false);
+      error = signal<string | null>(null);
+
+      // Private properties
+      private readonly destroy$ = new Subject<void>();
+      private readonly userProfileService = inject(UserProfileService);
+      private readonly authService = inject(AuthService);
+
+      ngOnInit(): void {
+        this.loadUserProfile();
+      }
+
+      ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+      }
+
+      // Public methods (template bindings)
+      onUpdateProfile(profileData: Partial<UserProfile>): void {
+        this.updateProfile(profileData);
+      }
+
+      // Private methods
+      private loadUserProfile(): void {
+        this.isLoading.set(true);
+        
+        this.userProfileService.getCurrentUserProfile()
+          .pipe(
+            takeUntil(this.destroy$),
+            finalize(() => this.isLoading.set(false))
+          )
+          .subscribe({
+            next: (profile) => this.profile.set(profile),
+            error: (error) => this.error.set('Failed to load profile')
+          });
+      }
+
+      // TrackBy function for *ngFor optimization
+      trackByTeamId(index: number, team: Team): number {
+        return team.id;
+      }
+    }
+    ```
+```
+
+## Supabase Integration
+
+```yaml
+supabase_integration:
+  service_configuration:
+    - id: "client_setup"
+      rule: "Configure Supabase client as singleton service"
+      example: "@Injectable({ providedIn: 'root' })"
+    
+    - id: "environment_config"
+      rule: "Use environment variables for configuration"
+      example: "environment.supabase.url, environment.supabase.anonKey"
+    
+    - id: "typed_client"
+      rule: "Create typed interface for Supabase operations"
+      example: "query<T>(table: string, filter?: string): Promise<T[]>"
+
+  authentication_service:
+    - id: "reactive_state"
+      rule: "Use signals for authentication state"
+      example: "user = signal<User | null>(null), isAuthenticated = computed(() => !!user())"
+    
+    - id: "session_management"
+      rule: "Handle session state properly"
+      example: "Listen to onAuthStateChange events"
+    
+    - id: "token_management"
+      rule: "Manage JWT tokens securely"
+      example: "getAccessToken(): string | null"
+
+  data_service_patterns:
+    - id: "typed_queries"
+      rule: "Use strongly typed database queries"
+      example: "getTeams(): Promise<Team[]>"
+    
+    - id: "organization_filtering"
+      rule: "Always include organization context for multi-tenancy"
+      example: "Filter queries by user's organization ID"
+    
+    - id: "error_handling"
+      rule: "Handle Supabase errors gracefully"
+      example: "Throw meaningful error messages"
+
+  real_time_subscriptions:
+    - id: "observable_patterns"
+      rule: "Use observables for real-time data"
+      example: "subscribeToTeams(): Observable<Team[]>"
+    
+    - id: "cleanup_subscriptions"
+      rule: "Clean up real-time subscriptions"
+      example: "Unsubscribe on component destroy"
+
+  examples: |
+    ```typescript
+    // ✅ Good Supabase service
+    @Injectable({
+      providedIn: 'root'
+    })
+    export class SupabaseService {
+      private readonly supabase: SupabaseClient;
+
+      constructor() {
+        this.supabase = createClient(
+          environment.supabase.url,
+          environment.supabase.anonKey,
+          {
+            auth: {
+              autoRefreshToken: true,
+              persistSession: true
+            }
+          }
+        );
+      }
+
+      async query<T>(table: string, filter?: string): Promise<T[]> {
+        const query = this.supabase.from(table).select('*');
+        
+        if (filter) {
+          const [column, value] = filter.split('=');
+          query.eq(column, value);
+        }
+
+        const { data, error } = await query;
+        
+        if (error) {
+          throw new Error(`Database query failed: ${error.message}`);
+        }
+        
+        return data as T[];
+      }
+    }
+
+    // ✅ Good authentication service
+    @Injectable({
+      providedIn: 'root'
+    })
+    export class AuthService {
+      private readonly supabaseService = inject(SupabaseService);
+      
+      // Reactive state with signals
+      private readonly _user = signal<User | null>(null);
+      private readonly _session = signal<Session | null>(null);
+      
+      readonly user = this._user.asReadonly();
+      readonly isAuthenticated = computed(() => !!this._session());
+
+      constructor() {
+        this.initializeAuth();
+      }
+
+      private async initializeAuth(): Promise<void> {
+        const { data: { session } } = await this.supabaseService.auth.getSession();
+        this.updateAuthState(session);
+
+        this.supabaseService.auth.onAuthStateChange((event, session) => {
+          this.updateAuthState(session);
+        });
+      }
+
+      async signInWithEmail(email: string, password: string): Promise<void> {
+        const { error } = await this.supabaseService.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) {
+          throw new Error(error.message);
+        }
+      }
+    }
+    ```
+```
+
+## TailwindCSS 4 Best Practices
+
+```yaml
+tailwindcss_best_practices:
+  design_system:
+    - id: "component_classes"
+      rule: "Define reusable component classes"
+      example: ".btn-primary, .card, .form-input"
+    
+    - id: "design_tokens"
+      rule: "Use custom design tokens"
+      example: "sport-primary, sport-secondary colors"
+    
+    - id: "layer_organization"
+      rule: "Organize styles in proper layers"
+      example: "@layer components, @layer utilities"
+
+  responsive_design:
+    - id: "mobile_first"
+      rule: "Use mobile-first approach"
+      example: "base styles for mobile, sm:, md:, lg: for larger screens"
+    
+    - id: "breakpoint_consistency"
+      rule: "Use consistent breakpoints"
+      example: "sm: 640px, md: 768px, lg: 1024px, xl: 1280px"
+    
+    - id: "responsive_utilities"
+      rule: "Use responsive utility classes"
+      example: "hidden sm:block, grid-cols-1 md:grid-cols-2"
+
+  component_styling:
+    - id: "utility_first"
+      rule: "Use utility-first approach"
+      example: "Compose styles with utility classes"
+    
+    - id: "conditional_classes"
+      rule: "Use ngClass for conditional styling"
+      example: "[ngClass]=\"{ 'bg-green-100': isActive, 'bg-red-100': !isActive }\""
+    
+    - id: "consistent_spacing"
+      rule: "Use consistent spacing scale"
+      example: "p-4, m-6, gap-8 following Tailwind spacing scale"
+
+  examples: |
+    ```css
+    /* ✅ Good - Design system in global styles */
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+
+    @layer components {
+      /* Button System */
+      .btn-base {
+        @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50;
+      }
+      
+      .btn-primary {
+        @apply btn-base bg-sport-primary text-white hover:bg-sport-primary-dark focus:ring-sport-primary/50;
+      }
+      
+      .btn-secondary {
+        @apply btn-base bg-white text-gray-700 border border-gray-300 hover:bg-gray-50;
+      }
+
+      /* Card System */
+      .card {
+        @apply bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden;
+      }
+      
+      .card-header {
+        @apply px-6 py-4 border-b border-gray-200 bg-gray-50;
+      }
+      
+      .card-body {
+        @apply px-6 py-4;
+      }
+
+      /* Form System */
+      .form-field {
+        @apply space-y-2;
+      }
+      
+      .form-label {
+        @apply block text-sm font-medium text-gray-700;
+      }
+      
+      .form-input {
+        @apply block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-sport-primary focus:border-sport-primary;
+      }
+    }
+    ```
+
+    ```html
+    <!-- ✅ Good - Component styling with design system -->
+    <div class="container-app">
+      <div class="page-header">
+        <h1 class="page-title">Team Management</h1>
+        <button class="btn-primary">
+          <mat-icon>add</mat-icon>
+          New Team
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
+        <div class="card animate-fade-in" 
+             *ngFor="let team of teams(); trackBy: trackByTeamId">
+          
+          <div class="card-header">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-gray-900">{{ team.name }}</h3>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                    [ngClass]="{
+                      'bg-green-100 text-green-800': team.status === 'active',
+                      'bg-gray-100 text-gray-800': team.status === 'inactive'
+                    }">
+                {{ team.status | titlecase }}
+              </span>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <dl class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Category</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ team.category }}</dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Players</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ team.playerCount }}</dd>
+              </div>
+            </dl>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    ```
+```
+
+## Guards and Interceptors
+
+```yaml
+guards_interceptors:
+  functional_guards:
+    - id: "auth_guard"
+      rule: "Use functional guards with inject()"
+      example: "export const authGuard: CanActivateFn"
+    
+    - id: "role_guard"
+      rule: "Create parameterized role guards"
+      example: "export const roleGuard = (roles: string[]): CanActivateFn"
+    
+    - id: "error_handling"
+      rule: "Handle guard errors gracefully"
+      example: "Redirect to appropriate pages on auth failure"
+
+  http_interceptors:
+    - id: "functional_interceptors"
+      rule: "Use functional interceptors"
+      example: "export const authInterceptor: HttpInterceptorFn"
+    
+    - id: "token_injection"
+      rule: "Automatically inject auth tokens"
+      example: "Add Authorization header for authenticated requests"
+    
+    - id: "error_interception"
+      rule: "Handle HTTP errors globally"
+      example: "Transform errors and redirect on 401/403"
+
+  examples: |
+    ```typescript
+    // ✅ Good functional guard
+    export const authGuard: CanActivateFn = (route, state) => {
+      const authService = inject(AuthService);
+      const router = inject(Router);
+
+      return authService.isAuthenticated().pipe(
+        map(isAuthenticated => {
+          if (isAuthenticated) {
+            return true;
+          }
+          
+          router.navigate(['/auth'], { 
+            queryParams: { returnUrl: state.url } 
+          });
+          return false;
+        })
+      );
+    };
+
+    // ✅ Good role-based guard
+    export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
+      return (route, state) => {
+        const authService = inject(AuthService);
+        const router = inject(Router);
+
+        return authService.user().pipe(
+          map(user => {
+            if (!user) {
+              router.navigate(['/auth']);
+              return false;
+            }
+
+            const userRole = user.user_metadata?.role;
+            if (allowedRoles.includes(userRole)) {
+              return true;
+            }
+
+            router.navigate(['/dashboard']);
+            return false;
+          })
+        );
+      };
+    };
+
+    // ✅ Good HTTP interceptor
+    export const authInterceptor: HttpInterceptorFn = (req, next) => {
+      const authService = inject(AuthService);
+      
+      const publicEndpoints = ['/auth', '/public'];
+      const isPublicEndpoint = publicEndpoints.some(endpoint => 
+        req.url.includes(endpoint)
+      );
+
+      if (isPublicEndpoint) {
+        return next(req);
+      }
+
+      const token = authService.getAccessToken();
+      if (token) {
+        const authReq = req.clone({
+          headers: req.headers.set('Authorization', `Bearer ${token}`)
+        });
+        return next(authReq);
+      }
+
+      return next(req);
+    };
+    ```
+```
+
+## Testing Standards
+
+```yaml
+testing_standards:
+  component_testing:
+    - id: "testbed_configuration"
+      rule: "Configure TestBed properly"
+      example: "Import required modules and provide mock services"
+    
+    - id: "spy_objects"
+      rule: "Use jasmine.createSpyObj for mocking"
+      example: "mockService = jasmine.createSpyObj('Service', ['method'])"
+    
+    - id: "async_testing"
+      rule: "Use fakeAsync and tick for async testing"
+      example: "Use fakeAsync(() => { /* test code */ tick(); })"
+
+  service_testing:
+    - id: "http_testing"
+      rule: "Use HttpClientTestingModule for HTTP tests"
+      example: "Test HTTP calls with HttpTestingController"
+    
+    - id: "mock_dependencies"
+      rule: "Mock all external dependencies"
+      example: "Mock Supabase client, other services"
+
+  test_structure:
+    - id: "descriptive_names"
+      rule: "Use descriptive test names"
+      example: "should load user profile when user exists"
+    
+    - id: "aaa_pattern"
+      rule: "Follow Arrange-Act-Assert pattern"
+      example: "Setup data, execute action, verify results"
+
+  examples: |
+    ```typescript
+    // ✅ Good component test
+    describe('UserProfileComponent', () => {
+      let component: UserProfileComponent;
+      let fixture: ComponentFixture<UserProfileComponent>;
+      let mockUserService: jasmine.SpyObj<UserProfileService>;
+
+      beforeEach(async () => {
+        mockUserService = jasmine.createSpyObj('UserProfileService', [
+          'getCurrentUserProfile'
+        ]);
+
+        await TestBed.configureTestingModule({
+          imports: [UserProfileComponent],
+          providers: [
+            { provide: UserProfileService, useValue: mockUserService }
+          ]
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(UserProfileComponent);
+        component = fixture.componentInstance;
+      });
+
+      it('should load user profile on init', fakeAsync(() => {
+        // Arrange
+        const mockProfile: UserProfile = {
+          id: 1,
+          firstName: 'John',
+          lastName: 'Doe'
+        };
+        mockUserService.getCurrentUserProfile.and.returnValue(
+          of(mockProfile)
+        );
+
+        // Act
+        component.ngOnInit();
+        tick();
+
+        // Assert
+        expect(component.profile()).toEqual(mockProfile);
+        expect(component.isLoading()).toBeFalse();
+      }));
+    });
+    ```
+```
+
+## Performance Optimization
+
+```yaml
+performance_optimization:
+  change_detection:
+    - id: "onpush_strategy"
+      rule: "Use OnPush change detection strategy"
+      example: "changeDetection: ChangeDetectionStrategy.OnPush"
+    
+    - id: "signal_usage"
+      rule: "Use signals for reactive data"
+      example: "data = signal<Data[]>([]); computed(() => filteredData())"
+    
+    - id: "trackby_functions"
+      rule: "Always provide trackBy functions"
+      example: "trackByItemId(index: number, item: Item): number"
+
+  lazy_loading:
+    - id: "feature_modules"
+      rule: "Lazy load feature modules"
+      example: "loadChildren: () => import('./feature/feature.routes')"
+    
+    - id: "component_lazy_loading"
+      rule: "Use standalone component lazy loading"
+      example: "loadComponent: () => import('./component').then(c => c.Component)"
+
+  bundle_optimization:
+    - id: "tree_shaking"
+      rule: "Import only what you need"
+      example: "import { map, filter } from 'rxjs/operators'"
+    
+    - id: "code_splitting"
+      rule: "Split code by features"
+      example: "Use dynamic imports for large libraries"
+
+  examples: |
+    ```typescript
+    // ✅ Good performance optimization
+    @Component({
+      selector: 'app-team-list',
+      templateUrl: './team-list.component.html',
+      changeDetection: ChangeDetectionStrategy.OnPush
+    })
+    export class TeamListComponent implements OnInit {
+      // Use signals for reactive data
+      teams = signal<Team[]>([]);
+      filteredTeams = computed(() => {
+        const searchTerm = this.searchTerm().toLowerCase();
+        return this.teams().filter(team => 
+          team.name.toLowerCase().includes(searchTerm)
+        );
+      });
+
+      searchTerm = signal<string>('');
+      private readonly teamService = inject(TeamService);
+
+      // TrackBy function for *ngFor optimization
+      trackByTeamId(index: number, team: Team): number {
+        return team.id;
+      }
+
+      async ngOnInit(): Promise<void> {
+        const teams = await this.teamService.getTeams();
+        this.teams.set(teams);
+      }
+
+      onSearchChange(searchTerm: string): void {
+        this.searchTerm.set(searchTerm);
+      }
+    }
+
+    // ✅ Good route configuration with lazy loading
+    const routes: Routes = [
+      {
+        path: 'dashboard',
+        canActivate: [authGuard],
+        loadChildren: () => import('./features/dashboard/dashboard.routes')
+          .then(r => r.DASHBOARD_ROUTES)
+      },
+      {
+        path: 'teams',
+        canActivate: [authGuard, roleGuard(['coach', 'admin'])],
+        loadChildren: () => import('./features/teams/teams.routes')
+          .then(r => r.TEAMS_ROUTES)
+      }
+    ];
+    ```
+```
+
+## Error Handling
+
+```yaml
+error_handling:
+  service_level:
+    - id: "specific_errors"
+      rule: "Throw specific error types"
+      example: "throw new Error('Specific error message')"
+    
+    - id: "error_context"
+      rule: "Include relevant context in errors"
+      example: "Include operation details, user context"
+    
+    - id: "error_logging"
+      rule: "Log errors appropriately"
+      example: "console.error('Operation failed:', error)"
+
+  component_level:
+    - id: "error_states"
+      rule: "Handle error states in UI"
+      example: "Show error messages, retry buttons"
+    
+    - id: "graceful_degradation"
+      rule: "Provide fallback UI for errors"
+      example: "Show skeleton or placeholder content"
+
+  global_handling:
+    - id: "error_interceptor"
+      rule: "Implement global error handling"
+      example: "HTTP error interceptor for consistent error handling"
+
+  examples: |
+    ```typescript
+    // ✅ Good error handling in service
+    async getTeams(): Promise<Team[]> {
+      try {
+        return await this.supabaseService.query<Team>('teams');
+      } catch (error) {
+        console.error('Failed to fetch teams:', error);
+        throw new Error('Unable to load teams. Please try again.');
+      }
+    }
+
+    // ✅ Good error handling in component
+    private loadUserProfile(): void {
+      this.isLoading.set(true);
+      this.error.set(null);
+
+      this.userService.getCurrentUserProfile()
+        .pipe(
+          takeUntil(this.destroy$),
+          finalize(() => this.isLoading.set(false))
+        )
+        .subscribe({
+          next: (profile) => {
+            this.profile.set(profile);
+          },
+          error: (error) => {
+            this.error.set('Failed to load profile');
+            console.error('Profile loading error:', error);
+          }
+        });
+    }
+    ```
+```

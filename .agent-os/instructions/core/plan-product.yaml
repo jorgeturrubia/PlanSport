@@ -1,0 +1,517 @@
+---
+description: Product Planning Rules for Agent OS
+version: 4.0
+encoding: UTF-8
+strict_mode: true
+---
+
+# Product Planning Rules
+
+```yaml
+command:
+  name: plan-product
+  version: 4.0
+  description: "Generate product docs for new projects: mission, tech-stack, roadmap, decisions files for AI agent consumption"
+```
+
+## 📋 Definición de Pasos Estructurada
+
+```yaml
+steps:
+  - id: gather_user_input
+    name: "Gather User Input"
+    type: input
+    required_fields:
+      - main_idea: 
+          type: string
+          min_length: 10
+          prompt: "¿Cuál es la idea principal del producto?"
+      - features:
+          type: array
+          min_items: 3
+          prompt: "Lista al menos 3 características principales"
+      - target_users:
+          type: string
+          prompt: "¿Quién usará este producto?"
+      - tech_stack_preferences:
+          type: string
+          prompt: "¿Qué tecnologías prefieres utilizar?"
+      - initialized:
+          type: boolean
+          prompt: "¿La aplicación ya ha sido inicializada y estamos dentro de la carpeta del proyecto? (sí/no)"
+    validation:
+      on_missing: BLOCK
+      message: |
+        Please provide the following missing information:
+        1. Main idea for the product
+        2. List of key features (minimum 3)
+        3. Target users and use cases (minimum 1)
+        4. Tech stack preferences
+        5. Has the new application been initialized yet and we're inside the project folder? (yes/no)
+    data_sources:
+      primary: "User direct input"
+      fallback:
+        - "~/.agent-os/standards/tech-stack.md"
+        - "~/.claude/CLAUDE.md"
+        - "Cursor User Rules"
+    
+  - id: create_documentation_structure
+    name: "Create Documentation Structure"
+    type: execute
+    commands:
+      - cmd: "mkdir -p .agent-os/product"
+        validate: directory_exists
+    validation:
+      - write_permissions: true
+      - no_overwrite: true
+    file_structure: |
+      .agent-os/
+      └── product/
+          ├── mission.md          # Product vision and purpose
+          ├── mission-lite.md     # Condensed mission for AI context
+          ├── tech-stack.md       # Technical architecture
+          ├── roadmap.md          # Development phases
+          └── decisions.md        # Decision log
+    
+  - id: create_mission_md
+    name: "Create mission.md"
+    type: template
+    source: templates/mission.yaml
+    destination: ".agent-os/product/mission.md"
+    variables:
+      product_name: "{input.main_idea}"
+      product_type: "{derived_product_type}"
+      target_users: "{input.target_users}"
+      problem_solved: "{derived_problem}"
+      value_proposition: "{derived_value}"
+    sections:
+      - name: "Pitch"
+        template: |
+          ## Pitch
+          
+          {product_name} is a {product_type} that helps {target_users} {problem_solved} by providing {value_proposition}.
+        constraints:
+          length: "1-2 sentences"
+          style: "elevator pitch"
+      
+      - name: "Users"
+        template: |
+          ## Users
+          
+          ### Primary Customers
+          
+          - {customer_segment_1}: {description_1}
+          - {customer_segment_2}: {description_2}
+          
+          ### User Personas
+          
+          **{user_type}** ({age_range})
+          - **Role:** {job_title}
+          - **Context:** {business_context}
+          - **Pain Points:** {pain_point_1}, {pain_point_2}
+          - **Goals:** {goal_1}, {goal_2}
+        schema:
+          name: "string"
+          age_range: "XX-XX years old"
+          role: "string"
+          context: "string"
+          pain_points: "array[string]"
+          goals: "array[string]"
+      
+      - name: "Problem"
+        template: |
+          ## The Problem
+          
+          ### {problem_title}
+          
+          {problem_description}. {quantifiable_impact}.
+          
+          **Our Solution:** {solution_description}
+        constraints:
+          problems: "2-4"
+          description: "1-3 sentences"
+          impact: "include metrics"
+          solution: "1 sentence"
+      
+      - name: "Differentiators"
+        template: |
+          ## Differentiators
+          
+          ### {differentiator_title}
+          
+          Unlike {competitor_or_alternative}, we provide {specific_advantage}. This results in {measurable_benefit}.
+        constraints:
+          count: "2-3"
+          focus: "competitive advantages"
+          evidence: "required"
+      
+      - name: "Features"
+        template: |
+          ## Key Features
+          
+          ### Core Features
+          
+          - **{feature_name}:** {user_benefit_description}
+          
+          ### Collaboration Features
+          
+          - **{feature_name}:** {user_benefit_description}
+        constraints:
+          total: "8-10 features"
+          grouping: "by category"
+          description: "user-benefit focused"
+    validation:
+      - file_exists: true
+      - min_size: 500
+      - no_placeholders: true
+    
+  - id: create_tech_stack_md
+    name: "Create tech-stack.md"
+    type: template
+    source: templates/tech-stack.yaml
+    destination: ".agent-os/product/tech-stack.md"
+    variables:
+      tech_preferences: "{input.tech_stack_preferences}"
+    required_items:
+      - application_framework: "string + version"
+      - database_system: "string"
+      - javascript_framework: "string"
+      - import_strategy: "['importmaps', 'node']"
+      - css_framework: "string + version"
+      - ui_component_library: "string"
+      - fonts_provider: "string"
+      - icon_library: "string"
+      - application_hosting: "string"
+      - database_hosting: "string"
+      - asset_hosting: "string"
+      - deployment_solution: "string"
+      - code_repository_url: "string"
+    data_resolution:
+      type: conditional
+      conditions:
+        - check: has_context_fetcher
+          if_true:
+            action: use_subagent
+            subagent: context-fetcher
+            request: "Find {item_name} from tech-stack.md"
+            process: "Use found defaults"
+          if_false:
+            action: manual_resolution
+            process: |
+              for item in "${REQUIRED_ITEMS[@]}"; do
+                if [[ "$USER_INPUT" != *"$item"* ]]; then
+                  echo "Check sources for $item:"
+                  echo "1. ~/.agent-os/standards/tech-stack.md"
+                  echo "2. ~/.claude/CLAUDE.md"
+                  echo "3. Cursor User Rules"
+                else
+                  echo "Add $item to missing list"
+                fi
+              done
+    missing_items_template: |
+      Please provide the following technical stack details:
+      {numbered_list_of_missing_items}
+      
+      You can respond with the technology choice or "n/a" for each item.
+    validation:
+      - file_exists: true
+      - min_size: 300
+      - no_placeholders: true
+    
+  - id: create_mission_lite_md
+    name: "Create mission-lite.md"
+    type: template
+    source: templates/mission-lite.yaml
+    destination: ".agent-os/product/mission-lite.md"
+    variables:
+      elevator_pitch: "{mission_md.pitch}"
+      value_summary: "{derived_value_summary}"
+    content_structure:
+      elevator_pitch:
+        source: "mission.md pitch section"
+        format: "single sentence"
+      value_summary:
+        length: "1-3 sentences"
+        includes: "value proposition, target users, key differentiator"
+        excludes: "secondary users, secondary differentiators"
+    content_template: |
+      # Product Mission (Lite)
+      
+      {elevator_pitch}
+      
+      {value_summary}
+    example: |
+      TaskFlow is a project management tool that helps remote teams coordinate work efficiently by providing real-time collaboration and automated workflow tracking.
+      
+      TaskFlow serves distributed software teams who need seamless task coordination across time zones. Unlike traditional project management tools, TaskFlow automatically syncs with development workflows and provides intelligent task prioritization based on team capacity and dependencies.
+    validation:
+      - file_exists: true
+      - min_size: 100
+      - no_placeholders: true
+    
+  - id: create_roadmap_md
+    name: "Create roadmap.md"
+    type: template
+    source: templates/roadmap.yaml
+    destination: ".agent-os/product/roadmap.md"
+    variables:
+      features: "{input.features}"
+    phase_structure:
+      count: "1-3"
+      features_per_phase: "3-7"
+    phase_template: |
+      ## Phase {number}: {name}
+      
+      **Goal:** {phase_goal}
+      **Success Criteria:** {measurable_criteria}
+      
+      ### Features
+      
+      - [ ] {feature} - {description} `{effort}`
+      
+      ### Dependencies
+      
+      - {dependency}
+    phase_guidelines:
+      - phase: 1
+        name: "Core MVP functionality"
+      - phase: 2
+        name: "Key differentiators"
+      - phase: 3
+        name: "Scale and polish"
+      - phase: 4
+        name: "Advanced features"
+      - phase: 5
+        name: "Enterprise features"
+    effort_scale:
+      - XS: "1 day"
+      - S: "2-3 days"
+      - M: "1 week"
+      - L: "2 weeks"
+      - XL: "3+ weeks"
+    validation:
+      - file_exists: true
+      - min_size: 300
+      - no_placeholders: true
+    
+  - id: create_decisions_md
+    name: "Create decisions.md"
+    type: template
+    source: templates/decisions.yaml
+    destination: ".agent-os/product/decisions.md"
+    variables:
+      current_date: "{current_date}"
+      product_mission: "{derived_mission_summary}"
+      target_market: "{input.target_users}"
+      key_features: "{input.features}"
+    decision_schema:
+      - date: "YYYY-MM-DD"
+      - id: "DEC-XXX"
+      - status: "['proposed', 'accepted', 'rejected', 'superseded']"
+      - category: "['technical', 'product', 'business', 'process']"
+      - stakeholders: "array[string]"
+    initial_decision_template: |
+      ## {current_date}: Initial Product Planning
+      
+      **ID:** DEC-001
+      **Status:** Accepted
+      **Category:** Product
+      **Stakeholders:** Product Owner, Tech Lead, Team
+      
+      ### Decision
+      
+      {product_mission_summary}
+      
+      ### Context
+      
+      {context_explanation}
+      
+      ### Alternatives Considered
+      
+      1. **{alternative}**
+         - Pros: {pros_list}
+         - Cons: {cons_list}
+      
+      ### Rationale
+      
+      {decision_rationale}
+      
+      ### Consequences
+      
+      **Positive:**
+      - {expected_benefits}
+      
+      **Negative:**
+      - {known_tradeoffs}
+    validation:
+      - file_exists: true
+      - min_size: 500
+      - no_placeholders: true
+```
+
+## 🔐 Sistema de Validación Mejorado
+
+```yaml
+validations:
+  pre_execution:
+    - name: "Verificar prerequisitos"
+      checks:
+        - no_existing_agentOs: ".agent-os/"
+        - write_permissions: "."
+        - required_fields: 
+            - "main_idea"
+            - "features"
+            - "target_users"
+  
+  post_execution:
+    - name: "Verificar resultados"
+      checks:
+        - all_files_created:
+            - ".agent-os/product/mission.md"
+            - ".agent-os/product/mission-lite.md"
+            - ".agent-os/product/tech-stack.md"
+            - ".agent-os/product/roadmap.md"
+            - ".agent-os/product/decisions.md"
+        - no_remaining_placeholders: true
+        - valid_markdown: true
+```
+
+## 🤖 Invocación Explícita de Subagentes
+
+```yaml
+subagent_calls:
+  context_fetcher:
+    trigger: "when_needed"
+    syntax: |
+      ```invoke-agent
+      agent: context-fetcher
+      action: read
+      params:
+        file: "{target_file}"
+        section: "{optional_section}"
+        return: "content_only"
+      ```
+    example: |
+      ```invoke-agent
+      agent: context-fetcher
+      action: read
+      params:
+        file: "mission-lite.md"
+        section: "pitch"
+        return: "content_only"
+      ```
+  
+  file_creator:
+    trigger: "for_file_creation"
+    syntax: |
+      ```invoke-agent
+      agent: file-creator
+      action: create
+      params:
+        path: "{file_path}"
+        content: "{file_content}"
+        validate: "{validation_type}"
+      ```
+  
+  date_checker:
+    trigger: "on_init"
+    syntax: |
+      ```invoke-agent
+      agent: date-checker
+      action: get_current_date
+      params:
+        format: "YYYY-MM-DD"
+      ```
+```
+
+## 🎯 Puntos de Control Obligatorios
+
+```yaml
+checkpoints:
+  - id: "CP1"
+    after_step: "gather_user_input"
+    validation_prompt: |
+      ✋ CHECKPOINT #1: Validación de Entrada
+      
+      CONFIRMA antes de continuar:
+      ✅ Idea principal del producto: {main_idea}
+      ✅ Características (min 3): {features}
+      ✅ Usuarios objetivo: {target_users}
+      ✅ Preferencias de tecnología: {tech_stack_preferences}
+      
+      ¿Todo correcto? (sí/no)
+    on_no: "repeat_step"
+  
+  - id: "CP2"
+    after_step: "create_documentation_structure"
+    validation_prompt: |
+      ✋ CHECKPOINT #2: Estructura Creada
+      
+      VERIFICA:
+      ✅ Directorio .agent-os/product/ creado
+      ✅ Permisos de escritura confirmados
+      
+      ¿Continuar? (sí/no)
+```
+
+## 📊 Sistema de Logging y Debug
+
+```yaml
+logging:
+  level: "verbose"
+  format: |
+    [STEP {step_id}] {step_name}
+    Status: {status}
+    Duration: {duration}ms
+    Output: {output_summary}
+    
+  on_error: |
+    ❌ ERROR en Paso {step_id}
+    Descripción: {error_message}
+    Acción sugerida: {suggested_action}
+    
+    ¿Reintentar? (sí/no/abortar)
+```
+
+## 🔄 Flujo de Ejecución Visual
+
+```mermaid
+graph TD
+    A[Inicio] --> B{¿Inputs completos?}
+    B -->|No| C[Solicitar inputs]
+    C --> B
+    B -->|Sí| D[Checkpoint #1]
+    D --> E[Crear estructura]
+    E --> F[Checkpoint #2]
+    F --> G[Crear mission.md]
+    G --> H[Crear tech-stack.md]
+    H --> I{¿Faltan items?}
+    I -->|Sí| J[Solicitar items]
+    J --> H
+    I -->|No| K[Crear mission-lite.md]
+    K --> L[Crear roadmap.md]
+    L --> M[Crear decisions.md]
+    M --> N{¿Validación OK?}
+    N -->|No| O[Mostrar errores]
+    O --> P[Reintentar]
+    P --> N
+    N -->|Sí| Q[Fin exitoso]
+```
+
+## Execution Summary
+
+```yaml
+final_checklist:
+  verify:
+    - "All 5 files created in `.agent-os/product/`"
+    - "User inputs incorporated throughout"
+    - "Missing tech stack items requested"
+    - "Initial decisions documented"
+
+execution_order:
+  - "Gather and validate all inputs"
+  - "Create directory structure"
+  - "Generate each file sequentially"
+  - "Request any missing information"
+  - "Validate complete documentation set"
+```

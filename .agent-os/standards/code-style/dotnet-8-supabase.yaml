@@ -1,0 +1,705 @@
+---
+title: .NET 8 + Supabase Style Guide
+description: .NET 8 coding standards with Supabase integration for SportAgentoos
+version: 1.0
+strict_mode: true
+---
+
+# .NET 8 + Supabase Style Guide
+
+```yaml
+meta:
+  context: ".NET 8 coding standards with Supabase integration for SportAgentoos"
+  version: 1.0
+  updated: "2025-08-06"
+  target_framework: "net8.0"
+  integrations: ["Supabase", "JWT", "Swagger"]
+```
+
+## Project Structure
+
+```yaml
+project_structure:
+  base_structure:
+    - "Controllers/          # API Controllers"
+    - "Services/             # Business Logic Services"
+    - "Models/               # Data Models and DTOs"
+    - "Infrastructure/       # External Integrations"
+    - "Middleware/           # Custom Middleware"
+    - "Extensions/           # Extension Methods"
+    - "Program.cs            # Application Entry Point"
+
+  controllers_folder:
+    - "AuthController.cs"
+    - "UserProfileController.cs"
+    - "SubscriptionController.cs"
+    - "TeamsController.cs"
+
+  services_folder:
+    - "Interfaces/           # Service interfaces"
+    - "UserProfileService.cs"
+    - "SubscriptionService.cs"
+    - "TeamService.cs"
+
+  models_folder:
+    - "Entities/             # Database models"
+    - "DTOs/                 # Data Transfer Objects"
+    - "Responses/            # API Response models"
+```
+
+## Naming Conventions
+
+```yaml
+naming_conventions:
+  classes_interfaces:
+    - id: "class_naming"
+      rule: "Use PascalCase for classes"
+      example: "public class UserProfileService : IUserProfileService"
+    
+    - id: "interface_naming"
+      rule: "Prefix interfaces with 'I'"
+      example: "public interface IUserProfileService"
+    
+    - id: "dto_naming"
+      rule: "Suffix DTOs appropriately"
+      example: "public class CreateTeamRequest, TeamDto, ApiResponse<T>"
+
+  methods_properties:
+    - id: "method_naming"
+      rule: "Use PascalCase for methods"
+      example: "public async Task<UserProfile> GetUserProfileAsync(int userId)"
+    
+    - id: "property_naming"
+      rule: "Use PascalCase for properties"
+      example: "public string FirstName { get; set; }"
+    
+    - id: "async_suffix"
+      rule: "Suffix async methods with 'Async'"
+      example: "public async Task<Team> CreateTeamAsync(CreateTeamRequest request)"
+
+  constants_enums:
+    - id: "const_naming"
+      rule: "Use UPPER_SNAKE_CASE for constants"
+      example: "public const string DEFAULT_ROLE = \"Coach\";"
+    
+    - id: "enum_naming"
+      rule: "Use PascalCase for enums and values"
+      example: "public enum SubscriptionPlan { Free, Coach, Club }"
+
+  examples: |
+    ```csharp
+    // ✅ Good naming
+    public class UserProfileService : IUserProfileService
+    {
+        public const string DEFAULT_ROLE = "Coach";
+        public string FirstName { get; set; }
+        public async Task<UserProfile> GetUserProfileAsync(int userId) { }
+    }
+
+    public enum SubscriptionPlan
+    {
+        Free,
+        Coach,
+        Club
+    }
+
+    // ❌ Bad naming
+    public class userProfileService
+    {
+        public const string default_role = "coach";
+        public string firstName { get; set; }
+        public async Task<UserProfile> getUserProfile(int userId) { }
+    }
+    ```
+```
+
+## Dependency Injection
+
+```yaml
+dependency_injection:
+  service_registration:
+    - id: "service_lifetime"
+      rule: "Use appropriate service lifetime"
+      examples:
+        - "AddScoped for services that maintain state per request"
+        - "AddSingleton for stateless services"
+        - "AddTransient for lightweight services"
+    
+    - id: "interface_registration"
+      rule: "Always register services with interfaces"
+      example: "builder.Services.AddScoped<IUserProfileService, UserProfileService>();"
+
+  constructor_injection:
+    - id: "inject_pattern"
+      rule: "Use inject() function in modern .NET"
+      example: "private readonly IUserProfileService _userProfileService = inject(IUserProfileService);"
+    
+    - id: "null_validation"
+      rule: "Validate injected dependencies"
+      example: "_supabaseClient = supabaseClient ?? throw new ArgumentNullException(nameof(supabaseClient));"
+
+  examples: |
+    ```csharp
+    // ✅ Good DI registration (Program.cs)
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+    builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+    builder.Services.AddScoped<ISupabaseClient, SupabaseClient>();
+
+    // ✅ Good constructor injection
+    public class UserProfileService : IUserProfileService
+    {
+        private readonly ISupabaseClient _supabaseClient;
+        private readonly ILogger<UserProfileService> _logger;
+
+        public UserProfileService(
+            ISupabaseClient supabaseClient,
+            ILogger<UserProfileService> logger)
+        {
+            _supabaseClient = supabaseClient ?? throw new ArgumentNullException(nameof(supabaseClient));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+    }
+    ```
+```
+
+## Controller Standards
+
+```yaml
+controller_standards:
+  controller_structure:
+    - id: "controller_attributes"
+      rule: "Use proper controller attributes"
+      example: "[ApiController], [Route(\"api/[controller]\")], [Authorize]"
+    
+    - id: "action_documentation"
+      rule: "Document all actions with XML comments"
+      example: "/// <summary>Gets user profile</summary>"
+    
+    - id: "response_types"
+      rule: "Specify response types with ProducesResponseType"
+      example: "[ProducesResponseType(typeof(ApiResponse<UserProfileDto>), 200)]"
+
+  error_handling:
+    - id: "try_catch"
+      rule: "Use try-catch for error handling"
+      example: "Wrap action logic in try-catch blocks"
+    
+    - id: "specific_exceptions"
+      rule: "Handle specific exceptions"
+      example: "Handle NotFoundException, ValidationException, etc."
+    
+    - id: "consistent_responses"
+      rule: "Return consistent response structures"
+      example: "Always return ApiResponse<T> or ApiErrorResponse"
+
+  multi_tenant_support:
+    - id: "organization_context"
+      rule: "Always include organization context"
+      example: "var organizationId = GetCurrentOrganizationId();"
+    
+    - id: "user_context"
+      rule: "Extract user context from JWT"
+      example: "var userId = User.FindFirst(\"sub\")?.Value;"
+
+  examples: |
+    ```csharp
+    // ✅ Good controller structure
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
+    public class UserProfileController : ControllerBase
+    {
+        private readonly IUserProfileService _userProfileService;
+        private readonly ILogger<UserProfileController> _logger;
+
+        /// <summary>
+        /// Gets the current user's profile
+        /// </summary>
+        /// <returns>User profile information</returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<UserProfileDto>), 200)]
+        [ProducesResponseType(typeof(ApiErrorResponse), 404)]
+        public async Task<ActionResult<ApiResponse<UserProfileDto>>> GetUserProfileAsync()
+        {
+            try
+            {
+                var userId = GetCurrentUserId();
+                var organizationId = GetCurrentOrganizationId();
+                
+                var profile = await _userProfileService.GetUserProfileAsync(userId, organizationId);
+                
+                return Ok(new ApiResponse<UserProfileDto>
+                {
+                    Data = profile,
+                    Success = true,
+                    Message = "Profile retrieved successfully"
+                });
+            }
+            catch (NotFoundException ex)
+            {
+                _logger.LogWarning(ex, "User profile not found");
+                return NotFound(new ApiErrorResponse { Error = "Profile not found" });
+            }
+        }
+
+        private string GetCurrentUserId()
+        {
+            return User.FindFirst("sub")?.Value ?? 
+                   throw new UnauthorizedAccessException("User ID not found");
+        }
+    }
+    ```
+```
+
+## Supabase Integration
+
+```yaml
+supabase_integration:
+  client_configuration:
+    - id: "client_setup"
+      rule: "Configure Supabase client properly"
+      example: "Use IOptions<SupabaseOptions> for configuration"
+    
+    - id: "connection_management"
+      rule: "Use proper connection management"
+      example: "Register as scoped service for request lifecycle"
+
+  data_access_patterns:
+    - id: "typed_queries"
+      rule: "Use strongly typed queries"
+      example: "await _supabaseClient.GetAsync<UserProfile>(\"user_profiles\", filter);"
+    
+    - id: "organization_filtering"
+      rule: "Always filter by organization for multi-tenancy"
+      example: "var filter = $\"user_id=eq.{userId}&organization_id=eq.{organizationId}\";"
+    
+    - id: "error_handling"
+      rule: "Handle Supabase errors appropriately"
+      example: "Wrap Supabase calls in try-catch blocks"
+
+  authentication:
+    - id: "jwt_validation"
+      rule: "Validate JWT tokens from Supabase"
+      example: "Configure JwtBearer with Supabase settings"
+    
+    - id: "token_extraction"
+      rule: "Extract user information from tokens"
+      example: "Use User.FindFirst() to get claims"
+
+  examples: |
+    ```csharp
+    // ✅ Good Supabase service implementation
+    public class UserProfileService : IUserProfileService
+    {
+        private readonly ISupabaseClient _supabaseClient;
+        private readonly ILogger<UserProfileService> _logger;
+
+        public async Task<UserProfileDto> GetUserProfileAsync(string userId, string organizationId)
+        {
+            try
+            {
+                _logger.LogInformation("Retrieving user profile for {UserId}", userId);
+
+                // Always include organization filtering for multi-tenancy
+                var filter = $"user_id=eq.{userId}&organization_id=eq.{organizationId}";
+                
+                var profile = await _supabaseClient.GetAsync<UserProfile>("user_profiles", filter);
+                
+                if (profile == null)
+                {
+                    throw new NotFoundException($"User profile not found for user {userId}");
+                }
+
+                return MapToDto(profile);
+            }
+            catch (Exception ex) when (!(ex is NotFoundException))
+            {
+                _logger.LogError(ex, "Error retrieving user profile for {UserId}", userId);
+                throw;
+            }
+        }
+
+        private static UserProfileDto MapToDto(UserProfile profile)
+        {
+            return new UserProfileDto
+            {
+                Id = profile.Id,
+                FirstName = profile.FirstName,
+                LastName = profile.LastName,
+                Email = profile.Email,
+                Role = profile.Role
+                // Don't expose sensitive fields like OrganizationId
+            };
+        }
+    }
+    ```
+```
+
+## Data Models
+
+```yaml
+data_models:
+  entity_models:
+    - id: "audit_fields"
+      rule: "Include audit fields in all entities"
+      example: "CreatedAt, UpdatedAt, CreatedBy, UpdatedBy"
+    
+    - id: "multi_tenant_field"
+      rule: "Include OrganizationId for multi-tenancy"
+      example: "public string OrganizationId { get; set; } = string.Empty;"
+    
+    - id: "soft_delete"
+      rule: "Use soft deletes with IsDeleted flag"
+      example: "public bool IsDeleted { get; set; } = false;"
+
+  dto_models:
+    - id: "separate_dtos"
+      rule: "Create separate DTOs for different purposes"
+      example: "CreateUserProfileRequest, UpdateUserProfileRequest, UserProfileDto"
+    
+    - id: "validation_attributes"
+      rule: "Use data annotations for validation"
+      example: "[Required], [StringLength], [EmailAddress]"
+    
+    - id: "no_sensitive_data"
+      rule: "Don't expose sensitive data in DTOs"
+      example: "Exclude OrganizationId, internal IDs from public DTOs"
+
+  response_models:
+    - id: "consistent_structure"
+      rule: "Use consistent response structure"
+      example: "ApiResponse<T>, ApiErrorResponse, ValidationErrorResponse"
+    
+    - id: "include_metadata"
+      rule: "Include useful metadata"
+      example: "Success flag, message, timestamp, traceId"
+
+  examples: |
+    ```csharp
+    // ✅ Good entity model
+    public class UserProfile
+    {
+        public int Id { get; set; }
+        public string UserId { get; set; } = string.Empty;
+        public string OrganizationId { get; set; } = string.Empty; // Multi-tenant
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
+        public bool IsActive { get; set; } = true;
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public string CreatedBy { get; set; } = string.Empty;
+        public string UpdatedBy { get; set; } = string.Empty;
+        public bool IsDeleted { get; set; } = false; // Soft delete
+    }
+
+    // ✅ Good DTO model
+    public class CreateUserProfileRequest
+    {
+        [Required]
+        [StringLength(50, MinimumLength = 2)]
+        public string FirstName { get; set; } = string.Empty;
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        public string Role { get; set; } = string.Empty;
+    }
+
+    // ✅ Good response model
+    public class ApiResponse<T>
+    {
+        public T? Data { get; set; }
+        public bool Success { get; set; }
+        public string Message { get; set; } = string.Empty;
+        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    }
+    ```
+```
+
+## Authentication & Authorization
+
+```yaml
+authentication_authorization:
+  jwt_configuration:
+    - id: "jwt_bearer_setup"
+      rule: "Configure JWT Bearer authentication"
+      example: "AddAuthentication(JwtBearerDefaults.AuthenticationScheme)"
+    
+    - id: "token_validation"
+      rule: "Validate tokens properly"
+      example: "ValidateIssuerSigningKey, ValidateIssuer, ValidateAudience"
+    
+    - id: "supabase_integration"
+      rule: "Use Supabase JWT settings"
+      example: "Authority = supabaseUrl, IssuerSigningKey from JwtSecret"
+
+  role_based_authorization:
+    - id: "custom_attributes"
+      rule: "Create custom authorization attributes"
+      example: "RequireRoleAttribute for role-based access"
+    
+    - id: "granular_permissions"
+      rule: "Implement resource-level permissions"
+      example: "Check CRUD permissions for specific resources"
+
+  multi_tenant_security:
+    - id: "organization_isolation"
+      rule: "Ensure data isolation between organizations"
+      example: "Always filter by organization in queries"
+    
+    - id: "user_context"
+      rule: "Extract user and organization from JWT"
+      example: "Get user_id and org_id from token claims"
+
+  examples: |
+    ```csharp
+    // ✅ Good JWT configuration
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(builder.Configuration["Supabase:JwtSecret"]!)),
+                ValidateIssuer = true,
+                ValidIssuer = builder.Configuration["Supabase:Url"],
+                ValidateAudience = true,
+                ValidAudience = "authenticated",
+                ValidateLifetime = true
+            };
+        });
+
+    // ✅ Good role-based authorization
+    public class RequireRoleAttribute : AuthorizeAttribute
+    {
+        public RequireRoleAttribute(params string[] roles)
+        {
+            Roles = string.Join(",", roles);
+        }
+    }
+
+    // Usage
+    [RequireRole("Admin", "Director")]
+    public async Task<ActionResult> GetAllUsersAsync()
+    ```
+```
+
+## Testing Standards
+
+```yaml
+testing_standards:
+  unit_test_structure:
+    - id: "test_class_naming"
+      rule: "Suffix test classes with 'Tests'"
+      example: "UserProfileServiceTests"
+    
+    - id: "test_method_naming"
+      rule: "Use descriptive test method names"
+      example: "GetUserProfileAsync_WhenUserExists_ReturnsUserProfile"
+    
+    - id: "arrange_act_assert"
+      rule: "Follow AAA pattern in tests"
+      example: "Arrange setup, Act execution, Assert verification"
+
+  mocking:
+    - id: "mock_dependencies"
+      rule: "Mock all external dependencies"
+      example: "Use Mock<ISupabaseClient> for database calls"
+    
+    - id: "verify_interactions"
+      rule: "Verify mock interactions"
+      example: "Verify method calls and parameters"
+
+  test_categories:
+    - id: "unit_tests"
+      rule: "Test individual components in isolation"
+      example: "Service methods, controller actions"
+    
+    - id: "integration_tests"
+      rule: "Test component interactions"
+      example: "API endpoints with real database"
+
+  examples: |
+    ```csharp
+    // ✅ Good unit test structure
+    [TestClass]
+    public class UserProfileServiceTests
+    {
+        private Mock<ISupabaseClient> _mockSupabaseClient;
+        private Mock<ILogger<UserProfileService>> _mockLogger;
+        private UserProfileService _service;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _mockSupabaseClient = new Mock<ISupabaseClient>();
+            _mockLogger = new Mock<ILogger<UserProfileService>>();
+            _service = new UserProfileService(_mockSupabaseClient.Object, _mockLogger.Object);
+        }
+
+        [TestMethod]
+        public async Task GetUserProfileAsync_WhenUserExists_ReturnsUserProfile()
+        {
+            // Arrange
+            var userId = "user123";
+            var organizationId = "org456";
+            var expectedProfile = new UserProfile { /* properties */ };
+            
+            _mockSupabaseClient
+                .Setup(x => x.GetAsync<UserProfile>("user_profiles", It.IsAny<string>()))
+                .ReturnsAsync(expectedProfile);
+
+            // Act
+            var result = await _service.GetUserProfileAsync(userId, organizationId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedProfile.FirstName, result.FirstName);
+            _mockSupabaseClient.Verify(/* verify calls */);
+        }
+    }
+    ```
+```
+
+## Error Handling & Logging
+
+```yaml
+error_handling_logging:
+  exception_handling:
+    - id: "specific_exceptions"
+      rule: "Use specific exception types"
+      example: "NotFoundException, ValidationException, UnauthorizedAccessException"
+    
+    - id: "global_handler"
+      rule: "Implement global exception handling"
+      example: "Use middleware for consistent error responses"
+    
+    - id: "error_context"
+      rule: "Include relevant context in errors"
+      example: "User ID, operation details in error messages"
+
+  structured_logging:
+    - id: "log_levels"
+      rule: "Use appropriate log levels"
+      example: "Information for normal flow, Warning for handled exceptions"
+    
+    - id: "log_context"
+      rule: "Include structured data in logs"
+      example: "Use LogInformation(\"Message {UserId} {Action}\", userId, action)"
+    
+    - id: "log_scopes"
+      rule: "Use log scopes for correlation"
+      example: "using var scope = _logger.BeginScope(\"Operation {OperationId}\")"
+
+  security_considerations:
+    - id: "no_sensitive_data"
+      rule: "Never log sensitive information"
+      example: "Don't log passwords, tokens, personal data"
+    
+    - id: "trace_correlation"
+      rule: "Include trace IDs for debugging"
+      example: "TraceId in error responses for troubleshooting"
+
+  examples: |
+    ```csharp
+    // ✅ Good error handling and logging
+    public async Task<UserProfileDto> GetUserProfileAsync(string userId, string organizationId)
+    {
+        using var scope = _logger.BeginScope("GetUserProfile {UserId} {OrganizationId}", 
+            userId, organizationId);
+        
+        try
+        {
+            _logger.LogInformation("Starting user profile retrieval");
+            
+            var profile = await _supabaseClient.GetAsync<UserProfile>("user_profiles", 
+                $"user_id=eq.{userId}&organization_id=eq.{organizationId}");
+            
+            if (profile == null)
+            {
+                _logger.LogWarning("User profile not found");
+                throw new NotFoundException($"User profile not found for user {userId}");
+            }
+            
+            _logger.LogInformation("User profile retrieved successfully");
+            return MapToDto(profile);
+        }
+        catch (Exception ex) when (!(ex is NotFoundException))
+        {
+            _logger.LogError(ex, "Error retrieving user profile");
+            throw;
+        }
+    }
+    ```
+```
+
+## Configuration Management
+
+```yaml
+configuration_management:
+  strongly_typed_config:
+    - id: "options_pattern"
+      rule: "Use Options pattern for configuration"
+      example: "Configure<SupabaseOptions>(configuration.GetSection(\"Supabase\"))"
+    
+    - id: "config_classes"
+      rule: "Create configuration classes"
+      example: "SupabaseOptions, JwtOptions, DatabaseOptions"
+    
+    - id: "validation"
+      rule: "Validate configuration at startup"
+      example: "Use data annotations or custom validation"
+
+  environment_management:
+    - id: "environment_variables"
+      rule: "Use environment variables for secrets"
+      example: "Store connection strings, keys in environment"
+    
+    - id: "appsettings_hierarchy"
+      rule: "Use appsettings hierarchy"
+      example: "appsettings.json, appsettings.Development.json"
+    
+    - id: "no_secrets_in_code"
+      rule: "Never hardcode secrets"
+      example: "All secrets via configuration or key vault"
+
+  examples: |
+    ```csharp
+    // ✅ Good configuration pattern
+    public class SupabaseOptions
+    {
+        public const string SectionName = "Supabase";
+        
+        [Required]
+        public string Url { get; set; } = string.Empty;
+        
+        [Required]
+        public string AnonKey { get; set; } = string.Empty;
+        
+        public string ServiceRoleKey { get; set; } = string.Empty;
+        public string JwtSecret { get; set; } = string.Empty;
+    }
+
+    // Registration
+    builder.Services.Configure<SupabaseOptions>(
+        builder.Configuration.GetSection(SupabaseOptions.SectionName));
+
+    // Usage
+    public class UserProfileService
+    {
+        private readonly SupabaseOptions _supabaseOptions;
+        
+        public UserProfileService(IOptions<SupabaseOptions> supabaseOptions)
+        {
+            _supabaseOptions = supabaseOptions.Value;
+        }
+    }
+    ```
+```

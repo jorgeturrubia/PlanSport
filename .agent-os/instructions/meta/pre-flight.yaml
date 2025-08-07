@@ -1,0 +1,148 @@
+---
+description: Common Pre-Flight Steps for Agent OS Instructions
+version: 2.0
+encoding: UTF-8
+strict_mode: true
+---
+
+# Pre-Flight Rules
+
+```yaml
+meta:
+  name: "Pre-Flight Checks"
+  purpose: "Establish standards for all Agent OS operations"
+  version: 2.0
+  updated: "2025-08-06"
+```
+
+## Agent OS YAML Format
+
+```yaml
+format_rules:
+  structure:
+    - All Agent OS instructions are now in YAML format
+    - Steps are defined with explicit IDs and types
+    - Validation is explicitly defined for each step
+    - Conditions use structured YAML syntax
+    - Templates reference external YAML files
+  
+  naming:
+    step_ids: "snake_case"
+    variables: "snake_case"
+    files: "kebab-case"
+    directories: "kebab-case"
+  
+  documentation:
+    flow_diagrams: "mermaid"
+    checkpoints: "required"
+    logging: "verbose"
+```
+
+## Subagent Usage
+
+```yaml
+subagent_usage:
+  invocation_format: |
+    ```invoke-agent
+    agent: {agent_name}
+    action: {action_name}
+    params:
+      param1: "value1"
+      param2: "value2"
+    ```
+  
+  available_agents:
+    - name: "context-fetcher"
+      purpose: "Read files from context"
+      documentation: "claude-code/agents/context-fetcher.md"
+    
+    - name: "date-checker"
+      purpose: "Get current date in specified format"
+      documentation: "claude-code/agents/date-checker.md"
+    
+    - name: "file-creator"
+      purpose: "Create and validate files"
+      documentation: "claude-code/agents/file-creator.md"
+```
+
+## Process Flow
+
+```yaml
+process_rules:
+  - Follow structured step definitions in order
+  - Execute conditions as defined in YAML
+  - Use templates exactly as specified
+  - Apply formatting rules consistently
+  - Respect validation constraints
+  - Handle errors according to error handling rules
+```
+
+## Conditional Logic
+
+```yaml
+conditional_example:
+  - id: example_conditional
+    name: "Example Conditional"
+    type: conditional
+    conditions:
+      - check: some_condition
+        if_true:
+          action: do_something
+          params:
+            param1: "value1"
+        if_false:
+          action: do_alternative
+          params:
+            param1: "value2"
+```
+
+## File References
+
+```yaml
+file_reference_rules:
+  - All file paths use relative references from project root
+  - Use `.agent-os/` prefix for Agent OS files
+  - Follow YAML reference conventions
+  - Use variables in paths with {variable_name} syntax
+```
+
+## Important Changes
+
+```yaml
+critical_changes:
+  - id: "no_more_xml"
+    description: "The system no longer uses XML tags or attributes"
+    severity: "critical"
+  
+  - id: "yaml_format"
+    description: "All instructions are in structured YAML format"
+    severity: "major"
+  
+  - id: "clear_structure"
+    description: "Steps, conditions, and templates are clearly defined"
+    severity: "major"
+  
+  - id: "subagent_integration"
+    description: "Subagent usage is explicitly documented"
+    severity: "major"
+```
+
+## Validation System
+
+```yaml
+validation_system:
+  pre_execution:
+    - Check file existence
+    - Verify permissions
+    - Validate dependencies
+  
+  step_execution:
+    - Validate inputs
+    - Check conditions
+    - Verify outputs
+  
+  post_execution:
+    - Verify all files created
+    - Check content validity
+    - Ensure no placeholders remain
+```

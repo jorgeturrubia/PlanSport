@@ -109,8 +109,7 @@ artifacts/
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
 
-# Agent OS directory (if you want to exclude it)
-.agent-os/
+# Agent OS directory is now included in the repository
 
 # Environment variables
 .env

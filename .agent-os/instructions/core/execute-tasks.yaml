@@ -1,0 +1,433 @@
+---
+description: Rules to initiate execution of a set of tasks using Agent OS
+version: 2.0
+encoding: UTF-8
+strict_mode: true
+---
+
+# Task Execution Rules
+
+```yaml
+command:
+  name: execute-tasks
+  version: 2.0
+  description: "Initiate execution of one or more tasks for a given spec."
+```
+
+## 📋 Definición de Pasos Estructurada
+
+```yaml
+steps:
+  - id: task_assignment
+    name: "Task Assignment"
+    type: input
+    required_fields:
+      - spec_path: 
+          type: string
+          prompt: "¿Cuál es la ruta del archivo spec.md?"
+      - specific_tasks:
+          type: array
+          required: false
+          prompt: "¿Qué tareas específicas quieres ejecutar? (deja en blanco para la siguiente pendiente)"
+    
+    task_selection:
+      - explicit: "User specifies exact task(s)"
+      - implicit: "Find next uncompleted task in tasks.md"
+    
+    actions:
+      - "Identify task(s) to execute"
+      - "Default to next uncompleted parent task if not specified"
+      - "Confirm task selection with user"
+    
+    output_variables:
+      - assigned_tasks
+      - spec_folder
+    
+  - id: context_analysis
+    name: "Context Analysis"
+    type: execute
+    commands:
+      - cmd: "invoke_subagent context-fetcher"
+        params:
+          action: "read"
+          file: "tasks.md"
+          path: "{spec_folder}"
+    
+    conditional_loads:
+      - file: ".agent-os/product/mission-lite.md"
+        condition: "not_in_context"
+        request: "Get product pitch from mission-lite.md"
+      
+      - file: "{spec_folder}/spec-lite.md"
+        condition: "not_in_context"
+        request: "Get spec summary from spec-lite.md"
+      
+      - file: "{spec_folder}/sub-specs/technical-spec.md"
+        condition: "not_in_context"
+        request: "Get technical approach from technical-spec.md"
+    
+    essential_docs:
+      - "tasks.md for task breakdown"
+    
+    conditional_docs:
+      - "mission-lite.md for product alignment"
+      - "spec-lite.md for feature summary"
+      - "technical-spec.md for implementation details"
+    
+  - id: check_dev_server
+    name: "Check for Development Server"
+    type: conditional
+    conditions:
+      - check: server_running
+        if_true:
+          action: ask_user
+          prompt: |
+            A development server is currently running.
+            Should I shut it down before proceeding? (yes/no)
+          if_yes:
+            action: shutdown_server
+          if_no:
+            action: continue
+        if_false:
+          action: skip_to
+          target: git_branch_management
+    
+  - id: git_branch_management
+    name: "Git Branch Management"
+    type: execute
+    commands:
+      - cmd: "invoke_subagent git-workflow"
+        params:
+          action: "manage_branch"
+          spec_folder: "{spec_folder}"
+    
+    branch_naming:
+      source: "Spec folder name"
+      format: "Exclude date prefix"
+      example: |
+        Folder: `2025-03-15-password-reset`
+        Branch: `password-reset`
+    
+  - id: task_execution_loop
+    name: "Task Execution Loop"
+    type: loop
+    loop_over: "assigned_tasks"
+    execution_flow: |
+      # LOAD .agent-os/instructions/core/execute-task.md ONCE
+      
+      for parent_task in "${ASSIGNED_TASKS[@]}"; do
+        echo "Executing task: $parent_task"
+        # EXECUTE instructions from execute-task.md with:
+        #   - parent_task_number
+        #   - all associated subtasks
+        # WAIT for task completion
+        # UPDATE tasks.md status
+      done
+    
+    continue_conditions:
+      - "More unfinished parent tasks exist"
+      - "User has not requested stop"
+    
+    exit_conditions:
+      - "All assigned tasks marked complete"
+      - "User requests early termination"
+      - "Blocking issue prevents continuation"
+    
+    task_status_check: |
+      # AFTER each task execution:
+      check_remaining_tasks() {
+        # CHECK tasks.md for remaining tasks
+        if [ "$ALL_ASSIGNED_TASKS_COMPLETE" == "true" ]; then
+          echo "PROCEED to next step"
+        else
+          echo "CONTINUE with next task"
+        fi
+      }
+    
+    actions:
+      - "Load execute-task.md instructions once at start"
+      - "Reuse same instructions for each parent task iteration"
+      - "Loop through all assigned parent tasks"
+      - "Update task status after each completion"
+      - "Verify all tasks complete before proceeding"
+      - "Handle blocking issues appropriately"
+    
+  - id: run_all_tests
+    name: "Run All Tests"
+    type: execute
+    commands:
+      - cmd: "invoke_subagent test-runner"
+        params:
+          action: "run_full_suite"
+    
+    test_execution:
+      order:
+        - "Run entire test suite"
+        - "Fix any failures"
+      requirement: "100% pass rate"
+    
+    failure_handling:
+      action: "Troubleshoot and fix"
+      priority: "Before proceeding"
+    
+  - id: git_workflow
+    name: "Git Workflow"
+    type: execute
+    commands:
+      - cmd: "invoke_subagent git-workflow"
+        params:
+          action: "complete_workflow"
+          spec_name: "{spec_name}"
+          spec_folder: "{spec_folder}"
+          changes: "all_modified_files"
+          target: "main"
+          description: "{summary_of_implemented_features}"
+    
+    commit_process:
+      commit:
+        message: "Descriptive summary of changes"
+        format: "Conventional commits if applicable"
+      push:
+        target: "Spec branch"
+        remote: "origin"
+      pull_request:
+        title: "Descriptive PR title"
+        description: "Functionality recap"
+    
+    output_variables:
+      - pr_url
+    
+  - id: roadmap_progress_check
+    name: "Roadmap Progress Check"
+    type: conditional
+    conditions:
+      - check: tasks_potentially_complete_roadmap_item
+        if_true:
+          action: check_roadmap
+          conditional_loading: |
+            if [[ "$ROADMAP_IN_CONTEXT" != "true" ]]; then
+              echo "LOAD .agent-os/product/roadmap.md"
+            else
+              echo "SKIP loading (use existing context)"
+            fi
+          roadmap_criteria:
+            update_when:
+              - "Spec fully implements roadmap feature"
+              - "All related tasks completed"
+              - "Tests passing"
+            caution: "Only mark complete if absolutely certain"
+        if_false:
+          action: skip_to
+          target: task_completion_notification
+    
+    actions:
+      - "First evaluate if roadmap check is needed"
+      - "Skip if tasks clearly don't complete roadmap items"
+      - "Check if roadmap.md already in context"
+      - "Load only if needed and not in context"
+      - "Evaluate if current spec completes roadmap goals"
+      - "Update mark roadmap items complete if applicable"
+      - "Verify certainty before marking complete"
+    
+  - id: task_completion_notification
+    name: "Task Completion Notification"
+    type: execute
+    notification_command: |
+      # macOS
+      afplay /System/Library/Sounds/Glass.aiff
+      
+      # Windows (alternative)
+      # powershell -c "[console]::beep(800,200)"
+      
+      # Linux (alternative)
+      # paplay /usr/share/sounds/alsa/Front_Left.wav 2>/dev/null || echo -e '\a'
+    
+    actions:
+      - "Play completion sound"
+      - "Alert user that task is complete"
+    
+  - id: completion_summary
+    name: "Completion Summary"
+    type: template
+    summary_template: |
+      ## ✅ What's been done
+      
+      1. **{feature_1}** - {description_1}
+      2. **{feature_2}** - {description_2}
+      
+      ## ⚠️ Issues encountered
+      
+      {only_if_applicable}
+      - **{issue_1}** - {description_and_reason}
+      
+      ## 👀 Ready to test in browser
+      
+      {only_if_applicable}
+      1. {step_1_to_test}
+      2. {step_2_to_test}
+      
+      ## 📦 Pull Request
+      
+      View PR: {github_pr_url}
+    
+    summary_sections:
+      required:
+        - "Functionality recap"
+        - "Pull request info"
+      conditional:
+        - "Issues encountered (if any)"
+        - "Testing instructions (if testable in browser)"
+    
+    actions:
+      - "Create comprehensive summary"
+      - "Include all required sections"
+      - "Add conditional sections if applicable"
+      - "Format with emoji headers for scannability"
+```
+
+## 🔐 Sistema de Manejo de Errores
+
+```yaml
+error_handling:
+  protocols:
+    blocking_issues:
+      - "Document in tasks.md"
+      - "Mark with ⚠️ emoji"
+      - "Include in summary"
+    
+    test_failures:
+      - "Fix before proceeding"
+      - "Never commit broken tests"
+    
+    technical_roadblocks:
+      - "Attempt 3 approaches"
+      - "Document if unresolved"
+      - "Seek user input"
+```
+
+## 🤖 Invocación Explícita de Subagentes
+
+```yaml
+subagent_calls:
+  context_fetcher:
+    trigger: "during_context_analysis"
+    syntax: |
+      ```invoke-agent
+      agent: context-fetcher
+      action: read
+      params:
+        file: "{target_file}"
+        section: "{optional_section}"
+        return: "content_only"
+      ```
+  
+  git_workflow:
+    trigger: "during_git_operations"
+    syntax: |
+      ```invoke-agent
+      agent: git-workflow
+      action: {action_name}
+      params:
+        spec_folder: "{spec_folder}"
+        branch_name: "{branch_name}"
+      ```
+  
+  test_runner:
+    trigger: "before_commit"
+    syntax: |
+      ```invoke-agent
+      agent: test-runner
+      action: run_full_suite
+      params:
+        fix_failures: true
+      ```
+```
+
+## 🎯 Puntos de Control Obligatorios
+
+```yaml
+checkpoints:
+  - id: "CP1"
+    after_step: "task_assignment"
+    validation_prompt: |
+      ✋ CHECKPOINT #1: Validación de Tareas
+      
+      CONFIRMA antes de continuar:
+      ✅ Tareas seleccionadas: {assigned_tasks}
+      ✅ Especificación: {spec_path}
+      
+      ¿Son correctas estas tareas para ejecutar? (sí/no)
+    on_no: "repeat_step"
+  
+  - id: "CP2"
+    after_step: "git_branch_management"
+    validation_prompt: |
+      ✋ CHECKPOINT #2: Gestión de Ramas Git
+      
+      VERIFICA:
+      ✅ Rama creada/seleccionada: {branch_name}
+      ✅ Basada en spec: {spec_folder}
+      
+      ¿Es correcta esta rama para trabajar? (sí/no)
+    on_no: "repeat_step"
+```
+
+## 📊 Sistema de Logging y Debug
+
+```yaml
+logging:
+  level: "verbose"
+  format: |
+    [STEP {step_id}] {step_name}
+    Status: {status}
+    Duration: {duration}ms
+    Output: {output_summary}
+    
+  on_error: |
+    ❌ ERROR en Paso {step_id}
+    Descripción: {error_message}
+    Acción sugerida: {suggested_action}
+    
+    ¿Reintentar? (sí/no/abortar)
+```
+
+## 🔄 Flujo de Ejecución Visual
+
+```mermaid
+graph TD
+    A[Inicio] --> B[Asignación de Tareas]
+    B --> C[Checkpoint #1]
+    C --> D[Análisis de Contexto]
+    D --> E{¿Servidor Dev?}
+    E -->|Sí| F[Preguntar al Usuario]
+    F --> G[Gestión de Ramas Git]
+    E -->|No| G
+    G --> H[Checkpoint #2]
+    H --> I[Loop de Ejecución de Tareas]
+    I --> J{¿Todas Completas?}
+    J -->|No| I
+    J -->|Sí| K[Ejecutar Tests]
+    K --> L{¿Tests OK?}
+    L -->|No| M[Corregir]
+    M --> K
+    L -->|Sí| N[Flujo Git]
+    N --> O{¿Completó Roadmap?}
+    O -->|Sí| P[Actualizar Roadmap]
+    O -->|No| Q[Notificación]
+    P --> Q
+    Q --> R[Resumen Final]
+```
+
+## Final Checklist
+
+```yaml
+final_checklist:
+  verify:
+    - "Task implementation complete"
+    - "All tests passing"
+    - "tasks.md updated"
+    - "Code committed and pushed"
+    - "Pull request created"
+    - "Roadmap checked/updated"
+    - "Summary provided to user"
+```

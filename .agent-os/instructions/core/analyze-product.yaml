@@ -1,0 +1,379 @@
+---
+description: Analyze Current Product & Install Agent OS
+version: 2.0
+encoding: UTF-8
+strict_mode: true
+---
+
+# Analyze Current Product & Install Agent OS
+
+```yaml
+command:
+  name: analyze-product
+  version: 2.0
+  description: "Install Agent OS into an existing codebase, analyze current product state and progress."
+```
+
+## 📋 Definición de Pasos Estructurada
+
+```yaml
+steps:
+  - id: analyze_codebase
+    name: "Analyze Existing Codebase"
+    type: execute
+    analysis_areas:
+      project_structure:
+        - "Directory organization"
+        - "File naming patterns"
+        - "Module structure"
+        - "Build configuration"
+      
+      technology_stack:
+        - "Frameworks in use"
+        - "Dependencies (package.json, Gemfile, requirements.txt, etc.)"
+        - "Database systems"
+        - "Infrastructure configuration"
+      
+      implementation_progress:
+        - "Completed features"
+        - "Work in progress"
+        - "Authentication/authorization state"
+        - "API endpoints"
+        - "Database schema"
+      
+      code_patterns:
+        - "Coding style in use"
+        - "Naming conventions"
+        - "File organization patterns"
+        - "Testing approach"
+    
+    actions:
+      - "Thoroughly analyze the existing codebase"
+      - "Document current technologies, features, and patterns"
+      - "Identify architectural decisions already made"
+      - "Note development progress and completed work"
+    
+    output_variables:
+      - observed_product_type
+      - detected_technologies
+      - implemented_features
+      - code_patterns
+    
+  - id: gather_product_context
+    name: "Gather Product Context"
+    type: input
+    required_fields:
+      - product_vision: 
+          type: string
+          prompt: "What problem does this solve? Who are the target users?"
+      - current_state:
+          type: string
+          prompt: "Are there features I should know about that aren't obvious from the code?"
+      - roadmap:
+          type: string
+          prompt: "What features are planned next? Any major refactoring planned?"
+      - decisions:
+          type: string
+          prompt: "Are there important technical or product decisions I should document?"
+      - team_preferences:
+          type: string
+          prompt: "Any coding standards or practices the team follows that I should capture?"
+    
+    context_intro: |
+      Based on my analysis of your codebase, I can see you're building {observed_product_type}.
+      
+      To properly set up Agent OS, I need to understand:
+    
+    actions:
+      - "Ask user for product context"
+      - "Combine user input with codebase analysis"
+      - "Prepare information for plan-product.md execution"
+    
+    validation:
+      on_missing: BLOCK
+      message: "I need this information to properly set up Agent OS for your project."
+    
+  - id: execute_plan_product
+    name: "Execute Plan-Product with Context"
+    type: execute
+    commands:
+      - cmd: "invoke_subagent plan-product"
+        validate: execution_success
+    
+    execution_parameters:
+      main_idea: "{derived_from_analysis_and_user_input}"
+      key_features: "{identified_implemented_and_planned_features}"
+      target_users: "{from_user_context}"
+      tech_stack: "{detected_from_codebase}"
+    
+    execution_prompt: |
+      I'm installing Agent OS into an existing product. Here's what I've gathered:
+      
+      **Main Idea**: {summary_from_analysis_and_context}
+      
+      **Key Features**:
+      - Already Implemented: {list_from_analysis}
+      - Planned: {list_from_user}
+      
+      **Target Users**: {from_user_response}
+      
+      **Tech Stack**: {detected_stack_with_versions}
+    
+    actions:
+      - "Execute plan-product.md with gathered information"
+      - "Provide all context as structured input"
+      - "Allow plan-product.md to create .agent-os/product/ structure"
+    
+  - id: customize_documentation
+    name: "Customize Generated Documentation"
+    type: execute
+    customization_tasks:
+      roadmap_adjustment:
+        - "Mark completed features as done"
+        - "Move implemented items to \"Phase 0: Already Completed\""
+        - "Adjust future phases based on actual progress"
+      
+      tech_stack_verification:
+        - "Verify detected versions are correct"
+        - "Add any missing infrastructure details"
+        - "Document actual deployment setup"
+      
+      decisions_documentation:
+        - "Add historical decisions that shaped current architecture"
+        - "Document why certain technologies were chosen"
+        - "Capture any pivots or major changes"
+    
+    roadmap_template: |
+      ## Phase 0: Already Completed
+      
+      The following features have been implemented:
+      
+      - [x] {feature_1} - {description_from_code}
+      - [x] {feature_2} - {description_from_code}
+      - [x] {feature_3} - {description_from_code}
+      
+      ## Phase 1: Current Development
+      
+      - [ ] {in_progress_feature} - {description}
+      
+      [CONTINUE_WITH_STANDARD_PHASES]
+    
+  - id: final_verification
+    name: "Final Verification and Summary"
+    type: execute
+    verification_checklist:
+      - ".agent-os/product/ directory created"
+      - "All product documentation reflects actual codebase"
+      - "Roadmap shows completed and planned features accurately"
+      - "Tech stack matches installed dependencies"
+    
+    summary_template: |
+      ## ✅ Agent OS Successfully Installed
+      
+      I've analyzed your {product_type} codebase and set up Agent OS with documentation that reflects your actual implementation.
+      
+      ### What I Found
+      
+      - **Tech Stack**: {summary_of_detected_stack}
+      - **Completed Features**: {count} features already implemented
+      - **Code Style**: {detected_patterns}
+      - **Current Phase**: {identified_development_stage}
+      
+      ### What Was Created
+      
+      - ✓ Product documentation in `.agent-os/product/`
+      - ✓ Roadmap with completed work in Phase 0
+      - ✓ Tech stack reflecting actual dependencies
+      
+      ### Next Steps
+      
+      1. Review the generated documentation in `.agent-os/product/`
+      2. Make any necessary adjustments to reflect your vision
+      3. See the Agent OS README for usage instructions: https://github.com/buildermethods/agent-os
+      4. Start using Agent OS for your next feature:
+         ```bash
+         cat .agent-os/instructions/core/create-spec.md
+         ```
+      
+      Your codebase is now Agent OS-enabled! 🚀
+```
+
+## 🔐 Sistema de Validación Mejorado
+
+```yaml
+validations:
+  pre_execution:
+    - name: "Verificar entorno"
+      checks:
+        - existing_codebase: "."
+        - write_permissions: "."
+        - no_existing_agentOs: ".agent-os/"
+  
+  post_execution:
+    - name: "Verificar instalación"
+      checks:
+        - directory_exists: ".agent-os/product/"
+        - all_files_created:
+            - ".agent-os/product/mission.md"
+            - ".agent-os/product/mission-lite.md"
+            - ".agent-os/product/tech-stack.md"
+            - ".agent-os/product/roadmap.md"
+            - ".agent-os/product/decisions.md"
+        - no_remaining_placeholders: true
+        - valid_markdown: true
+```
+
+## 🤖 Invocación Explícita de Subagentes
+
+```yaml
+subagent_calls:
+  context_fetcher:
+    trigger: "when_needed"
+    syntax: |
+      ```invoke-agent
+      agent: context-fetcher
+      action: read
+      params:
+        file: "{target_file}"
+        section: "{optional_section}"
+        return: "content_only"
+      ```
+  
+  plan_product:
+    trigger: "after_analysis"
+    syntax: |
+      ```invoke-agent
+      agent: plan-product
+      action: execute
+      params:
+        main_idea: "{derived_main_idea}"
+        features: "{derived_features}"
+        target_users: "{derived_users}"
+        tech_stack: "{derived_tech_stack}"
+      ```
+```
+
+## 🎯 Puntos de Control Obligatorios
+
+```yaml
+checkpoints:
+  - id: "CP1"
+    after_step: "analyze_codebase"
+    validation_prompt: |
+      ✋ CHECKPOINT #1: Validación de Análisis
+      
+      CONFIRMA antes de continuar:
+      ✅ Tipo de producto detectado: {observed_product_type}
+      ✅ Tecnologías detectadas: {detected_technologies}
+      ✅ Características implementadas: {implemented_features}
+      
+      ¿Es correcto este análisis? (sí/no)
+    on_no: "repeat_step"
+  
+  - id: "CP2"
+    after_step: "gather_product_context"
+    validation_prompt: |
+      ✋ CHECKPOINT #2: Contexto del Producto
+      
+      VERIFICA:
+      ✅ Visión del producto: {product_vision}
+      ✅ Estado actual: {current_state}
+      ✅ Roadmap: {roadmap}
+      
+      ¿Es correcta esta información? (sí/no)
+    on_no: "repeat_step"
+```
+
+## 📊 Sistema de Manejo de Errores
+
+```yaml
+error_handling:
+  scenarios:
+    - id: "no_clear_structure"
+      condition: "Cannot determine project type or structure"
+      action: "Ask user for clarification about project"
+      prompt: |
+        I'm having trouble determining your project structure. Could you clarify:
+        1. What type of application is this?
+        2. What's the primary programming language?
+        3. What framework(s) are you using?
+    
+    - id: "conflicting_patterns"
+      condition: "Multiple coding styles detected"
+      action: "Ask user which pattern to document"
+      prompt: |
+        I've detected multiple coding styles in your project:
+        {detected_patterns}
+        
+        Which style should I document as the standard for future development?
+    
+    - id: "missing_dependencies"
+      condition: "Cannot determine full tech stack"
+      action: "List detected technologies and ask for missing pieces"
+      prompt: |
+        I've identified these technologies in your project:
+        {detected_technologies}
+        
+        Are there any other key technologies I should document?
+```
+
+## 🔄 Flujo de Ejecución Visual
+
+```mermaid
+graph TD
+    A[Inicio] --> B[Análisis del Codebase]
+    B --> C[Checkpoint #1]
+    C --> D[Recopilar Contexto del Producto]
+    D --> E[Checkpoint #2]
+    E --> F[Ejecutar Plan-Product]
+    F --> G[Personalizar Documentación]
+    G --> H[Verificación Final]
+    H --> I{¿Validación OK?}
+    I -->|No| J[Corregir Problemas]
+    J --> H
+    I -->|Sí| K[Resumen y Siguientes Pasos]
+```
+
+## 💡 Mejoras Adicionales
+
+```yaml
+improvements:
+  code_analysis:
+    - name: "Detección Inteligente"
+      description: "Utiliza patrones para detectar automáticamente frameworks y tecnologías"
+    
+    - name: "Análisis de Dependencias"
+      description: "Extrae versiones exactas de package.json, Gemfile, etc."
+    
+    - name: "Mapeo de Estructura"
+      description: "Genera un mapa visual de la estructura del proyecto"
+  
+  documentation_enhancements:
+    - name: "Marcado de Progreso"
+      description: "Marca claramente características ya implementadas vs. planeadas"
+    
+    - name: "Integración de Historial"
+      description: "Incorpora decisiones históricas en el registro de decisiones"
+    
+    - name: "Ajuste de Roadmap"
+      description: "Ajusta el roadmap basado en el progreso actual del proyecto"
+```
+
+## Execution Summary
+
+```yaml
+final_checklist:
+  verify:
+    - "Codebase analyzed thoroughly"
+    - "User context gathered"
+    - "plan-product.md executed with proper context"
+    - "Documentation customized for existing product"
+    - "Team can adopt Agent OS workflow"
+
+execution_order:
+  - "Analyze the existing codebase structure and technologies"
+  - "Gather additional context from the user"
+  - "Execute plan-product with the gathered information"
+  - "Customize documentation to match actual implementation"
+  - "Verify installation and provide summary"
+```

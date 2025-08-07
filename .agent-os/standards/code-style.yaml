@@ -1,0 +1,347 @@
+---
+title: Code Style Guide
+description: Global code style rules for Agent OS projects
+version: 2.0
+strict_mode: true
+---
+
+# Code Style Guide
+
+```yaml
+meta:
+  context: "Global code style rules for Agent OS projects"
+  version: 2.0
+  updated: "2025-08-07"
+```
+
+## General Formatting Rules
+
+```yaml
+general_formatting:
+  context_check:
+    implementation: |
+      # Check if General Formatting section already read in current context
+      if [[ "$GENERAL_FORMATTING_IN_CONTEXT" == "true" ]]; then
+        echo "SKIP: Re-reading this section"
+        echo "NOTE: Using General Formatting rules already in context"
+      else
+        echo "READ: The following formatting rules"
+      fi
+  
+  indentation:
+    - "Use 2 spaces for indentation (never tabs)"
+    - "Maintain consistent indentation throughout files"
+    - "Align nested structures for readability"
+  
+  naming_conventions:
+    - type: "Methods and Variables"
+      style: "snake_case"
+      examples: ["user_profile", "calculate_total"]
+    
+    - type: "Classes and Modules"
+      style: "PascalCase"
+      examples: ["UserProfile", "PaymentProcessor"]
+    
+    - type: "Constants"
+      style: "UPPER_SNAKE_CASE"
+      examples: ["MAX_RETRY_COUNT"]
+  
+  string_formatting:
+    - "Use single quotes for strings: `'Hello World'`"
+    - "Use double quotes only when interpolation is needed"
+    - "Use template literals for multi-line strings or complex interpolation"
+  
+  code_comments:
+    - "Add brief comments above non-obvious business logic"
+    - "Document complex algorithms or calculations"
+    - "Explain the \"why\" behind implementation choices"
+    - "Never remove existing comments unless removing the associated code"
+    - "Update comments when modifying code to maintain accuracy"
+    - "Keep comments concise and relevant"
+```
+
+## Language-Specific Style Guides
+
+```yaml
+html_css_tailwind_style:
+  context_check:
+    implementation: |
+      # Check if current task involves HTML, CSS, or TailwindCSS
+      if [[ "$TASK_INVOLVES_HTML_CSS_TAILWIND" == "true" ]]; then
+        if [[ "$CSS_TAILWIND_STYLE_IN_CONTEXT" == "true" ]]; then
+          echo "SKIP: Re-reading CSS/Tailwind style guide"
+          echo "NOTE: Using CSS/Tailwind style guide already in context"
+        else
+          echo "Loading CSS/Tailwind style guide..."
+          
+          # Context fetcher strategy
+          if [[ "$CURRENT_AGENT" == "claude-code" && "$CONTEXT_FETCHER_EXISTS" == "true" ]]; then
+            echo "USE: context-fetcher agent"
+            echo "REQUEST: Get CSS and TailwindCSS rules from code-style/css-tailwind-style.md"
+            echo "PROCESS: Returned style rules for SportAgentoos project"
+          else
+            echo "READ: standards/code-style/css-tailwind-style.md"
+            echo "This file contains:"
+            echo "- Complete TailwindCSS v4 style guide with OKLCH theming"
+            echo "- SportAgentoos-specific color schemes and components"
+            echo "- Class ordering conventions and best practices"
+            echo "- Component patterns for sports applications"
+            echo "- Dark mode and responsive design guidelines"
+          fi
+        fi
+      else
+        echo "SKIP: CSS/Tailwind style guide not relevant to current task"
+      fi
+  
+  reference_file: "standards/code-style/css-tailwind-style.md"
+  description: "Complete CSS and TailwindCSS v4 style guide for SportAgentoos project"
+  
+  key_sections:
+    - "Sistema de Theming con OKLCH"
+    - "Configuración Principal - styles.scss" 
+    - "tailwind.config.ts Actualizado"
+    - "Estructura de Clases CSS (orden de clases)"
+    - "Componentes Reutilizables con Sistema de Theming"
+    - "Patrones de Diseño Específicos"
+    - "Best Practices para CSS/Tailwind"
+  
+  invocation:
+    syntax: |
+      ```invoke-agent
+      agent: context-fetcher
+      action: read
+      params:
+        file: "standards/code-style/css-tailwind-style.md"
+        return: "content_only"
+      ```
+```
+
+```yaml
+angular_typescript_style:
+  context_check:
+    implementation: |
+      # Check if current task involves Angular/TypeScript development
+      if [[ "$TASK_INVOLVES_ANGULAR" == "true" || "$TASK_INVOLVES_TYPESCRIPT" == "true" ]]; then
+        if [[ "$ANGULAR_BEST_PRACTICES_IN_CONTEXT" == "true" ]]; then
+          echo "SKIP: Re-reading Angular best practices"
+          echo "NOTE: Using Angular best practices already in context"
+        else
+          echo "Loading Angular/TypeScript best practices..."
+          
+          # Use MCP tool to get Angular best practices
+          echo "USE: get_best_practices MCP tool"
+          echo "This will provide:"
+          echo "- Angular 20+ standalone components best practices"
+          echo "- TypeScript strict typing guidelines"
+          echo "- Modern Angular patterns (signals, inject())"
+          echo "- Template syntax (@if, @for instead of *ngIf, *ngFor)"
+          echo "- Component architecture and state management"
+        fi
+      else
+        echo "SKIP: Angular/TypeScript best practices not relevant to current task"
+      fi
+  
+  mcp_tool: "get_best_practices"
+  description: "Angular 20+ best practices with standalone components and modern patterns"
+  
+  key_practices:
+    - "Always use standalone components (no NgModules)"
+    - "Use input() and output() functions instead of decorators"
+    - "Use modern control flow (@if, @for, @switch)"
+    - "Use inject() function instead of constructor injection"
+    - "Use signals for state management and computed() for derived state"
+    - "Set changeDetection: ChangeDetectionStrategy.OnPush"
+  
+  invocation:
+    syntax: |
+      Use the get_best_practices MCP tool directly:
+      ```
+      get_best_practices
+      ```
+```
+
+```yaml
+dotnet_csharp_style:
+  context_check:
+    implementation: |
+      # Check if current task involves .NET/C# development
+      if [[ "$TASK_INVOLVES_DOTNET" == "true" || "$TASK_INVOLVES_CSHARP" == "true" ]]; then
+        if [[ "$DOTNET_STYLE_IN_CONTEXT" == "true" ]]; then
+          echo "SKIP: Re-reading .NET/C# style guides"
+          echo "NOTE: Using .NET/C# style guides already in context"
+        else
+          echo "Loading .NET/C# style guides..."
+          
+          # Reference Entity Framework setup guide
+          echo "Available guides:"
+          echo "- standards/backend/entityframework-setup-guide.md"
+          echo "- Entity Framework Core 9.0.8 + PostgreSQL patterns"
+          echo "- Dependency injection and configuration patterns"
+          echo "- ASP.NET Core 8.0 API best practices"
+          echo "- Health check endpoint implementations"
+        fi
+      else
+        echo "SKIP: .NET/C# style guides not relevant to current task"
+      fi
+  
+  reference_files:
+    - "standards/backend/entityframework-setup-guide.md"
+  description: "Entity Framework Core and ASP.NET Core patterns for SportPlanner API"
+  
+  key_patterns:
+    - "Use async/await patterns throughout"
+    - "Implement proper dependency injection in Program.cs"
+    - "Use Entity Framework with PostgreSQL snake_case naming"
+    - "Configure health check endpoints for monitoring"
+    - "Enable detailed logging in development"
+    - "Use configuration classes for settings"
+  
+  invocation:
+    syntax: |
+      ```invoke-agent
+      agent: context-fetcher
+      action: read
+      params:
+        file: "standards/backend/entityframework-setup-guide.md"
+        return: "content_only"
+      ```
+```
+
+```yaml
+javascript_style:
+  context_check:
+    implementation: |
+      # Check if current task involves JavaScript
+      if [[ "$TASK_INVOLVES_JAVASCRIPT" == "true" ]]; then
+        if [[ "$JAVASCRIPT_STYLE_IN_CONTEXT" == "true" ]]; then
+          echo "SKIP: Re-reading this file"
+          echo "NOTE: Using JavaScript style guide already in context"
+        else
+          echo "Loading JavaScript style guide..."
+          
+          # Context fetcher strategy
+          if [[ "$CURRENT_AGENT" == "claude-code" && "$CONTEXT_FETCHER_EXISTS" == "true" ]]; then
+            echo "USE: context-fetcher agent"
+            echo "REQUEST: Get JavaScript style rules from code-style/javascript-style.yaml"
+            echo "PROCESS: Returned style rules"
+          else
+            echo "READ: standards/code-style/javascript-style.yaml"
+          fi
+        fi
+      else
+        echo "SKIP: JavaScript style guide not relevant to current task"
+      fi
+  
+  invocation:
+    syntax: |
+      ```invoke-agent
+      agent: context-fetcher
+      action: read
+      params:
+        file: "standards/code-style/javascript-style.yaml"
+        return: "content_only"
+      ```
+```
+
+## Code Structure
+
+```yaml
+code_structure:
+  file_organization:
+    - "Each file should have a single responsibility"
+    - "Group related functionality together"
+    - "Keep files under 300 lines where possible"
+    - "Order methods by importance, with public methods first"
+  
+  model_file_structure:
+    - "CRITICAL: One main entity model per file (Team, User, Organization, etc.)"
+    - "Never mix multiple entity classes in the same model file"
+    - "Related DTOs and interfaces can share the same file as the main entity"
+    - "If entity variations are needed, create separate files with descriptive names"
+    - "Examples:"
+    - "  ✅ Correct: team.model.ts (contains Team + CreateTeamRequest + UpdateTeamRequest)"
+    - "  ✅ Correct: team-blue.model.ts, team-red.model.ts (separate variations)"
+    - "  ❌ Wrong: team.model.ts containing Team, TeamBlue, TeamRed classes"
+    - "  ❌ Wrong: user.model.ts containing User, UserProfile, UserSettings entities"
+  
+  function_organization:
+    - "Keep functions focused on a single task"
+    - "Limit function length to under 30 lines where possible"
+    - "Use descriptive function names that indicate purpose"
+    - "Order parameters from required to optional"
+  
+  import_organization:
+    - "Group imports by type (standard library, external packages, internal modules)"
+    - "Order imports alphabetically within groups"
+    - "Remove unused imports"
+    - "Avoid wildcard imports"
+```
+
+## Error Handling
+
+```yaml
+error_handling:
+  guidelines:
+    - "Use try/catch blocks for error-prone operations"
+    - "Provide specific error messages with actionable information"
+    - "Log errors with sufficient context for debugging"
+    - "Handle errors at the appropriate level"
+    - "Never silently catch errors without proper handling"
+  
+  logging_practices:
+    - "Use appropriate log levels (debug, info, warning, error)"
+    - "Include relevant context in log messages"
+    - "Don't log sensitive information"
+    - "Structure logs for easy parsing and analysis"
+```
+
+## Code Quality Standards
+
+```yaml
+code_quality:
+  principles:
+    - id: "DRY"
+      name: "Don't Repeat Yourself"
+      description: "Avoid code duplication by extracting common functionality"
+    
+    - id: "SOLID"
+      name: "SOLID Principles"
+      description: "Follow Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion principles"
+    
+    - id: "KISS"
+      name: "Keep It Simple, Stupid"
+      description: "Prefer simple solutions over complex ones"
+    
+    - id: "YAGNI"
+      name: "You Ain't Gonna Need It"
+      description: "Don't implement features until they are actually needed"
+  
+  code_review_checklist:
+    - "Does the code follow style guidelines?"
+    - "Is the code readable and maintainable?"
+    - "Are edge cases handled appropriately?"
+    - "Is error handling implemented correctly?"
+    - "Are there appropriate tests?"
+    - "Is the code efficient and performant?"
+```
+
+## Language Selection Guide
+
+```yaml
+language_selection:
+  - type: "Backend APIs"
+    recommended: "C# with .NET"
+    alternatives: ["Node.js with TypeScript", "Python with FastAPI"]
+    
+  - type: "Frontend Web Applications"
+    recommended: "TypeScript with Angular"
+    alternatives: ["TypeScript with React", "TypeScript with Vue"]
+    
+  - type: "Data Processing"
+    recommended: "Python with Pandas/NumPy"
+    alternatives: ["C# with ML.NET", "TypeScript with TensorFlow.js"]
+    
+  - type: "DevOps Automation"
+    recommended: "PowerShell or Bash"
+    alternatives: ["Python", "TypeScript"]
+```

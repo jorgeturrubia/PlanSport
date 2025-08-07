@@ -1,0 +1,263 @@
+---
+title: CSS Style Guide
+description: CSS and TailwindCSS styling rules for Agent OS projects
+version: 2.0
+strict_mode: true
+---
+
+# CSS Style Guide
+
+```yaml
+meta:
+  context: "CSS and TailwindCSS styling rules for Agent OS projects"
+  version: 2.0
+  updated: "2025-08-06"
+```
+
+## Color System
+
+```yaml
+color_system:
+  description: "We use Tailwind CSS v4 with OKLCH color space for better color consistency and modern browser support."
+  
+  theme_configuration:
+    - "**Light Theme**: Default `:root` variables"
+    - "**Dark Theme**: `.dark` class modifier"
+    - "**Color Format**: OKLCH for all color values"
+    - "**Variable Naming**: Semantic naming (primary, secondary, accent, etc.)"
+  
+  css_custom_properties:
+    light_theme: |
+      ```css
+      :root {
+        /* Light theme colors */
+        --background: oklch(0.9842 0.0034 247.8575);
+        --foreground: oklch(0.2795 0.0368 260.0310);
+        --primary: oklch(0.5854 0.2041 277.1173);
+        --primary-foreground: oklch(1.0000 0 0);
+        --secondary: oklch(0.9276 0.0058 264.5313);
+        --accent: oklch(0.9299 0.0334 272.7879);
+        --destructive: oklch(0.6368 0.2078 25.3313);
+        --border: oklch(0.8717 0.0093 258.3382);
+        --input: oklch(0.8717 0.0093 258.3382);
+        --ring: oklch(0.5854 2041 277.1173);
+        
+        /* Typography */
+        --font-sans: Inter, sans-serif;
+        --font-serif: Merriweather, serif;
+        --font-mono: JetBrains Mono, monospace;
+        
+        /* Spacing and Layout */
+        --radius: 0.5rem;
+        --spacing: 0.25rem;
+      }
+      ```
+    
+    dark_theme: |
+      ```css
+      .dark {
+        /* Dark theme overrides */
+        --background: oklch(0.2077 0.0398 265.7549);
+        --foreground: oklch(0.9288 0.0126 255.5078);
+        --primary: oklch(0.6801 0.1583 276.9349);
+        --primary-foreground: oklch(0.2077 0.0398 265.7549);
+        --secondary: oklch(0.3351 0.0331 260.9120);
+        --border: oklch(0.4461 0.0263 256.8018);
+        --input: oklch(0.4461 0.0263 256.8018);
+      }
+      ```
+  
+  tailwind_integration: |
+    ```css
+    @theme inline {
+      --color-background: var(--background);
+      --color-foreground: var(--foreground);
+      --color-primary: var(--primary);
+      --color-primary-foreground: var(--primary-foreground);
+      --color-secondary: var(--secondary);
+      --color-border: var(--border);
+      --color-input: var(--input);
+      --color-ring: var(--ring);
+    }
+    ```
+```
+
+## Tailwind CSS Usage
+
+```yaml
+tailwind_usage:
+  multi_line_classes:
+    - "Use multi-line formatting for Tailwind CSS classes in HTML and Angular templates"
+    - "Each responsive breakpoint on its own line, ordered from smallest to largest"
+    - "Align classes vertically for readability"
+    - "Group interactive states (hover, focus) on separate lines"
+    - "Custom CSS classes at the beginning of the first line"
+    - "Use semantic color classes (bg-background, text-foreground, etc.)"
+  
+  responsive_breakpoints:
+    - name: "xs"
+      size: "400px"
+      note: "(custom breakpoint)"
+    
+    - name: "sm"
+      size: "640px"
+    
+    - name: "md"
+      size: "768px"
+    
+    - name: "lg"
+      size: "1024px"
+    
+    - name: "xl"
+      size: "1280px"
+    
+    - name: "2xl"
+      size: "1536px"
+  
+  example: |
+    ```html
+    <div class="custom-card bg-background text-foreground border-border p-4 rounded-lg w-full
+                hover:bg-accent hover:text-accent-foreground
+                focus:ring-2 focus:ring-ring focus:ring-offset-2
+                xs:p-6
+                sm:p-8 sm:text-base
+                md:p-10 md:text-lg
+                lg:p-12 lg:text-xl lg:w-3/5
+                xl:p-14 xl:text-2xl
+                2xl:p-16 2xl:text-3xl 2xl:w-3/4">
+      Content with semantic colors
+    </div>
+    ```
+```
+
+## Framework-Specific Guidelines
+
+```yaml
+angular_considerations:
+  - "Use ViewEncapsulation.None for global theme styles"
+  - "Implement theme toggle service for light/dark mode switching"
+  - "Apply `.dark` class to document body or root element"
+  - "Use Angular Material theming integration when applicable"
+
+react_considerations:
+  - "Use styled-components or Emotion for component-specific styling"
+  - "Implement React Context for theme management"
+  - "Use CSS modules for component-scoped styles"
+  - "Leverage React.memo for components with static styling"
+```
+
+## Semantic Color Usage
+
+```yaml
+color_usage:
+  - color: "background/foreground"
+    usage: "Main page colors"
+  
+  - color: "primary"
+    usage: "Main brand color for buttons, links"
+  
+  - color: "secondary"
+    usage: "Supporting elements, less prominent actions"
+  
+  - color: "accent"
+    usage: "Highlights, special elements"
+  
+  - color: "muted"
+    usage: "Subdued text, placeholders"
+  
+  - color: "destructive"
+    usage: "Error states, danger actions"
+  
+  - color: "border"
+    usage: "Dividers, input borders"
+  
+  - color: "input"
+    usage: "Form input backgrounds"
+  
+  - color: "ring"
+    usage: "Focus indicators"
+```
+
+## CSS Best Practices
+
+```yaml
+css_best_practices:
+  - id: "specificity"
+    rule: "Keep selector specificity low"
+    example: "Prefer .button over .navbar .content .button"
+  
+  - id: "class_naming"
+    rule: "Use kebab-case for class names"
+    example: "user-profile, nav-item, btn-primary"
+  
+  - id: "avoid_ids"
+    rule: "Avoid using ID selectors in CSS"
+    rationale: "IDs have higher specificity and can lead to specificity wars"
+  
+  - id: "units"
+    rule: "Use relative units (rem, em) over absolute units (px)"
+    rationale: "Better for accessibility and responsive design"
+  
+  - id: "z_index"
+    rule: "Use z-index scale in increments of 10"
+    example: "z-10, z-20, z-30, etc."
+  
+  - id: "media_queries"
+    rule: "Use min-width media queries for mobile-first approach"
+    example: "@media (min-width: 768px) { /* styles */ }"
+```
+
+## CSS Organization
+
+```yaml
+css_organization:
+  file_structure:
+    - name: "globals.css"
+      content: "Reset, base styles, theme variables"
+    
+    - name: "components.css"
+      content: "Reusable component styles"
+    
+    - name: "utilities.css"
+      content: "Utility classes for one-off styling needs"
+  
+  import_order:
+    - "Reset/Normalize CSS"
+    - "Third-party libraries"
+    - "Custom variables and theme definitions"
+    - "Base styles"
+    - "Component styles"
+    - "Utility classes"
+  
+  selector_order:
+    - "Element selector"
+    - "Class selector"
+    - "Attribute selector"
+    - "Pseudo-class selector"
+    - "Pseudo-element selector"
+```
+
+## Accessibility Considerations
+
+```yaml
+accessibility:
+  - id: "color_contrast"
+    rule: "Maintain minimum contrast ratio of 4.5:1 for normal text"
+    standard: "WCAG 2.1 AA"
+  
+  - id: "focus_styles"
+    rule: "Always include visible focus styles"
+    example: "focus:ring-2 focus:ring-ring focus:ring-offset-2"
+  
+  - id: "dark_mode"
+    rule: "Support both light and dark mode"
+    rationale: "Reduces eye strain and improves usability in different lighting conditions"
+  
+  - id: "responsive_design"
+    rule: "Ensure all UI elements work across all screen sizes"
+    technique: "Use mobile-first approach with responsive breakpoints"
+  
+  - id: "reduced_motion"
+    rule: "Respect user preference for reduced motion"
+    example: "@media (prefers-reduced-motion: reduce) { /* reduce or remove animations */ }"
+```

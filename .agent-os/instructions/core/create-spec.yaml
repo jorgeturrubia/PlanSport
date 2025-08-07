@@ -1,0 +1,541 @@
+---
+description: Spec Creation Rules for Agent OS
+version: 2.0
+encoding: UTF-8
+strict_mode: true
+---
+
+# Spec Creation Rules
+
+## 📋 Definición de Pasos Estructurada
+
+```yaml
+steps:
+  - id: spec_initiation
+    name: "Spec Initiation"
+    type: input
+    required_fields:
+      - spec_idea: 
+          type: string
+          min_length: 10
+          prompt: "¿Cuál es la idea de la especificación a crear?"
+    validation:
+      on_missing: BLOCK
+      message: "Falta información requerida: {missing_fields}"
+    
+  - id: context_gathering
+    name: "Context Gathering"
+    type: conditional
+    conditions:
+      - check: file_in_context
+        file: ".agent-os/product/mission-lite.md"
+        if_true: 
+          action: skip_to
+          target: step_3
+        if_false:
+          action: read_file
+          file: ".agent-os/product/mission-lite.md"
+      - check: file_in_context
+        file: ".agent-os/product/tech-stack.md"
+        if_true: 
+          action: skip_to
+          target: step_3
+        if_false:
+          action: read_file
+          file: ".agent-os/product/tech-stack.md"
+    
+  - id: requirements_clarification
+    name: "Requirements Clarification"
+    type: execute
+    conditions:
+      - check: clarification_needed
+        if_true:
+          action: ask_questions
+          fields:
+            - scope
+            - technical_requirements
+            - integration_points
+        if_false:
+          action: skip_to
+          target: date_determination
+    
+  - id: date_determination
+    name: "Date Determination"
+    type: execute
+    commands:
+      - cmd: "invoke_subagent date-checker get_current_date"
+        validate: date_format
+        format: "YYYY-MM-DD"
+    output_variable: current_date
+    
+  - id: spec_folder_creation
+    name: "Spec Folder Creation"
+    type: execute
+    commands:
+      - cmd: "mkdir -p .agent-os/specs/{current_date}-{spec_name}"
+        validate: directory_exists
+    validation:
+      - directory_exists: true
+      - spec_name_valid: true
+    spec_name_constraints:
+      max_words: 5
+      style: kebab-case
+      descriptive: true
+    
+  - id: create_spec_md
+    name: "Create spec.md"
+    type: template
+    source: templates/spec.yaml
+    destination: ".agent-os/specs/{current_date}-{spec_name}/spec.md"
+    variables:
+      spec_name: "{spec_name}"
+      current_date: "{current_date}"
+    sections:
+      - name: "Overview"
+        template: |
+          ## Overview
+          
+          {spec_overview}
+        constraints:
+          length: "1-2 sentences"
+          content: "goal and objective"
+      - name: "User Stories"
+        template: |
+          ## User Stories
+          
+          ### {story_title}
+          
+          As a {user_type}, I want to {action}, so that {benefit}.
+          
+          {detailed_workflow}
+        constraints:
+          count: "1-3 stories"
+          include: "workflow and problem solved"
+          format: "title + story + details"
+      - name: "Spec Scope"
+        template: |
+          ## Spec Scope
+          
+          1. **{feature_name_1}** - {description_1}
+          2. **{feature_name_2}** - {description_2}
+        constraints:
+          count: "1-5 features"
+          format: "numbered list"
+          description: "one sentence each"
+      - name: "Out of Scope"
+        template: |
+          ## Out of Scope
+          
+          - {excluded_1}
+          - {excluded_2}
+        purpose: "Explicitly exclude functionalities"
+      - name: "Expected Deliverable"
+        template: |
+          ## Expected Deliverable
+          
+          1. {outcome_1}
+          2. {outcome_2}
+        constraints:
+          count: "1-3 expectations"
+          focus: "browser-testable outcomes"
+    validation:
+      - file_exists: true
+      - min_size: 500
+      - no_placeholders: true
+    
+  - id: create_spec_lite_md
+    name: "Create spec-lite.md"
+    type: template
+    source: templates/spec-lite.yaml
+    destination: ".agent-os/specs/{current_date}-{spec_name}/spec-lite.md"
+    variables:
+      spec_summary: "{spec_overview}"
+    template: |
+      # Spec Summary (Lite)
+      
+      {spec_summary}
+    constraints:
+      length: "1-3 sentences"
+      content: "core goal and objective"
+    validation:
+      - file_exists: true
+      - min_size: 50
+      - no_placeholders: true
+    
+  - id: create_technical_spec
+    name: "Create Technical Specification"
+    type: template
+    source: templates/technical-spec.yaml
+    destination: ".agent-os/specs/{current_date}-{spec_name}/sub-specs/technical-spec.md"
+    variables:
+      spec_path: ".agent-os/specs/{current_date}-{spec_name}/spec.md"
+    sections:
+      - name: "Technical Requirements"
+        template: |
+          ## Technical Requirements
+          
+          - {requirement_1}
+          - {requirement_2}
+        required: true
+      - name: "External Dependencies"
+        template: |
+          ## External Dependencies
+          
+          - **{library_name}** - {purpose}
+          - **Justification:** {reason}
+        required: false
+        condition: "spec_requires_new_dependencies"
+    validation:
+      - file_exists: true
+      - min_size: 200
+      - no_placeholders: true
+    
+  - id: create_database_schema
+    name: "Create Database Schema"
+    type: conditional
+    conditions:
+      - check: spec_requires_database_changes
+        if_true:
+          action: create_template
+          source: templates/database-schema.yaml
+          destination: ".agent-os/specs/{current_date}-{spec_name}/sub-specs/database-schema.md"
+        if_false:
+          action: skip_to
+          target: create_api_spec
+    variables:
+      spec_path: ".agent-os/specs/{current_date}-{spec_name}/spec.md"
+    sections:
+      - name: "Changes"
+        content: "new tables, columns, modifications, migrations"
+      - name: "Specifications"
+        content: "SQL syntax, indexes, constraints, foreign keys"
+      - name: "Rationale"
+        content: "reason for each change, performance, data integrity"
+    
+  - id: create_api_spec
+    name: "Create API Specification"
+    type: conditional
+    conditions:
+      - check: spec_requires_api_changes
+        if_true:
+          action: create_template
+          source: templates/api-spec.yaml
+          destination: ".agent-os/specs/{current_date}-{spec_name}/sub-specs/api-spec.md"
+        if_false:
+          action: skip_to
+          target: user_review
+    variables:
+      spec_path: ".agent-os/specs/{current_date}-{spec_name}/spec.md"
+    sections:
+      - name: "Endpoints"
+        template: |
+          ## Endpoints
+          
+          ### {http_method} {endpoint_path}
+          
+          **Purpose:** {description}
+          **Parameters:** {parameters}
+          **Response:** {response_format}
+          **Errors:** {possible_errors}
+        required: true
+      - name: "Controllers"
+        content: "action names, business logic, error handling"
+      - name: "Purpose"
+        content: "endpoint rationale, integration with features"
+    
+  - id: user_review
+    name: "User Review"
+    type: input
+    prompt: |
+      I've created the spec documentation:
+      
+      - Spec Requirements: .agent-os/specs/{current_date}-{spec_name}/spec.md
+      - Spec Summary: .agent-os/specs/{current_date}-{spec_name}/spec-lite.md
+      - Technical Spec: .agent-os/specs/{current_date}-{spec_name}/sub-specs/technical-spec.md
+      {other_specs}
+      
+      Please review and let me know if any changes are needed before I create the task breakdown.
+    required_fields:
+      - approval:
+          type: string
+          prompt: "¿Apruebas los documentos de especificación? (sí/no)"
+    validation:
+      on_missing: BLOCK
+      message: "Se requiere tu aprobación para continuar"
+    
+  - id: create_tasks_md
+    name: "Create tasks.md"
+    type: template
+    conditions:
+      - check: user_approval
+        value: "sí"
+    source: templates/tasks.yaml
+    destination: ".agent-os/specs/{current_date}-{spec_name}/tasks.md"
+    template: |
+      # Spec Tasks
+      
+      ## Tasks
+      
+      - [ ] 1. {major_task_1}
+        - [ ] 1.1 Write tests for {component_1}
+        - [ ] 1.2 {implementation_step_1_2}
+        - [ ] 1.3 {implementation_step_1_3}
+        - [ ] 1.4 Verify all tests pass
+      
+      - [ ] 2. {major_task_2}
+        - [ ] 2.1 Write tests for {component_2}
+        - [ ] 2.2 {implementation_step_2_2}
+    constraints:
+      major_tasks:
+        count: "1-5"
+        format: "numbered checklist"
+        grouping: "by feature or component"
+      subtasks:
+        count: "up to 8 per major task"
+        format: "decimal notation"
+        first: "write tests"
+        last: "verify tests pass"
+    ordering:
+      principles:
+        - "Consider technical dependencies"
+        - "Follow TDD approach"
+        - "Group related functionality"
+        - "Build incrementally"
+    validation:
+      - file_exists: true
+      - min_size: 200
+      - no_placeholders: true
+    
+  - id: decision_documentation
+    name: "Decision Documentation"
+    type: conditional
+    conditions:
+      - check: spec_significantly_deviates
+        if_true:
+          action: ask_user
+          prompt: "This spec significantly deviates from our mission/roadmap. Should I draft a decision entry? (yes/no)"
+          if_yes:
+            action: update_decisions
+            template: |
+              ## {current_date}: {decision_title}
+              
+              **ID:** DEC-{next_number}
+              **Status:** Accepted
+              **Category:** {category}
+              **Related Spec:** .agent-os/specs/{current_date}-{spec_name}/
+              
+              ### Decision
+              
+              {decision_summary}
+              
+              ### Context
+              
+              {decision_context}
+              
+              ### Deviation
+              
+              {specific_deviation}
+          if_no:
+            action: skip_to
+            target: execution_readiness
+        if_false:
+          action: skip_to
+          target: execution_readiness
+    validation:
+      - deviation_explained: true
+      - decision_recorded: true
+    
+  - id: execution_readiness
+    name: "Execution Readiness Check"
+    type: input
+    prompt: |
+      The spec planning is complete. The first task is:
+      
+      **Task 1:** {first_task_title}
+      {first_task_description}
+      
+      Would you like me to proceed with implementing Task 1? I will focus only on this first task and its subtasks unless you specify otherwise.
+      
+      Type 'yes' to proceed with Task 1, or let me know if you'd like to review or modify the plan first.
+    required_fields:
+      - proceed:
+          type: string
+          prompt: "¿Proceder con la implementación? (yes/no)"
+    validation:
+      on_missing: BLOCK
+      message: "Se requiere tu confirmación para proceder"
+```
+
+## 🔐 Sistema de Validación Mejorado
+
+```yaml
+validations:
+  pre_execution:
+    - name: "Verificar prerequisitos"
+      checks:
+        - no_existing_agentOs: ".agent-os/"
+        - write_permissions: "."
+        - required_files: 
+            - "instructions/core/plan-product.md"
+            - "standards/tech-stack.md"
+  
+  post_execution:
+    - name: "Verificar resultados"
+      checks:
+        - all_files_created:
+            - ".agent-os/specs/{current_date}-{spec_name}/spec.md"
+            - ".agent-os/specs/{current_date}-{spec_name}/spec-lite.md"
+            - ".agent-os/specs/{current_date}-{spec_name}/sub-specs/technical-spec.md"
+            - ".agent-os/specs/{current_date}-{spec_name}/tasks.md"
+        - no_remaining_placeholders: true
+        - valid_markdown: true
+```
+
+## 🤖 Invocación Explícita de Subagentes
+
+```yaml
+subagent_calls:
+  context_fetcher:
+    trigger: "when_needed"
+    syntax: |
+      ```invoke-agent
+      agent: context-fetcher
+      action: read
+      params:
+        file: "{target_file}"
+        section: "{optional_section}"
+        return: "content_only"
+      ```
+    example: |
+      ```invoke-agent
+      agent: context-fetcher
+      action: read
+      params:
+        file: "mission-lite.md"
+        section: "pitch"
+        return: "content_only"
+      ```
+  
+  date_checker:
+    trigger: "on_spec_creation"
+    syntax: |
+      ```invoke-agent
+      agent: date-checker
+      action: get_current_date
+      params:
+        format: "YYYY-MM-DD"
+      ```
+```
+
+## 🎯 Puntos de Control Obligatorios
+
+```yaml
+checkpoints:
+  - id: "CP1"
+    after_step: "spec_initiation"
+    validation_prompt: |
+      ✋ CHECKPOINT #1: Validación de Entrada
+      
+      CONFIRMA antes de continuar:
+      ✅ Idea de la especificación: {spec_idea}
+      
+      ¿Todo correcto? (sí/no)
+    on_no: "repeat_step"
+  
+  - id: "CP2"
+    after_step: "spec_folder_creation"
+    validation_prompt: |
+      ✋ CHECKPOINT #2: Estructura Creada
+      
+      VERIFICA:
+      ✅ Directorio .agent-os/specs/{current_date}-{spec_name}/ creado
+      ✅ Permisos de escritura confirmados
+      
+      ¿Continuar? (sí/no)
+```
+
+## 📊 Sistema de Logging y Debug
+
+```yaml
+logging:
+  level: "verbose"
+  format: |
+    [STEP {step_id}] {step_name}
+    Status: {status}
+    Duration: {duration}ms
+    Output: {output_summary}
+    
+  on_error: |
+    ❌ ERROR en Paso {step_id}
+    Descripción: {error_message}
+    Acción sugerida: {suggested_action}
+    
+    ¿Reintentar? (sí/no/abortar)
+```
+
+## 🔄 Flujo de Ejecución Visual
+
+```mermaid
+graph TD
+    A[Inicio] --> B{¿Inputs completos?}
+    B -->|No| C[Solicitar inputs]
+    C --> B
+    B -->|Sí| D[Checkpoint #1]
+    D --> E{¿Contexto existe?}
+    E -->|Sí| F[Saltar lectura]
+    E -->|No| G[Leer contexto]
+    F --> H[Crear estructura]
+    G --> H
+    H --> I[Checkpoint #2]
+    I --> J[Generar archivos]
+    J --> K{¿Validación OK?}
+    K -->|No| L[Mostrar errores]
+    L --> M[Reintentar]
+    M --> J
+    K -->|Sí| N[Fin exitoso]
+```
+
+## 💡 Mejoras Adicionales
+
+### 1. Sistema de Plantillas Inteligentes
+```yaml
+templates:
+  smart_replacement:
+    - pattern: "[SPEC_NAME]"
+      source: "spec_name"
+      transform: "kebab_to_title"
+    - pattern: "[CURRENT_DATE]"
+      source: "current_date"
+      format: "YYYY-MM-DD"
+    - pattern: "[FEATURES_LIST]"
+      source: "features"
+      format: "markdown_list"
+```
+
+### 2. Modo de Recuperación
+```yaml
+recovery_mode:
+  on_partial_failure:
+    - detect_completed_steps
+    - resume_from_last_checkpoint
+    - preserve_existing_files
+  
+  on_total_failure:
+    - create_backup: ".agent-os-backup-{timestamp}"
+    - log_failure_report
+    - suggest_manual_fixes
+```
+
+### 3. Validación Semántica
+```yaml
+semantic_validation:
+  spec_md:
+    - must_contain: ["overview", "user stories", "scope"]
+    - max_length: 5000_words
+    - readability_score: ">= 60"
+  
+  technical_spec:
+    - valid_technologies: true
+    - compatible_versions: true
+    - no_conflicts: true
+```
