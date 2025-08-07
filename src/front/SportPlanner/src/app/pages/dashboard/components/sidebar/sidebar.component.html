@@ -1,0 +1,133 @@
+<aside class="sidebar" [class.collapsed]="!isSidebarExpanded()" data-testid="sidebar">
+  <!-- Sidebar Header -->
+  <div class="sidebar-header">
+    <div class="logo" [class.collapsed]="!isSidebarExpanded()">
+      <img src="assets/logo.svg" alt="SportPlanner" class="logo-icon" />
+      <span class="logo-text" *ngIf="isSidebarExpanded()">SportPlanner</span>
+    </div>
+    <button 
+      class="toggle-btn" 
+      (click)="toggleSidebar()" 
+      data-testid="sidebar-toggle"
+      [attr.aria-label]="isSidebarExpanded() ? 'Colapsar sidebar' : 'Expandir sidebar'">
+      <i class="icon-menu"></i>
+    </button>
+  </div>
+
+  <!-- Navigation Content -->
+  <nav class="sidebar-nav" data-testid="sidebar-nav">
+    <!-- Navigation Sections -->
+    <div 
+      *ngFor="let section of navigationConfig().sections" 
+      class="nav-section" 
+      [class.collapsed]="section.isCollapsed"
+      data-testid="nav-section-{{ section.id }}">
+      
+      <!-- Section Header -->
+      <div 
+        *ngIf="section.label && isSidebarExpanded()" 
+        class="section-header"
+        [class.collapsible]="section.isCollapsible"
+        (click)="onSectionToggle(section)"
+        data-testid="section-header-{{ section.id }}">
+        <span class="section-title">{{ section.label }}</span>
+        <i 
+          *ngIf="section.isCollapsible" 
+          class="section-toggle-icon" 
+          [class.rotated]="!section.isCollapsed"></i>
+      </div>
+
+      <!-- Section Items -->
+      <ul 
+        class="nav-items" 
+        *ngIf="shouldShowSection(section)"
+        data-testid="nav-items-{{ section.id }}">
+        <li 
+          *ngFor="let item of section.items" 
+          class="nav-item"
+          [class.active]="isItemActive(item)"
+          [class.has-children]="item.children && item.children.length > 0"
+          data-testid="nav-item-{{ item.id }}">
+          
+          <!-- Main Navigation Link -->
+          <a 
+            class="nav-link"
+            [class.expanded]="item.isExpanded"
+            (click)="onNavigationItemClick(item)"
+            [attr.title]="!isSidebarExpanded() ? item.label : null"
+            data-testid="nav-link-{{ item.id }}">
+            
+            <!-- Icon -->
+            <i class="nav-icon icon-{{ item.icon }}" data-testid="nav-icon-{{ item.id }}"></i>
+            
+            <!-- Label -->
+            <span 
+              *ngIf="isSidebarExpanded()" 
+              class="nav-label"
+              data-testid="nav-label-{{ item.id }}">{{ item.label }}</span>
+            
+            <!-- Badge -->
+            <span 
+              *ngIf="item.badge && isSidebarExpanded()" 
+              class="nav-badge" 
+              [class]="'badge-' + (item.badge.color || 'default')"
+              data-testid="nav-badge-{{ item.id }}">{{ item.badge.text }}</span>
+            
+            <!-- Chevron for expandable items -->
+            <i 
+              *ngIf="item.children && item.children.length > 0 && isSidebarExpanded()" 
+              class="nav-chevron"
+              [class.rotated]="item.isExpanded"
+              data-testid="nav-chevron-{{ item.id }}"></i>
+          </a>
+          
+          <!-- Children Items -->
+          <ul 
+            *ngIf="shouldShowChildren(item)" 
+            class="nav-children"
+            data-testid="nav-children-{{ item.id }}">
+            <li 
+              *ngFor="let child of item.children" 
+              class="nav-child-item"
+              [class.active]="isItemActive(child)"
+              data-testid="nav-child-item-{{ child.id }}">
+              <a 
+                class="nav-child-link"
+                (click)="onNavigationItemClick(child)"
+                data-testid="nav-child-link-{{ child.id }}">
+                <i class="nav-child-icon icon-{{ child.icon }}" data-testid="nav-child-icon-{{ child.id }}"></i>
+                <span class="nav-child-label" data-testid="nav-child-label-{{ child.id }}">{{ child.label }}</span>
+                <span 
+                  *ngIf="child.badge" 
+                  class="nav-child-badge" 
+                  [class]="'badge-' + (child.badge.color || 'default')"
+                  data-testid="nav-child-badge-{{ child.id }}">{{ child.badge.text }}</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Theme Toggle -->
+  <div class="theme-toggle-section">
+    <app-theme-toggle 
+      (themeChanged)="onThemeChanged($event)"
+      data-testid="sidebar-theme-toggle">
+    </app-theme-toggle>
+  </div>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer" *ngIf="isSidebarExpanded()">
+    <div class="user-info">
+      <div class="user-avatar">
+        <img src="assets/default-avatar.png" alt="Usuario" />
+      </div>
+      <div class="user-details">
+        <span class="user-name">Usuario</span>
+        <span class="user-role">Entrenador</span>
+      </div>
+    </div>
+  </div>
+</aside>

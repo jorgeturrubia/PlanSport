@@ -1,0 +1,81 @@
+<!-- About Section -->
+<section class="about-section" role="region" aria-labelledby="about-title">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="section-header">
+      <h2 id="about-title" class="section-title">{{ title() }}</h2>
+      <p class="section-subtitle">{{ subtitle() }}</p>
+    </div>
+    
+    <!-- About Content Grid -->
+    <div class="about-grid">
+      <!-- Mission Card -->
+      <div class="about-card mission-card">
+        <div class="about-icon" aria-label="Mission icon">🎯</div>
+        <div class="about-content">
+          <h3 class="about-title">Nuestra Misión</h3>
+          <p class="about-description">{{ getMissionContent() }}</p>
+        </div>
+      </div>
+      
+      <!-- Vision Card -->
+      <div class="about-card vision-card">
+        <div class="about-icon" aria-label="Vision icon">🚀</div>
+        <div class="about-content">
+          <h3 class="about-title">Nuestra Visión</h3>
+          <p class="about-description">{{ getVisionContent() }}</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Testimonials Section -->
+    @if (showTestimonials()) {
+      <div class="testimonials-container" role="region" aria-labelledby="testimonials-title">
+        <h3 id="testimonials-title" class="testimonials-title">Lo que dicen nuestros usuarios</h3>
+        
+        <div class="testimonials-grid">
+          @for (testimonial of testimonials(); track testimonial.name) {
+            <div class="testimonial-card">
+              <!-- Testimonial Header -->
+              <div class="testimonial-header">
+                <div class="testimonial-avatar" [attr.aria-label]="testimonial.name + ' avatar'">
+                  {{ testimonial.avatar }}
+                </div>
+                <div class="testimonial-info">
+                  <h4 class="testimonial-name">{{ testimonial.name }}</h4>
+                  <p class="testimonial-role">{{ testimonial.role }}</p>
+                </div>
+              </div>
+              
+              <!-- Testimonial Rating -->
+              <div class="testimonial-rating" [attr.aria-label]="testimonial.rating + ' out of 5 stars'">
+                @for (filled of getStarsArray(testimonial.rating); track $index) {
+                  <span class="star" [class.filled]="filled" aria-hidden="true">
+                    {{ filled ? '★' : '☆' }}
+                  </span>
+                }
+              </div>
+              
+              <!-- Testimonial Content -->
+              <blockquote class="testimonial-content">
+                "{{ testimonial.content }}"
+              </blockquote>
+            </div>
+          }
+        </div>
+      </div>
+    }
+    
+    <!-- Call-to-Action Slot -->
+    <div class="about-cta">
+      <ng-content select="[slot=cta]"></ng-content>
+    </div>
+  </div>
+  
+  <!-- Background Decoration -->
+  <div class="about-background">
+    <div class="bg-decoration bg-decoration-1"></div>
+    <div class="bg-decoration bg-decoration-2"></div>
+    <div class="bg-decoration bg-decoration-3"></div>
+  </div>
+</section>

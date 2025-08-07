@@ -1,0 +1,137 @@
+<!-- Footer -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-container">
+    <!-- Main Footer Content -->
+    <div class="footer-grid">
+      <!-- Brand Section -->
+      <div class="footer-brand">
+        <div class="brand-header">
+          <div class="brand-logo" aria-label="SportAgentoos Logo">⚽</div>
+          <h3 class="brand-name">SportAgentoos</h3>
+        </div>
+        <p class="company-description">{{ getCompanyDescription() }}</p>
+        
+        <!-- Contact Information -->
+        <div class="footer-contact">
+          <p class="contact-email">
+            <span class="contact-label">Email:</span>
+            <a href="mailto:{{ getContactEmail() }}" class="email-link">{{ getContactEmail() }}</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Navigation Section -->
+      <div class="footer-nav">
+        <h4 class="footer-section-title">Navegación</h4>
+        <nav class="nav-list" role="navigation" aria-label="Footer navigation">
+          @for (link of navigationLinks; track link.id) {
+            <a 
+              class="nav-link" 
+              [href]="link.href || '#' + link.id + '-section'"
+              (click)="handleLinkClick($event, link.id)"
+              [attr.aria-label]="'Ir a ' + link.label">
+              {{ link.label }}
+            </a>
+          }
+        </nav>
+      </div>
+
+      <!-- Legal Section -->
+      <div class="footer-legal">
+        <h4 class="footer-section-title">Legal</h4>
+        <nav class="legal-list" role="navigation" aria-label="Legal links">
+          @for (link of legalLinks; track link.id) {
+            <a 
+              class="legal-link" 
+              [href]="link.href"
+              (click)="handleLinkClick($event, link.id)"
+              [attr.aria-label]="link.label">
+              {{ link.label }}
+            </a>
+          }
+        </nav>
+      </div>
+
+      <!-- Support Section -->
+      <div class="footer-support">
+        <h4 class="footer-section-title">Soporte</h4>
+        <nav class="support-list" role="navigation" aria-label="Support links">
+          @for (link of supportLinks; track link.id) {
+            <a 
+              class="support-link" 
+              [href]="link.href"
+              target="_blank"
+              rel="noopener noreferrer"
+              (click)="handleLinkClick($event, link.id)"
+              [attr.aria-label]="link.label + ' (se abre en una nueva ventana)'">
+              {{ link.label }}
+            </a>
+          }
+        </nav>
+      </div>
+
+      <!-- Newsletter Section -->
+      <div class="footer-newsletter">
+        <h4 class="newsletter-title footer-section-title">Newsletter</h4>
+        <p class="newsletter-description">{{ getNewsletterDescription() }}</p>
+        
+        <div class="newsletter-signup">
+          <div class="newsletter-form">
+            <input 
+              type="email" 
+              class="newsletter-input" 
+              placeholder="Tu email"
+              aria-label="Introduce tu email para el newsletter"
+              required>
+            <button 
+              type="button" 
+              class="newsletter-button"
+              aria-label="Suscribirse al newsletter">
+              Suscribirse
+            </button>
+          </div>
+          <p class="newsletter-disclaimer">
+            Al suscribirte aceptas recibir emails de SportAgentoos. Puedes darte de baja en cualquier momento.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <!-- Social Media Links -->
+      <div class="footer-social">
+        <h4 class="social-title">Síguenos</h4>
+        <div class="social-links">
+          @for (social of socialLinks; track social.platform) {
+            <a 
+              class="social-link" 
+              [href]="social.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              [attr.aria-label]="social.ariaLabel">
+              <span class="social-icon">{{ social.icon }}</span>
+              <span class="social-name">{{ social.platform }}</span>
+            </a>
+          }
+        </div>
+      </div>
+
+      <!-- Copyright -->
+      <div class="footer-copyright">
+        <p class="copyright-text">
+          &copy; {{ getCurrentYear() }} SportAgentoos. Todos los derechos reservados.
+        </p>
+        <p class="company-tagline">
+          Construido con 💙 para entrenadores y equipos deportivos de todo el mundo.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background Decoration -->
+  <div class="footer-background">
+    <div class="bg-decoration bg-decoration-1"></div>
+    <div class="bg-decoration bg-decoration-2"></div>
+  </div>
+</footer>

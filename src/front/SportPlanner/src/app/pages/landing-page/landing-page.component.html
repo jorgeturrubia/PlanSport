@@ -1,0 +1,109 @@
+<!-- Landing Page Main Container -->
+<div class="landing-page" [class.loading]="isLoading()" [class.navigating]="isNavigating()">
+  
+  <!-- Loading Overlay -->
+  @if (isLoading()) {
+    <div class="loading-overlay" aria-label="Cargando página...">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Cargando SportAgentoos...</p>
+    </div>
+  }
+  
+  <!-- Error Message -->
+  @if (hasError()) {
+    <div class="error-banner" role="alert" aria-live="assertive">
+      <div class="error-content">
+        <span class="error-icon" aria-hidden="true">⚠️</span>
+        <span class="error-message">{{ errorMessage() }}</span>
+        <button 
+          class="error-close" 
+          (click)="clearError()"
+          aria-label="Cerrar mensaje de error"
+          type="button">
+          ✕
+        </button>
+      </div>
+    </div>
+  }
+  
+  <!-- Navigation Progress Indicator -->
+  @if (isNavigating()) {
+    <div class="navigation-progress" aria-label="Navegando...">
+      <div class="progress-bar"></div>
+    </div>
+  }
+
+  <!-- Header Section with Navigation -->
+  <app-header
+    [navigationItems]="navigationItems"
+    [activeSection]="activeSection()"
+    (navigate)="scrollToSection($event)"
+    (loginClicked)="handleLogin()"
+    (registerClicked)="handleRegister()"
+    (brandClicked)="handleBrandClick()">
+  </app-header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Hero Section -->
+    <div id="hero-section">
+      <app-hero
+        (navigate)="scrollToSection($event)">
+      </app-hero>
+    </div>
+
+  <!-- Features Section -->
+  <section id="features-section">
+    <app-features></app-features>
+  </section>
+
+  <!-- About Section -->
+  <section id="about-section">
+    <app-about></app-about>
+  </section>
+
+  <!-- CTA Section -->
+  <section id="cta-section">
+    <app-cta 
+      (getStarted)="handleGetStarted()"
+      (viewPlans)="handleViewPlans()"></app-cta>
+  </section>
+
+    <!-- Subscriptions Section -->
+    <section id="subscriptions-section" class="subscriptions-section section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Suscripciones</h2>
+          <p class="section-subtitle">
+            Elige el plan que mejor se adapte a las necesidades de tu equipo
+          </p>
+        </div>
+        <div class="subscriptions-content">
+          <!-- Subscriptions content will be added in next tasks -->
+          <p class="placeholder-text">Contenido de suscripciones - Coming soon!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials-section" class="testimonials-section section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Opiniones</h2>
+          <p class="section-subtitle">
+            Lo que dicen nuestros usuarios sobre SportAgentoos
+          </p>
+        </div>
+        <div class="testimonials-content">
+          <!-- Testimonials content will be added in next tasks -->
+          <p class="placeholder-text">Contenido de opiniones - Coming soon!</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer Section -->
+  <app-footer
+    (navigate)="scrollToSection($event)">
+  </app-footer>
+</div>
