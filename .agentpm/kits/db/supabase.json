@@ -1,0 +1,7 @@
+{
+  "name": "supabase-postgres",
+  "auth": "supabase-auth",
+  "jwt": true,
+  "rls": true,
+  "service_role_backend_only": true
+}

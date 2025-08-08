@@ -1,0 +1,11 @@
+agent: v1
+product: "Agent OS"
+stack:
+  frontend: angular@20
+  backend: dotnet@8
+  db: supabase-postgres
+frontend_style: tailwind@4
+theme: default
+standards: minimal # minimal | strict
+openapi: src/back/SportPlannerApi/swagger/v1/swagger.json
+checklist: web-api # web-api | web-app | lib

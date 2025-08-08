@@ -1,0 +1,11 @@
+{
+  "name": "dark",
+  "palette": {
+    "primary": "#8b5cf6",
+    "secondary": "#f97316",
+    "accent": "#14b8a6",
+    "bg": "#0a0a0a",
+    "surface": "#171717",
+    "text": "#f5f5f5"
+  }
+}

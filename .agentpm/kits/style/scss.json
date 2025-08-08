@@ -1,0 +1,6 @@
+{
+  "name": "scss",
+  "lint": true,
+  "variables": "src/styles/_variables.scss",
+  "architecture": "7-1"
+}
