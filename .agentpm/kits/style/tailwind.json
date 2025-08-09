@@ -1,0 +1,12 @@
+{
+  "name": "tailwind",
+  "version": 4,
+  "tokens": {
+    "spacing": [2,4,8,12,16,24,32],
+    "radius": [2,4,8,12],
+    "typography": {
+      "fontFamily": "Inter, system-ui, sans-serif"
+    }
+  },
+  "preflight": "selective"
+}

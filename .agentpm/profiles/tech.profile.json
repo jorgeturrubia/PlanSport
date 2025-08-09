@@ -1,0 +1,98 @@
+{
+  "schema": "tech.profile:v1",
+  "generatedAt": "2025-08-08T09:49:13Z",
+  "source": {
+    "agentpm": ".agentpm/agentpm.yaml",
+    "kits": [
+      ".agentpm/kits/db/supabase.json",
+      ".agentpm/kits/db/postgres.json",
+      ".agentpm/kits/style/tailwind.json",
+      ".agentpm/kits/theme/default.json"
+    ]
+  },
+  "product": "Agent OS",
+  "stack": {
+    "frontend": {
+      "framework": "angular",
+      "version": "20",
+      "style": {
+        "name": "tailwind",
+        "version": 4,
+        "tokens": {
+          "spacing": [2,4,8,12,16,24,32],
+          "radius": [2,4,8,12],
+          "typography": {
+            "fontFamily": "Inter, system-ui, sans-serif"
+          }
+        },
+        "preflight": "selective"
+      },
+      "theme": {
+        "name": "default",
+        "palette": {
+          "primary": "#2563eb",
+          "secondary": "#64748b",
+          "accent": "#22c55e",
+          "bg": "#0b1220",
+          "surface": "#111827",
+          "text": "#e5e7eb"
+        }
+      }
+    },
+    "backend": {
+      "framework": "dotnet",
+      "version": "8",
+      "api": {
+        "style": "minimal-apis|mvc-compatible",
+        "versioning": "/api/v{n}",
+        "openapi": "src/back/SportPlannerApi/swagger/v1/swagger.json"
+      },
+      "observability": {
+        "otel": true,
+        "exporter": "otlp"
+      }
+    },
+    "database": {
+      "engine": "supabase-postgres",
+      "orm": "ef-core",
+      "naming": "snake_case",
+      "migrations": "per-bc",
+      "pooling": true,
+      "retry": { "policy": "exponential", "maxAttempts": 3 },
+      "auth": {
+        "provider": "supabase-auth",
+        "jwt": true,
+        "rls": true,
+        "service_role_backend_only": true
+      }
+    }
+  },
+  "standards": {
+    "level": "minimal",
+    "frontend": ".agentpm/standards/frontend.standard.md",
+    "backend": ".agentpm/standards/backend.standard.md",
+    "checklists": ".agentpm/standards/checklists.md"
+  },
+  "decisions": {
+    "source": ".agentpm/decisions/decisions.active.md",
+    "active": {
+      "frontend.state": "signals+services",
+      "frontend.style": "tailwind@4",
+      "backend.api": "minimal-apis",
+      "backend.db": "supabase-postgres+ef-core",
+      "api.versioning": "/api/v{n}"
+    }
+  },
+  "checklistProfile": "web-api",
+  "compatibility": {
+    "angular": "20.x",
+    "tailwind": "4.x",
+    "dotnet": "8.x",
+    "postgres": "14+"
+  },
+  "rationale": [
+    "Tailwind v4 por velocidad y tokens; SCSS queda disponible como kit alternativo.",
+    "Minimal APIs en .NET 8 para simplicidad; MVC permitido si encaja mejor por módulo.",
+    "Supabase aporta Auth+RLS; EF Core para productividad y migraciones controladas."
+  ]
+}

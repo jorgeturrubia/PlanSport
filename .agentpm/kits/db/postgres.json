@@ -1,0 +1,8 @@
+{
+  "name": "postgres",
+  "orm": "ef-core",
+  "naming": "snake_case",
+  "migrations": "per-bc",
+  "pooling": true,
+  "retry": { "policy": "exponential", "maxAttempts": 3 }
+}
