@@ -44,7 +44,7 @@ export class Landing implements OnInit {
     // Escuchar cambios de sección activa
     this.scrollService.activeSection$
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(section => {
+      .subscribe((section: string) => {
         // Se usará para actualizar la navegación activa
         console.log('Sección activa:', section);
       });

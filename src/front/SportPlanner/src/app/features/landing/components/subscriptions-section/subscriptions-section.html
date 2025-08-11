@@ -90,13 +90,13 @@
             <!-- Quick Stats -->
             @if (plan.maxTeams) {
               <div class="flex justify-center space-x-4 text-sm text-gray-600 mb-4">
-                @if (plan.maxTeams && plan.maxTeams !== Infinity) {
+                @if (plan.maxTeams) {
                   <span class="flex items-center space-x-1">
                     <fa-icon [icon]="faUsers" [attr.aria-hidden]="true"></fa-icon>
                     <span>{{ plan.maxTeams }} equipo(s)</span>
                   </span>
                 }
-                @if (plan.maxTrainings && plan.maxTrainings !== Infinity) {
+                @if (plan.maxTrainings) {
                   <span class="flex items-center space-x-1">
                     <fa-icon [icon]="faChartLine" [attr.aria-hidden]="true"></fa-icon>
                     <span>{{ plan.maxTrainings }} entrenamientos</span>

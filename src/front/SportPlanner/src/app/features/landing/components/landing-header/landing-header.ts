@@ -96,7 +96,7 @@ export class LandingHeader implements OnInit {
     // Observar sección activa
     this.scrollService.activeSection$
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(section => {
+      .subscribe((section: string) => {
         this.activeSection.set(section);
       });
   }

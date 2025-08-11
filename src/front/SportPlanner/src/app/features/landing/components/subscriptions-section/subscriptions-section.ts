@@ -68,6 +68,10 @@ export class SubscriptionsSection {
   readonly faTimes = faTimes;
   readonly faStar = faStar;
   readonly faInfinity = faInfinity;
+  readonly faCrown = faCrown;
+  readonly faUsers = faUsers;
+  readonly faChartLine = faChartLine;
+  readonly faShieldAlt = faShieldAlt;
   
   // Estado
   readonly billingPeriod = signal<'monthly' | 'annual'>('monthly');

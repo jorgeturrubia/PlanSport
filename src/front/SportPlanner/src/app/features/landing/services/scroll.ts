@@ -11,7 +11,7 @@ export class ScrollService {
   private readonly activeSectionSubject = new BehaviorSubject<string>('hero');
   
   // Observable público para la sección activa
-  readonly activeSection$ = this.activeSectionSubject.asReadonly();
+  readonly activeSection$ = this.activeSectionSubject.asObservable();
   
   // Configuración del observador
   private observer: IntersectionObserver | null = null;

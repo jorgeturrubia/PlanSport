@@ -65,6 +65,7 @@ export class Footer {
   readonly faMapMarkerAlt = faMapMarkerAlt;
   readonly faArrowUp = faArrowUp;
   readonly faHeart = faHeart;
+  readonly faShieldAlt = faShieldAlt;
   
   // Iconos de redes sociales
   readonly faFacebook = faFacebook;
