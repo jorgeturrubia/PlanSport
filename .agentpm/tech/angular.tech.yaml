@@ -1,0 +1,737 @@
+# Angular Technical Specification for LLM Code Generation
+# Version: 1.0
+# Purpose: LLM-only consumption for precise code generation
+
+project:
+  name: SportPlanner
+  type: SPA
+  created: 2025-08-11
+  
+stack:
+  angular:
+    version: 20.x.x
+    standalone: true
+    ssr: true
+    routing: true
+  typescript: 5.6.x
+  node: 22.16.0
+  package_manager: npm
+  
+dependencies:
+  production:
+    # Core
+    '@supabase/supabase-js': 2.x.x
+    
+    # UI & Styling
+    tailwindcss: 4.x.x
+    
+    # Icons
+    '@fortawesome/fontawesome-free': 6.x.x
+    '@fortawesome/angular-fontawesome': 0.15.x
+    
+    # State Management
+    # Using Angular Signals (built-in)
+    
+    # Utilities
+    date-fns: 3.x.x
+    
+    # Charts & Data Visualization
+    chart.js: 4.x.x
+    ng2-charts: 6.x.x
+    
+    # Angular CDK
+    '@angular/cdk': 20.x.x
+    
+    # Animations
+    '@angular/animations': 20.x.x
+    
+  development:
+    # Linting & Formatting
+    eslint: 9.x.x
+    prettier: 3.x.x
+    '@angular/language-service': 20.x.x
+    
+    # Git Hooks
+    husky: 9.x.x
+    lint-staged: 15.x.x
+    
+architecture:
+  pattern: standalone
+  state_management: signals
+  change_detection: OnPush  # CHANGED: Best practice is OnPush, not Default
+  
+  structure:
+    src/app:
+      core:
+        - services      # [auth, api, guards, interceptors]
+        - interceptors  # [auth, error, loading]
+        - models        # [interfaces, types, enums]
+        - guards        # [auth, role, subscription]
+      features:
+        pattern: feature-folder-pattern
+        modules:
+          - auth          # [login, register, forgot-password]
+          - dashboard     # [overview, widgets, stats]
+          - teams         # [list, detail, create, edit, players]
+          - planning      # [list, create, edit, calendar, objectives]
+          - training      # [sessions, exercises, execution]
+          - marketplace   # [browse, search, ratings, import]
+          - subscription  # [plans, payment, upgrade]
+          - reports       # [analytics, exports, charts]
+          - profile       # [settings, preferences]
+          - admin         # [users, organizations, system]
+      shared:
+        - components    # [buttons, cards, modals, tables]
+        - directives    # [permissions, animations]
+        - pipes         # [date, currency, filters]
+        - utils         # [validators, helpers, constants]
+      layout:
+        - header        # [navbar, user-menu, notifications]
+        - sidebar       # [navigation, collapsible]
+        - footer        # [links, copyright]
+        
+auth:
+  provider: supabase
+  version: 2.x.x
+  config:
+    login_redirect: /dashboard
+    logout_redirect: /
+    protected_routes:
+      - /dashboard/*
+      - /teams/*
+      - /planning/*
+      - /training/*
+      - /marketplace/*
+      - /subscription/*
+      - /reports/*
+      - /profile/*
+      - /admin/*
+    public_routes:
+      - /
+      - /login
+      - /register
+  roles:
+    - admin
+    - director
+    - entrenador
+  storage: localStorage
+  token_type: JWT
+  
+database:
+  provider: custom
+  type: postgres
+  orm: entity-framework-core
+  api: .NET8
+  tables:
+    users:
+      fields:
+        id: uuid
+        email: string
+        created_at: timestamp
+        updated_at: timestamp
+    subscriptions:
+      fields:
+        id: uuid
+        user_id: uuid
+        type: enum
+        status: string
+        expires_at: timestamp
+    organizations:
+      fields:
+        id: uuid
+        name: string
+        subscription_id: uuid
+        created_by: uuid
+    teams:
+      fields:
+        id: uuid
+        organization_id: uuid
+        name: string
+        sport_id: uuid
+        gender: enum
+        category: string
+        level: enum
+        hidden: boolean
+    sports:
+      fields:
+        id: uuid
+        name: string
+        icon: string
+    plannings:
+      fields:
+        id: uuid
+        name: string
+        start_date: date
+        end_date: date
+        training_days: jsonb
+        duration_minutes: integer
+        hidden: boolean
+      relations:
+        teams: many-to-many
+        objectives: many-to-many
+    objectives:
+      fields:
+        id: uuid
+        name: string
+        category: string
+        subcategory: string
+        difficulty: integer
+        learning_time: integer
+        custom: boolean
+      relations:
+        plannings: many-to-many
+        exercises: many-to-many
+    exercises:
+      fields:
+        id: uuid
+        name: string
+        description: text
+        duration_minutes: integer
+        tags: jsonb
+        custom: boolean
+      relations:
+        objectives: many-to-many
+    trainings:
+      fields:
+        id: uuid
+        planning_id: uuid
+        date: date
+        status: enum
+        exercises: jsonb
+    players:
+      fields:
+        id: uuid
+        team_id: uuid
+        name: string
+        position: string
+        number: integer
+        active: boolean
+    marketplace_plannings:
+      fields:
+        id: uuid
+        planning_id: uuid
+        author_id: uuid
+        sport_id: uuid
+        rating: decimal
+        downloads: integer
+        published: boolean
+    planning_ratings:
+      fields:
+        id: uuid
+        marketplace_planning_id: uuid
+        user_id: uuid
+        rating: integer
+        comment: text
+    planning_downloads:
+      fields:
+        id: uuid
+        marketplace_planning_id: uuid
+        user_id: uuid
+        downloaded_at: timestamp
+        
+api:
+  base_url: http://localhost:5000
+  version: v1
+  auth_header: Authorization
+  auth_prefix: Bearer
+  
+  endpoints:
+    auth:
+      login: POST /auth/login
+      logout: POST /auth/logout
+      refresh: POST /auth/refresh
+      profile: GET /auth/profile
+    teams:
+      list: GET /teams
+      get: GET /teams/:id
+      create: POST /teams
+      update: PUT /teams/:id
+      delete: DELETE /teams/:id
+    plannings:
+      list: GET /plannings
+      get: GET /plannings/:id
+      create: POST /plannings
+      update: PUT /plannings/:id
+      delete: DELETE /plannings/:id
+      generate: POST /plannings/:id/generate
+    objectives:
+      list: GET /objectives
+      get: GET /objectives/:id
+      create: POST /objectives
+      update: PUT /objectives/:id
+      delete: DELETE /objectives/:id
+    exercises:
+      list: GET /exercises
+      get: GET /exercises/:id
+      create: POST /exercises
+      update: PUT /exercises/:id
+      delete: DELETE /exercises/:id
+    trainings:
+      list: GET /trainings
+      get: GET /trainings/:id
+      create: POST /trainings
+      update: PUT /trainings/:id
+      delete: DELETE /trainings/:id
+      execute: POST /trainings/:id/execute
+    marketplace:
+      list: GET /marketplace/plannings
+      get: GET /marketplace/plannings/:id
+      publish: POST /marketplace/publish
+      rate: POST /marketplace/plannings/:id/rate
+      download: POST /marketplace/plannings/:id/download
+      
+  error_handling:
+    401: redirect_to_login
+    403: show_forbidden
+    404: show_not_found
+    500: show_error
+    
+styling:
+  framework: tailwind
+  version: 4.x.x
+  
+  icons:
+    library: fontawesome
+    version: 6.x.x
+    usage: |
+      // Import in standalone component
+      import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+      import { faHome, faUser, faCalendar } from '@fortawesome/free-solid-svg-icons';
+      
+      @Component({
+        imports: [FontAwesomeModule],
+        template: `
+          <fa-icon [icon]="faHome"></fa-icon>
+          <fa-icon [icon]="faUser" [size]="'lg'"></fa-icon>
+          <fa-icon [icon]="faCalendar" [style.color]="'#3B82F6'"></fa-icon>
+        `
+      })
+      export class MyComponent {
+        faHome = faHome;
+        faUser = faUser;
+        faCalendar = faCalendar;
+      }
+    common_icons:
+      # Navigation
+      - faHome          # fas fa-home
+      - faBars          # fas fa-bars (menu)
+      - faArrowLeft     # fas fa-arrow-left
+      - faArrowRight    # fas fa-arrow-right
+      
+      # Sports specific
+      - faFutbol        # fas fa-futbol (soccer)
+      - faBasketballBall # fas fa-basketball-ball
+      - faSwimmer       # fas fa-swimmer
+      - faRunning       # fas fa-running
+      - faDumbbell      # fas fa-dumbbell (gym)
+      - faStopwatch     # fas fa-stopwatch
+      - faTrophy        # fas fa-trophy
+      - faMedal         # fas fa-medal
+      
+      # Team Management
+      - faUsers         # fas fa-users (team)
+      - faUserPlus      # fas fa-user-plus
+      - faClipboardList # fas fa-clipboard-list
+      - faCalendarAlt   # fas fa-calendar-alt
+      
+      # Planning
+      - faChartLine     # fas fa-chart-line
+      - faTasks         # fas fa-tasks
+      - faCalendarCheck # fas fa-calendar-check
+      - faClock         # fas fa-clock
+      
+      # Actions
+      - faPlus          # fas fa-plus
+      - faEdit          # fas fa-edit
+      - faTrash         # fas fa-trash
+      - faSave          # fas fa-save
+      - faDownload      # fas fa-download
+      - faUpload        # fas fa-upload
+      - faShare         # fas fa-share
+      
+      # Status
+      - faCheck         # fas fa-check
+      - faTimes         # fas fa-times (close)
+      - faExclamationTriangle # fas fa-exclamation-triangle
+      - faInfoCircle    # fas fa-info-circle
+      
+      # User
+      - faUser          # fas fa-user
+      - faCog           # fas fa-cog (settings)
+      - faSignOutAlt    # fas fa-sign-out-alt
+      - faBell          # fas fa-bell (notifications)
+      
+      # Marketplace
+      - faStore         # fas fa-store
+      - faStar          # fas fa-star (rating)
+      - faSearch        # fas fa-search
+      - faFilter        # fas fa-filter
+  
+  tailwind:
+    config:
+      content:
+        - "./src/**/*.{html,ts}"
+      theme:
+        extend:
+          colors:
+            primary: '#3B82F6'
+            secondary: '#10B981'
+            destructive: '#EF4444'
+            warning: '#F59E0B'
+            muted: '#64748B'
+          fonts:
+            sans: ['Outfit', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+    utilities:
+      responsive: true
+      dark_mode: class
+      
+  global_styles:
+    - styles.css
+    - variables.css
+    
+forms:
+  type: reactive
+  validation:
+    library: angular-native
+    patterns:
+      email: '^[\w\.-]+@[\w\.-]+\.\w+$'
+      phone: '^(\+34)?[6-9]\d{8}$'
+      dni: '^[0-9]{8}[A-Z]$'
+      password: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+  
+  common_validators:
+    - required
+    - email
+    - minLength
+    - maxLength
+    - pattern
+    - min
+    - max
+    
+testing:
+  unit: karma
+  e2e: playwright
+  coverage_target: 60
+  
+  config:
+    test_files: ["*.spec.ts", "*.test.ts"]
+    exclude: ["node_modules", "dist", "coverage"]
+    
+build:
+  output: dist/sport-planner
+  
+  optimization:
+    bundle_budget: 750kb
+    lazy_loading: true
+    tree_shaking: true
+    minification: true
+    source_maps: false
+    
+  environments:
+    development:
+      api_url: http://localhost:5000
+      debug: true
+      supabase_url: ${SUPABASE_URL}
+      supabase_key: ${SUPABASE_ANON_KEY}
+    production:
+      api_url: https://api.sportplanner.com
+      debug: false
+      supabase_url: ${SUPABASE_URL}
+      supabase_key: ${SUPABASE_ANON_KEY}
+      
+conventions:
+  naming:
+    components: PascalCase
+    services: PascalCase
+    files: kebab-case
+    folders: kebab-case
+    interfaces: IPascalCase
+    enums: PascalCase
+    
+  typescript:
+    strict: true              # NEW: Use strict type checking
+    avoid_any: true           # NEW: Avoid any, use unknown
+    prefer_inference: true    # NEW: Prefer type inference when obvious
+    
+  git:
+    branch: feature|fix|chore/description
+    commit: 'type(scope): message'
+    
+  code:
+    max_line_length: 100
+    indent: 2
+    quotes: single
+    semicolons: true
+    
+commands:
+  dev: ng serve
+  build: ng build
+  test: ng test
+  lint: ng lint
+  e2e: ng e2e
+  format: prettier --write "src/**/*.{ts,html,css}"
+  pre-commit: lint-staged
+  
+security:
+  csp: none
+  https: enforced
+  
+  headers:
+    X-Frame-Options: DENY
+    X-Content-Type-Options: nosniff
+    Strict-Transport-Security: 'max-age=31536000; includeSubDomains'
+    
+  secrets:
+    storage: env
+    prefix: NG_APP_
+    
+patterns:
+  service_structure: |
+    @Injectable({ providedIn: 'root' })
+    export class NameService {
+      private readonly http = inject(HttpClient);
+      private readonly auth = inject(AuthService);
+      
+      // Signal state - use update/set, not mutate
+      private readonly dataSignal = signal<IData[]>([]);
+      public readonly data = this.dataSignal.asReadonly();
+      
+      // Computed values for derived state
+      public readonly dataCount = computed(() => this.data().length);
+      
+      // Methods
+      loadData(): void {
+        this.http.get<IData[]>('/api/data').pipe(
+          takeUntilDestroyed()
+        ).subscribe(data => {
+          // Use set or update, NOT mutate
+          this.dataSignal.set(data);
+        });
+      }
+      
+      updateItem(id: string, updates: Partial<IData>): void {
+        this.dataSignal.update(items => 
+          items.map(item => 
+            item.id === id ? { ...item, ...updates } : item
+          )
+        );
+      }
+    }
+    
+  component_structure: |
+    @Component({
+      selector: 'app-name',
+      # NO standalone: true - es el default
+      imports: [CommonModule, ReactiveFormsModule, NgOptimizedImage],
+      templateUrl: './name.component.html',
+      styleUrl: './name.component.css',
+      changeDetection: ChangeDetectionStrategy.OnPush,
+      host: {
+        '[class.active]': 'isActive()',
+        '(click)': 'handleClick($event)'
+      }
+    })
+    export class NameComponent implements OnInit {
+      private readonly service = inject(NameService);
+      
+      // Use input() and output() functions instead of decorators
+      readonly name = input<string>();
+      readonly nameChange = output<string>();
+      
+      // Signals for local state
+      protected readonly data = this.service.data;
+      protected readonly isActive = signal(false);
+      
+      // Use computed() for derived state
+      protected readonly displayName = computed(() => 
+        this.name() || 'Default Name'
+      );
+      
+      ngOnInit(): void {
+        // Initialization
+      }
+      
+      handleClick(event: Event): void {
+        // Handle host click
+      }
+    }
+    
+  guard_structure: |
+    export const nameGuard: CanActivateFn = (route, state) => {
+      const authService = inject(AuthService);
+      const router = inject(Router);
+      
+      if (authService.isAuthenticated()) {
+        return true;
+      }
+      
+      return router.createUrlTree(['/login']);
+    }
+  
+  interface_structure: |
+    export interface IName {
+      id: string;
+      createdAt: Date;
+      updatedAt: Date;
+      // properties
+    }
+  
+  enum_structure: |
+    export enum NameEnum {
+      VALUE1 = 'value1',
+      VALUE2 = 'value2'
+    }
+    
+  model_structure: |
+    export class NameModel {
+      constructor(
+        public id: string,
+        public createdAt: Date,
+        public updatedAt: Date,
+        // properties
+      ) {}
+    }
+
+imports:
+  common:
+    angular_core:
+      - Component
+      - Injectable
+      - inject
+      - signal
+      - computed
+      - effect
+      - input         # NEW: For input() function
+      - output        # NEW: For output() function
+      - OnInit
+      - OnDestroy
+      - ChangeDetectionStrategy  # NEW: For OnPush
+    angular_common:
+      - CommonModule
+      - AsyncPipe
+      - DatePipe
+      - CurrencyPipe
+      - NgOptimizedImage  # NEW: For optimized images
+    angular_forms:
+      - ReactiveFormsModule
+      - FormBuilder
+      - FormGroup
+      - FormControl
+      - Validators
+    angular_router:
+      - Router
+      - ActivatedRoute
+      - RouterLink
+      - RouterOutlet
+      - CanActivateFn
+    fontawesome:
+      - FontAwesomeModule
+      - FaIconLibrary
+      # Import icons as needed from:
+      # '@fortawesome/free-solid-svg-icons'
+      # '@fortawesome/free-regular-svg-icons'
+      # '@fortawesome/free-brands-svg-icons'
+    rxjs:
+      - Observable
+      - Subject
+      - BehaviorSubject
+      - map
+      - filter
+      - switchMap
+      - catchError
+      - of
+      - throwError
+      - takeUntilDestroyed
+
+file_templates:
+  service: [name].service.ts
+  component: [name].component.ts
+  interface: [name].interface.ts
+  model: [name].model.ts
+  guard: [name].guard.ts
+  pipe: [name].pipe.ts
+  directive: [name].directive.ts
+  spec: [name].spec.ts
+
+error_messages:
+  auth:
+    invalid_credentials: "Credenciales inválidas"
+    session_expired: "Tu sesión ha expirado"
+    unauthorized: "No tienes autorización para acceder"
+    forbidden: "Acceso denegado"
+  validation:
+    required: "Este campo es obligatorio"
+    email: "Formato de email inválido"
+    min_length: "La longitud mínima es {min} caracteres"
+    max_length: "La longitud máxima es {max} caracteres"
+    pattern: "El formato no es válido"
+    min: "El valor mínimo es {min}"
+    max: "El valor máximo es {max}"
+    dni: "El formato del DNI no es válido"
+    phone: "El formato del teléfono no es válido"
+    password: "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial"
+  api:
+    network_error: "Error de conexión. Por favor, intenta de nuevo"
+    server_error: "Error del servidor. Por favor, contacta con soporte"
+    not_found: "Recurso no encontrado"
+    timeout: "La solicitud ha tardado demasiado tiempo"
+  business:
+    # Específicos del negocio (a definir)
+    planning_overlap: "La planificación se solapa con otra existente"
+    team_full: "El equipo ha alcanzado el máximo de jugadores"
+    subscription_expired: "Tu suscripción ha expirado"
+    subscription_limit: "Has alcanzado el límite de tu plan"
+    no_plannings_available: "No hay planificaciones disponibles para este deporte"
+
+optimizations:
+  signals:
+    enabled: true
+    patterns:
+      - computed_values
+      - effect_cleanup
+      - toSignal_for_observables
+  
+  change_detection:
+    strategy: OnPush  # CHANGED: Best practice
+    track_by: always
+  
+  lazy_loading:
+    routes: true
+    modules: true
+    components: true
+    
+  performance:
+    preload_strategy: PreloadAllModules
+    virtual_scrolling: true
+    image_optimization: true
+    font_display: swap
+
+# LLM INSTRUCTIONS:
+# - Use this YAML as source of truth for all SportPlanner code generation
+# - All patterns must be followed exactly
+# - Replace [PLACEHOLDERS] with actual values when generating code
+# - When generating code, reference specific sections by path (e.g., auth.provider)
+# - Use imports.common for standard imports
+# - Apply error_messages consistently across the app (in Spanish)
+# - Follow file_templates naming convention
+# - Priority: security > performance > features
+# - When uncertain, check patterns section first
+# 
+# ANGULAR BEST PRACTICES (CRITICAL):
+# - Always use standalone components (DO NOT add standalone: true, it's default)
+# - Use input() and output() functions instead of @Input/@Output decorators
+# - Use computed() for derived state
+# - Set changeDetection: ChangeDetectionStrategy.OnPush in components
+# - Use inject() function instead of constructor injection
+# - Prefer signals over observables where possible
+# - Use native control flow (@if, @for, @switch) not *ngIf, *ngFor
+# - DO NOT use ngClass, use [class] bindings
+# - DO NOT use ngStyle, use [style] bindings
+# - DO NOT use @HostBinding/@HostListener, use host object
+# - Use NgOptimizedImage for static images
+# - DO NOT use signal.mutate(), use update() or set()
+# - Use strict TypeScript, avoid 'any', prefer 'unknown'
+# - Implement lazy loading for all feature modules
+# - Keep components small with single responsibility
+# - Keep templates simple, avoid complex logic
+# - All user-facing text should be in Spanish
