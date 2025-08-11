@@ -1,19 +1,19 @@
 # Progress Tracker - Landing Page Feature
 ## Estado: EN_PROGRESO
-## Última actualización: 2025-08-11T14:50:00Z
+## Última actualización: 2025-08-11T14:52:00Z
 
 ### ✅ Tareas Completadas
 - [x] Crear branch feature/landing-page
 - [x] Inicializar progress tracker
+- [x] TASK-1.1: Crear estructura de carpetas (commit: 5fd5038)
 
 ### 🔄 En Progreso
-- [ ] TASK-1.1: Crear estructura de carpetas
-  - Subtarea 1: ⏳ Creando estructura de directorios
-  - Subtarea 2: ⏳ Pendiente
-  - Subtarea 3: ⏳ Pendiente
+- [ ] TASK-1.2: Generar componentes principales
+  - Subtarea 1: ⏳ Generar LandingComponent
+  - Subtarea 2: ⏳ Generar componentes de sección
+  - Subtarea 3: ⏳ Configurar como standalone
 
 ### ⏳ Pendientes
-- [ ] TASK-1.2: Generar componentes principales
 - [ ] TASK-1.3: Configurar routing
 - [ ] TASK-2.1: Landing Header Component
 - [ ] TASK-2.2: Hero Section Component
@@ -47,7 +47,7 @@
 
 ## Environment State:
 - Branch: feature/landing-page
-- Last Commit: pendiente
+- Last Commit: 5fd5038
 - Dependencies Installed: ✅ (verificado en package.json)
 - Backend Running: ❌ (no necesario para esta fase)
 - Frontend Running: ⏳ (por iniciar)
