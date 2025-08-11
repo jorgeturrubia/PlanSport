@@ -1,22 +1,22 @@
 # Progress Tracker - Landing Page Feature
 ## Estado: EN_PROGRESO
-## Última actualización: 2025-08-11T14:52:00Z
+## Última actualización: 2025-08-11T14:58:00Z
 
 ### ✅ Tareas Completadas
 - [x] Crear branch feature/landing-page
 - [x] Inicializar progress tracker
 - [x] TASK-1.1: Crear estructura de carpetas (commit: 5fd5038)
+- [x] TASK-1.2: Generar componentes principales (commit: ad8b59e)
+- [x] TASK-1.3: Configurar routing (commit: ae4b6db)
+- [x] TASK-2.1: Landing Header Component (commit: ae4b6db)
 
 ### 🔄 En Progreso
-- [ ] TASK-1.2: Generar componentes principales
-  - Subtarea 1: ⏳ Generar LandingComponent
-  - Subtarea 2: ⏳ Generar componentes de sección
-  - Subtarea 3: ⏳ Configurar como standalone
+- [ ] TASK-2.2: Hero Section Component
+  - Subtarea 1: ⏳ Crear layout grid responsive
+  - Subtarea 2: ⏳ Implementar título y subtítulo con gradiente
+  - Subtarea 3: ⏳ Agregar iconos de deportes y badges animados
 
 ### ⏳ Pendientes
-- [ ] TASK-1.3: Configurar routing
-- [ ] TASK-2.1: Landing Header Component
-- [ ] TASK-2.2: Hero Section Component
 - [ ] TASK-2.3: Features Section Component
 - [ ] TASK-2.4: Marketplace Section Component
 - [ ] TASK-2.5: Subscriptions Section Component
@@ -38,7 +38,9 @@
 - [ ] TASK-7.3: SEO
 
 ### 🐛 Issues Encontrados
-<!-- Se actualizará según se encuentren problemas -->
+- Issue #1: El nombre del servicio generado era 'Scroll' en lugar de 'ScrollService'
+  - **Solución**: Reescribir el archivo completo con el nombre correcto
+  - **Estado**: Resuelto ✅
 
 ### 📝 Notas de Implementación
 - Decisión 1: Comenzando con Landing Page ya que es la cara principal de la aplicación
@@ -47,7 +49,7 @@
 
 ## Environment State:
 - Branch: feature/landing-page
-- Last Commit: 5fd5038
+- Last Commit: ae4b6db
 - Dependencies Installed: ✅ (verificado en package.json)
 - Backend Running: ❌ (no necesario para esta fase)
 - Frontend Running: ⏳ (por iniciar)
