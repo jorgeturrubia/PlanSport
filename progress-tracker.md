@@ -19,10 +19,14 @@
   - [x] AuthController base
   - [x] IAuthService interface
   - [x] SupabaseAuthService base
-  - [ ] DTOs adicionales (ForgotPassword, ResetPassword, VerifyEmail, Profile)
-  - [ ] Middleware de autenticación
-  - [ ] Manejo de excepciones personalizado
-  - [ ] Validaciones con FluentValidation
+  - [x] DTOs adicionales (ForgotPassword, ResetPassword, VerifyEmail, Profile)
+  - [x] Middleware de autenticación (JWT Bearer configurado)
+  - [x] Manejo de excepciones personalizado (GlobalExceptionMiddleware)
+  - [x] Validaciones con FluentValidation
+  - [x] Rate Limiting configurado
+  - [x] CORS configurado
+  - [x] Swagger con autenticación JWT
+  - [ ] Completar métodos faltantes en SupabaseAuthService
 
 ### ⏳ Pendientes
 - [ ] TASK-AUTH-002: Completar implementación del frontend
