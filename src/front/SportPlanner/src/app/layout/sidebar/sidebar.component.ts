@@ -92,6 +92,9 @@ export class SidebarComponent implements OnInit {
     return this.navigationService.getFilteredMenuItems(role);
   });
   
+  // Expose activeRoute as a public property for template access
+  readonly activeRoute = this.navigationService.activeRoute;
+  
   constructor() {
     // Listen to route changes to update active state
     this.router.events.pipe(
