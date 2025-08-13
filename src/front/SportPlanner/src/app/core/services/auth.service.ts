@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthResponse, AuthResponseData, LoginCredentials, RefreshResponse, User, ProfileDto, UpdateProfileDto, ChangePasswordDto } from '../../features/auth/models/auth.interfaces';
 import { AuthErrorHandlerService } from './auth-error-handler.service';
+import { environment } from '../../../environments/environment';
 
 // --- SERVICE ---
 
@@ -13,7 +14,7 @@ export class AuthService {
   private readonly router = inject(Router);
   private readonly authErrorHandler = inject(AuthErrorHandlerService);
 
-  private readonly API_URL = 'http://localhost:5000/api/auth'; // From api-spec
+  private readonly API_URL = `${environment.apiUrl}/api/auth`; // From environment config
 
   // --- STATE SIGNALS ---
   private readonly userSignal = signal<User | null>(null);
