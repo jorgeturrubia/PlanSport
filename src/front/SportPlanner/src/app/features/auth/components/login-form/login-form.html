@@ -1,0 +1,126 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+  <!-- Email Field -->
+  <div class="form-field">
+    <label for="email" class="form-label">
+      Correo electrónico
+    </label>
+    <div class="form-input-container">
+      <fa-icon [icon]="faEnvelope" class="input-icon" [attr.aria-hidden]="true"></fa-icon>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        placeholder="tu@email.com"
+        autocomplete="email"
+        class="form-input"
+        [class.valid]="emailControl.valid && emailControl.touched"
+        [class.invalid]="emailControl.invalid && emailControl.touched"
+        [attr.aria-describedby]="emailControl.invalid && emailControl.touched ? 'email-error' : null"
+        [attr.aria-invalid]="emailControl.invalid && emailControl.touched">
+      
+      <!-- Success Icon -->
+      <div *ngIf="emailControl.valid && emailControl.touched" class="input-action success-icon">
+        <fa-icon [icon]="faCheck" [attr.aria-hidden]="true"></fa-icon>
+      </div>
+      
+      <!-- Error Icon -->
+      <div *ngIf="emailControl.invalid && emailControl.touched" class="input-action">
+        <fa-icon [icon]="faExclamationTriangle" [attr.aria-hidden]="true"></fa-icon>
+      </div>
+    </div>
+    
+    <!-- Error Message -->
+    <div *ngIf="emailControl.invalid && emailControl.touched" 
+         id="email-error"
+         class="error-message"
+         role="alert">
+      <fa-icon [icon]="faExclamationTriangle" [attr.aria-hidden]="true"></fa-icon>
+      {{ getFieldErrorMessage('email') }}
+    </div>
+  </div>
+
+  <!-- Password Field -->
+  <div class="form-field">
+    <label for="password" class="form-label">
+      Contraseña
+    </label>
+    <div class="form-input-container">
+      <fa-icon [icon]="faLock" class="input-icon" [attr.aria-hidden]="true"></fa-icon>
+      <input
+        id="password"
+        [type]="showPassword() ? 'text' : 'password'"
+        formControlName="password"
+        placeholder="••••••••"
+        autocomplete="current-password"
+        class="form-input"
+        [class.valid]="passwordControl.valid && passwordControl.touched"
+        [class.invalid]="passwordControl.invalid && passwordControl.touched"
+        [attr.aria-describedby]="passwordControl.invalid && passwordControl.touched ? 'password-error' : null"
+        [attr.aria-invalid]="passwordControl.invalid && passwordControl.touched"
+        style="padding-right: 3rem;">
+      
+      <!-- Toggle Password Button -->
+      <button
+        type="button"
+        class="input-action"
+        [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        (click)="togglePasswordVisibility()">
+        <fa-icon 
+          [icon]="showPassword() ? faEyeSlash : faEye" 
+          [attr.aria-hidden]="true">
+        </fa-icon>
+      </button>
+    </div>
+    
+    <!-- Error Message -->
+    <div *ngIf="passwordControl.invalid && passwordControl.touched" 
+         id="password-error"
+         class="error-message"
+         role="alert">
+      <fa-icon [icon]="faExclamationTriangle" [attr.aria-hidden]="true"></fa-icon>
+      {{ getFieldErrorMessage('password') }}
+    </div>
+  </div>
+
+  <!-- Remember Me & Forgot Password -->
+  <div class="form-options">
+    <label class="checkbox-container">
+      <input
+        type="checkbox"
+        formControlName="rememberMe"
+        class="form-checkbox">
+      <span class="checkbox-label">Recordarme</span>
+    </label>
+    <a href="#" class="forgot-link">
+      ¿Olvidaste tu contraseña?
+    </a>
+  </div>
+
+  <!-- Submit Button -->
+  <button
+    type="submit"
+    [disabled]="isSubmitting()"
+    class="submit-button">
+    <span *ngIf="!isSubmitting()">
+      <fa-icon [icon]="faSignInAlt" [attr.aria-hidden]="true"></fa-icon>
+      Iniciar Sesión
+    </span>
+    <span *ngIf="isSubmitting()">
+      <svg class="loading-spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      Iniciando sesión...
+    </span>
+  </button>
+
+  <!-- Additional Links -->
+  <div class="additional-links">
+    <p class="link-text">
+      ¿No tienes una cuenta?
+      <a routerLink="/auth/register" class="auth-link">
+        Regístrate aquí
+      </a>
+    </p>
+  </div>
+</form>
