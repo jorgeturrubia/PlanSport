@@ -163,7 +163,7 @@ export class SubscriptionsSectionComponent {
   }
 
   goToRegister(): void {
-    this.router.navigate(['/register']);
+    this.router.navigate(['/auth/register']);
   }
 
   resetForm(): void {

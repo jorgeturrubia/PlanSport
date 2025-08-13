@@ -14,7 +14,7 @@ export class AuthService {
   private readonly router = inject(Router);
   private readonly authErrorHandler = inject(AuthErrorHandlerService);
 
-  private readonly API_URL = `${environment.apiUrl}/api/auth`; // From environment config
+  private readonly API_URL = `${environment.apiUrl}/api/Auth`; // From environment config - Note: Capital 'A' in Auth
 
   // --- STATE SIGNALS ---
   private readonly userSignal = signal<User | null>(null);
@@ -56,6 +56,8 @@ export class AuthService {
 
   async login(credentials: LoginCredentials): Promise<void> {
     try {
+      console.log('Attempting login to:', `${this.API_URL}/login`);
+      console.log('With credentials:', credentials);
       const response = await firstValueFrom(
         this.http.post<AuthResponse>(`${this.API_URL}/login`, credentials)
       );

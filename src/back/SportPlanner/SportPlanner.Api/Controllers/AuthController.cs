@@ -38,17 +38,25 @@ namespace SportPlanner.Api.Controllers
                 var result = await _authService.LoginAsync(request);
                 if (result == null)
                 {
-                    return Unauthorized(new { message = "Invalid credentials" });
+                    return Unauthorized(new { success = false, message = "Invalid credentials" });
                 }
-                return Ok(result);
+                return Ok(new { 
+                    success = true, 
+                    data = new {
+                        accessToken = result.AccessToken,
+                        refreshToken = result.RefreshToken,
+                        expiresIn = result.ExpiresIn,
+                        user = result.User
+                    }
+                });
             }
             catch (InvalidCredentialsException ex)
             {
-                return Unauthorized(new { message = ex.UserMessage, code = ex.ErrorCode });
+                return Unauthorized(new { success = false, message = ex.UserMessage, code = ex.ErrorCode });
             }
             catch (AuthException ex)
             {
-                return BadRequest(new { message = ex.UserMessage, code = ex.ErrorCode });
+                return BadRequest(new { success = false, message = ex.UserMessage, code = ex.ErrorCode });
             }
         }
 
@@ -60,17 +68,25 @@ namespace SportPlanner.Api.Controllers
                 var result = await _authService.RegisterAsync(request);
                 if (result == null)
                 {
-                    return BadRequest(new { message = "Registration failed" });
+                    return BadRequest(new { success = false, message = "Registration failed" });
                 }
-                return Created("api/auth/register", result);
+                return Created("api/auth/register", new { 
+                    success = true, 
+                    data = new {
+                        accessToken = result.AccessToken,
+                        refreshToken = result.RefreshToken,
+                        expiresIn = result.ExpiresIn,
+                        user = result.User
+                    }
+                });
             }
             catch (UserAlreadyExistsException ex)
             {
-                return BadRequest(new { message = ex.UserMessage, code = ex.ErrorCode });
+                return BadRequest(new { success = false, message = ex.UserMessage, code = ex.ErrorCode });
             }
             catch (AuthException ex)
             {
-                return BadRequest(new { message = ex.UserMessage, code = ex.ErrorCode });
+                return BadRequest(new { success = false, message = ex.UserMessage, code = ex.ErrorCode });
             }
         }
 
@@ -80,9 +96,16 @@ namespace SportPlanner.Api.Controllers
             var result = await _authService.RefreshAsync(request);
             if (result == null)
             {
-                return Unauthorized(new { message = "Invalid refresh token" });
+                return Unauthorized(new { success = false, message = "Invalid refresh token" });
             }
-            return Ok(result);
+            return Ok(new { 
+                success = true, 
+                data = new {
+                    accessToken = result.AccessToken,
+                    refreshToken = result.RefreshToken,
+                    expiresIn = result.ExpiresIn
+                }
+            });
         }
 
         [Authorize]

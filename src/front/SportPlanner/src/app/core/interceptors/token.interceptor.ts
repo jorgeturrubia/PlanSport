@@ -8,8 +8,8 @@ export const tokenInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, n
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // Skip auth endpoints
-  const skipUrls = ['/api/auth/login', '/api/auth/register', '/api/auth/refresh', '/api/auth/forgot-password', '/api/auth/reset-password'];
+  // Skip auth endpoints - Note: Using 'Auth' with capital A to match backend route
+  const skipUrls = ['/api/Auth/login', '/api/Auth/register', '/api/Auth/refresh', '/api/Auth/forgot-password', '/api/Auth/reset-password'];
   if (skipUrls.some(url => req.url.includes(url))) {
     return next(req);
   }

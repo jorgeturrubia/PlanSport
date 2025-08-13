@@ -22,7 +22,7 @@ import {
   encapsulation: ViewEncapsulation.None
 })
 export class HeroSectionComponent {
-  private readonly router = Router;
+  constructor(private readonly router: Router) {}
   
   // Font Awesome icons
   faFutbol = faFutbol;
@@ -54,8 +54,7 @@ export class HeroSectionComponent {
    * Navigates to register page
    */
   goToRegister(): void {
-    // this.router.navigate(['/register']);
-    console.log('Navigate to register');
+    this.router.navigate(['/auth/register']);
   }
 
   /**

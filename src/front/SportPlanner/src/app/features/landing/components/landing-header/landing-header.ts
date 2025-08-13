@@ -68,14 +68,14 @@ export class LandingHeaderComponent {
    * Navigates to login page
    */
   goToLogin(): void {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   /**
    * Navigates to register page
    */
   goToRegister(): void {
-    this.router.navigate(['/register']);
+    this.router.navigate(['/auth/register']);
   }
 
   /**

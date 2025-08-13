@@ -16,6 +16,8 @@ import { faExclamationTriangle, faInfoCircle, faCheck } from '@fortawesome/free-
     </div>
   `,
   styles: [`
+    @import "tailwindcss" reference;
+    
     .error-container {
       @apply p-4 rounded-lg mb-4;
     }
