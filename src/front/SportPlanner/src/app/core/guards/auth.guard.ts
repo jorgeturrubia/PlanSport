@@ -12,7 +12,8 @@ export const authGuard: CanActivateFn = (route, state) => {
       const checkAuth = setInterval(() => {
         if (!authService.isLoading()) { // Use isLoading() from AuthService
           clearInterval(checkAuth);
-          resolve(checkAuthentication());
+          const result = checkAuthentication();
+          resolve(result === true);
         }
       }, 100);
     });
