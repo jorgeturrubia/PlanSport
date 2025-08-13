@@ -1,7 +1,8 @@
-import { Component, signal, inject } from '@angular/core'; // Added inject
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AuthService } from './core/services/auth.service'; // Import AuthService
-import { CommonModule } from '@angular/common'; // Import CommonModule for ngIf/ngClass
+import { AuthService } from './core/services/auth.service';
+import { ThemeService } from './core/services/theme';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -9,10 +10,17 @@ import { CommonModule } from '@angular/common'; // Import CommonModule for ngIf/
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
   protected readonly title = signal('SportPlanner');
-  private readonly authService = inject(AuthService); // Inject AuthService
+  private readonly authService = inject(AuthService);
+  private readonly themeService = inject(ThemeService);
 
-  readonly isLoadingAuth = this.authService.isLoading; // Expose isLoading from AuthService
+  readonly isLoadingAuth = this.authService.isLoading;
+
+  ngOnInit(): void {
+    // El ThemeService se auto-inicializa en su constructor
+    // pero podemos acceder a su estado si necesitamos
+    console.log('Tema actual:', this.themeService.theme());
+  }
 }
 
