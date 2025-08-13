@@ -37,21 +37,25 @@ export const routes: Routes = [
       }
     ]
   },
-  // Protected Routes
+  // Protected Routes with Dashboard Layout
   {
-    path: 'dashboard',
-    loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent), // Assuming this component exists
-    canActivate: [authGuard]
-  },
-  {
-    path: 'teams',
-    loadComponent: () => import('./features/teams/teams.component').then(m => m.TeamsComponent), // Assuming this component exists
-    canActivate: [authGuard]
-  },
-  {
-    path: 'profile',
-    loadComponent: () => import('./features/auth/components/profile/profile.component').then(m => m.ProfileComponent),
-    canActivate: [authGuard]
+    path: '',
+    loadComponent: () => import('./layout/dashboard-layout/dashboard-layout.component').then(m => m.DashboardLayoutComponent),
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./features/dashboard/dashboard-home.component').then(m => m.DashboardHomeComponent)
+      },
+      {
+        path: 'teams',
+        loadComponent: () => import('./features/teams/teams.component').then(m => m.TeamsComponent)
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./features/auth/components/profile/profile.component').then(m => m.ProfileComponent)
+      }
+    ]
   },
   // Default redirect for any other path
   {
