@@ -1,16 +1,19 @@
 <div class="auth-container flex items-center justify-center">
   <div class="w-full max-w-md">
+    <!-- Theme Toggle in top right corner -->
+    <app-theme-toggle class="fixed top-4 right-4 z-50"></app-theme-toggle>
+
     <!-- Logo Section -->
     <div class="auth-logo">
       <h1>PlanSport</h1>
       <p>Planificación deportiva inteligente</p>
     </div>
-    
+
     <!-- Auth Card -->
     <div class="auth-card">
       <!-- Tabs Navigation -->
       <div class="auth-tabs" role="tablist" aria-label="Opciones de autenticación">
-        <a 
+        <a
           routerLink="/auth/login"
           class="auth-tab"
           [class.active]="activeTab() === 'login'"
@@ -24,8 +27,8 @@
           <fa-icon [icon]="faSignInAlt" [attr.aria-hidden]="true"></fa-icon>
           <span>Iniciar Sesión</span>
         </a>
-        
-        <a 
+
+        <a
           routerLink="/auth/register"
           class="auth-tab"
           [class.active]="activeTab() === 'register'"
@@ -40,7 +43,7 @@
           <span>Registrarse</span>
         </a>
       </div>
-      
+
       <!-- Tab Panel -->
       <div class="auth-panel" role="tabpanel" [attr.id]="activeTab() + '-panel'" [attr.aria-labelledby]="activeTab() + '-tab'">
         <router-outlet></router-outlet>

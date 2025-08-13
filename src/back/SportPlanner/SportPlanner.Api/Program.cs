@@ -2,6 +2,7 @@ using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using SportPlanner.Api.Middleware;
 using SportPlanner.Api.Services;
 using System.Text;
 
@@ -75,6 +76,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseGlobalExceptionMiddleware(); // Add global exception middleware
 
 app.UseSerilogRequestLogging();
 app.UseIpRateLimiting();

@@ -10,5 +10,12 @@ namespace SportPlanner.Api.Services
         Task<AuthResponseDto?> RegisterAsync(AuthController.RegisterRequest request);
         Task<AuthResponseDto?> RefreshAsync(AuthController.RefreshRequest request);
         Task LogoutAsync(AuthController.LogoutRequest request);
+        Task<bool> ForgotPasswordAsync(string email);
+        Task<bool> ResetPasswordAsync(string token, string newPassword);
+        Task<bool> SendEmailVerificationAsync();
+        Task<bool> VerifyEmailAsync(string token);
+        Task<ProfileDto?> GetProfileAsync();
+        Task<ProfileDto?> UpdateProfileAsync(UpdateProfileDto profile);
+        Task<bool> ChangePasswordAsync(ChangePasswordDto changePassword);
     }
 }

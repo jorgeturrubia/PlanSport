@@ -1,41 +1,68 @@
-# Progress Tracker - authentication
-
+# Progress Tracker - Authentication Feature
 ## Estado: EN_PROGRESO
-## Última actualización: 2025-08-13
+## Última actualización: 2025-08-13 14:58:14
+
+### 📋 Contexto
+- **Branch**: feature/authentication
+- **Feature**: Sistema de autenticación completo con Supabase
+- **Stack**: Angular 20 + .NET 8 + Supabase
 
 ### ✅ Tareas Completadas
-- [x] TASK-1.1: Setup .NET Project (commit: N/A - initial setup)
-- [x] TASK-1.2: Configure JWT Authentication (commit: N/A)
-- [x] TASK-1.3: Create Auth Controller (commit: N/A)
-- [x] TASK-1.4: Implement Auth Service (commit: N/A)
-- [x] TASK-1.5: Setup Rate Limiting (commit: N/A)
-- [x] TASK-1.6: Add Logging & Auditing (commit: N/A)
+- [x] Estructura base de autenticación creada
+- [x] AuthController inicial implementado
+- [x] SupabaseAuthService configurado
+- [x] Componentes base de auth-tabs, login-form y register-form
+- [x] Interfaces de autenticación definidas
 
 ### 🔄 En Progreso
-- [ ] Phase 2: Frontend Angular
+- [ ] TASK-AUTH-001: Completar implementación del backend
+  - [x] AuthController base
+  - [x] IAuthService interface
+  - [x] SupabaseAuthService base
+  - [ ] DTOs adicionales (ForgotPassword, ResetPassword, VerifyEmail, Profile)
+  - [ ] Middleware de autenticación
+  - [ ] Manejo de excepciones personalizado
+  - [ ] Validaciones con FluentValidation
 
 ### ⏳ Pendientes
-- [ ] Phase 3: Database Setup
-- [ ] Phase 4: Integration & Testing
-- [ ] Phase 5: Documentation & Polish
+- [ ] TASK-AUTH-002: Completar implementación del frontend
+  - [ ] Componente forgot-password
+  - [ ] Componente reset-password
+  - [ ] Componente verify-email
+  - [ ] Componente profile
+  - [ ] Guards de autenticación
+  - [ ] Interceptores HTTP
+  - [ ] Servicio de autenticación completo
+
+- [ ] TASK-AUTH-003: Integración completa
+  - [ ] Conectar frontend con backend
+  - [ ] Configurar Supabase
+  - [ ] Manejo de tokens JWT
+  - [ ] Refresh token logic
+  - [ ] Logout en todos los dispositivos
+
+- [ ] TASK-AUTH-004: Testing
+  - [ ] Tests unitarios backend (>80% coverage)
+  - [ ] Tests unitarios frontend (>80% coverage)
+  - [ ] Tests de integración
+  - [ ] Tests E2E
 
 ### 🐛 Issues Encontrados
-- **Issue #1**: `run_shell_command` tool does not support un-registered sub-directory paths.
-  - **Solución**: Used `--project` flag for `dotnet` commands to target specific project files from the root.
-  - **Estado**: Resuelto ✅
-- **Issue #2**: `dotnet add` command failed due to .NET version mismatch.
-  - **Solución**: Specified exact compatible versions for each NuGet package.
-  - **Estado**: Resuelto ✅
+_No issues reportados aún_
 
 ### 📝 Notas de Implementación
-- Utilized the existing `.NET 8` project as a foundation.
-- Added required NuGet packages for the entire authentication feature.
-- Configured `appsettings.json` with placeholder values for Supabase and JWT.
-- Implemented JWT validation in `Program.cs` using a symmetric key (`SymmetricSecurityKey`) from `appsettings.json` for initial setup simplicity.
-- **TODO**: Refactor to use an asymmetric key by fetching the public key from the Supabase JWKS endpoint, which is more secure.
-- Added a basic CORS policy for `http://localhost:4200`.
-- Created `AuthController` with placeholder endpoints and request DTOs.
-- Created `IAuthService` and `SupabaseAuthService` with actual Supabase client calls for login, register, refresh, and logout.
-- Registered services and injected `IAuthService` into `AuthController`.
-- Configured in-memory rate limiting using `AspNetCoreRateLimit`.
-- Configured Serilog for structured logging to console and file.
+- Se detectaron archivos modificados pero no commiteados
+- Nuevos archivos DTOs y componentes creados pero no añadidos a git
+- Necesario revisar y validar cambios actuales antes de continuar
+
+### 🔧 Environment State
+- Backend: No ejecutándose
+- Frontend: No ejecutándose
+- Git Status: Cambios sin commitear
+- Dependencies: Por verificar
+
+### 📊 Métricas
+- Coverage Frontend: Por medir
+- Coverage Backend: Por medir
+- Archivos modificados: 17
+- Archivos nuevos: 9+

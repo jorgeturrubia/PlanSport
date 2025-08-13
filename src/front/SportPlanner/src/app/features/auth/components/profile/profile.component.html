@@ -1,0 +1,165 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <h2>User Profile</h2>
+    <p>Manage your account information and security settings</p>
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="loading()" class="loading">
+    <div class="spinner"></div>
+    <p>Loading profile...</p>
+  </div>
+
+  <!-- Profile content -->
+  <div *ngIf="!loading() && profile()" class="profile-content">
+    <!-- Profile Update Form -->
+    <div class="form-section">
+      <h3>Profile Information</h3>
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()" class="profile-form">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input 
+            id="fullName" 
+            type="text" 
+            formControlName="fullName"
+            [class.error]="profileFullName?.invalid && profileFullName?.touched"
+            placeholder="Enter your full name">
+          <div *ngIf="profileFullName?.invalid && profileFullName?.touched" class="error-message">
+            <span *ngIf="profileFullName?.errors?.['required']">Name is required</span>
+            <span *ngIf="profileFullName?.errors?.['minlength']">Name must be at least 2 characters</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            id="email" 
+            type="email" 
+            formControlName="email"
+            placeholder="Your email address"
+            readonly>
+          <p class="hint">Email cannot be changed</p>
+          
+          <!-- Email Verification Status -->
+          <div class="email-verification-status">
+            <div class="verification-indicator">
+              <span class="status-label">Email Status:</span>
+              <span class="status-value" [class.verified]="profile()?.emailConfirmed" [class.unverified]="!profile()?.emailConfirmed">
+                {{ profile()?.emailConfirmed ? 'Verified' : 'Not Verified' }}
+              </span>
+            </div>
+            
+            <!-- Send Verification Email Button -->
+            <button
+              *ngIf="!profile()?.emailConfirmed"
+              type="button"
+              (click)="sendVerificationEmail()"
+              [disabled]="emailVerificationLoading()"
+              class="btn btn-secondary verification-button">
+              <span *ngIf="emailVerificationLoading()" class="spinner-small"></span>
+              {{ emailVerificationLoading() ? 'Sending...' : 'Send Verification Email' }}
+            </button>
+            
+            <!-- Success message -->
+            <div *ngIf="emailVerificationSuccess()" class="success-message">
+              Verification email sent successfully! Please check your inbox.
+            </div>
+            
+            <!-- Error message -->
+            <div *ngIf="emailVerificationError()" class="error-message">
+              {{ emailVerificationError() }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Success message -->
+        <div *ngIf="profileUpdateSuccess()" class="success-message">
+          Profile updated successfully!
+        </div>
+
+        <!-- Error message -->
+        <div *ngIf="profileUpdateError()" class="error-message">
+          {{ profileUpdateError() }}
+        </div>
+
+        <div class="form-actions">
+          <button 
+            type="submit" 
+            [disabled]="profileForm.invalid || profileUpdateLoading()"
+            class="btn btn-primary">
+            <span *ngIf="profileUpdateLoading()" class="spinner-small"></span>
+            {{ profileUpdateLoading() ? 'Updating...' : 'Update Profile' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Change Password Form -->
+    <div class="form-section">
+      <h3>Change Password</h3>
+      <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()" class="password-form">
+        <div class="form-group">
+          <label for="currentPassword">Current Password</label>
+          <input 
+            id="currentPassword" 
+            type="password" 
+            formControlName="currentPassword"
+            [class.error]="currentPassword?.invalid && currentPassword?.touched"
+            placeholder="Enter your current password">
+          <div *ngIf="currentPassword?.invalid && currentPassword?.touched" class="error-message">
+            <span *ngIf="currentPassword?.errors?.['required']">Current password is required</span>
+            <span *ngIf="currentPassword?.errors?.['minlength']">Password must be at least 6 characters</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="newPassword">New Password</label>
+          <input 
+            id="newPassword" 
+            type="password" 
+            formControlName="newPassword"
+            [class.error]="newPassword?.invalid && newPassword?.touched"
+            placeholder="Enter your new password">
+          <div *ngIf="newPassword?.invalid && newPassword?.touched" class="error-message">
+            <span *ngIf="newPassword?.errors?.['required']">New password is required</span>
+            <span *ngIf="newPassword?.errors?.['minlength']">Password must be at least 6 characters</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm New Password</label>
+          <input 
+            id="confirmPassword" 
+            type="password" 
+            formControlName="confirmPassword"
+            [class.error]="confirmPassword?.invalid && confirmPassword?.touched"
+            placeholder="Confirm your new password">
+          <div *ngIf="confirmPassword?.invalid && confirmPassword?.touched" class="error-message">
+            <span *ngIf="confirmPassword?.errors?.['required']">Please confirm your new password</span>
+            <span *ngIf="confirmPassword?.errors?.['passwordMismatch']">Passwords do not match</span>
+          </div>
+        </div>
+
+        <!-- Success message -->
+        <div *ngIf="passwordChangeSuccess()" class="success-message">
+          Password changed successfully!
+        </div>
+
+        <!-- Error message -->
+        <div *ngIf="passwordChangeError()" class="error-message">
+          {{ passwordChangeError() }}
+        </div>
+
+        <div class="form-actions">
+          <button 
+            type="submit" 
+            [disabled]="passwordForm.invalid || passwordChangeLoading()"
+            class="btn btn-primary">
+            <span *ngIf="passwordChangeLoading()" class="spinner-small"></span>
+            {{ passwordChangeLoading() ? 'Changing...' : 'Change Password' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
