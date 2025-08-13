@@ -1,0 +1,118 @@
+<nav class="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
+  <div class="px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Left side - Logo and menu button -->
+      <div class="flex items-center">
+        <!-- Mobile menu button -->
+        @if (isMobile()) {
+          <button
+            type="button"
+            (click)="toggleSidebar()"
+            class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
+            [attr.aria-label]="'Abrir menú lateral'"
+            aria-expanded="false">
+            <fa-icon [icon]="faBars" class="h-5 w-5" [attr.aria-hidden]="true"></fa-icon>
+          </button>
+        }
+        
+        <!-- Logo/Brand -->
+        <div class="flex items-center ml-4 lg:ml-0">
+          <a routerLink="/dashboard" class="flex items-center">
+            <span class="text-xl font-bold text-primary-600">PlanSport</span>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Right side - User info -->
+      <div class="flex items-center gap-4">
+        <!-- User dropdown -->
+        <div class="relative">
+          <button
+            id="user-menu-button"
+            type="button"
+            (click)="toggleDropdown()"
+            class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors duration-200"
+            [attr.aria-label]="'Abrir menú de usuario'"
+            [attr.aria-expanded]="isDropdownOpen()">
+            
+            <!-- User avatar with initials -->
+            <div class="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">
+              {{ userInitials() }}
+            </div>
+            
+            <!-- User name and role (hidden on mobile) -->
+            @if (!isMobile()) {
+              <div class="text-left">
+                <p class="text-sm font-semibold text-gray-900">{{ userName() }}</p>
+                <p class="text-xs text-gray-500">{{ userRole() }}</p>
+              </div>
+            }
+            
+            <!-- Dropdown arrow -->
+            <fa-icon 
+              [icon]="faChevronDown" 
+              class="h-4 w-4 text-gray-400 transition-transform duration-200"
+              [class.rotate-180]="isDropdownOpen()"
+              [attr.aria-hidden]="true">
+            </fa-icon>
+          </button>
+          
+          <!-- Dropdown menu -->
+          @if (isDropdownOpen()) {
+            <div
+              id="user-dropdown"
+              class="absolute right-0 mt-2 w-56 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none animate-slideDown"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="user-menu-button">
+              
+              <!-- User info in dropdown (mobile) -->
+              @if (isMobile()) {
+                <div class="px-4 py-3 border-b border-gray-100">
+                  <p class="text-sm font-semibold text-gray-900">{{ userName() }}</p>
+                  <p class="text-xs text-gray-500">{{ userEmail() }}</p>
+                  <p class="text-xs text-gray-400 mt-1">{{ userRole() }}</p>
+                </div>
+              }
+              
+              <div class="py-1" role="none">
+                <!-- Profile link -->
+                <a
+                  routerLink="/profile"
+                  (click)="navigateToProfile()"
+                  class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150"
+                  role="menuitem">
+                  <fa-icon [icon]="faUser" class="h-4 w-4" [attr.aria-hidden]="true"></fa-icon>
+                  <span>Mi Perfil</span>
+                </a>
+                
+                <!-- Settings link -->
+                <a
+                  routerLink="/settings"
+                  (click)="navigateToSettings()"
+                  class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150"
+                  role="menuitem">
+                  <fa-icon [icon]="faCog" class="h-4 w-4" [attr.aria-hidden]="true"></fa-icon>
+                  <span>Configuración</span>
+                </a>
+                
+                <!-- Divider -->
+                <div class="border-t border-gray-100 my-1"></div>
+                
+                <!-- Logout button -->
+                <button
+                  type="button"
+                  (click)="logout()"
+                  class="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors duration-150"
+                  role="menuitem">
+                  <fa-icon [icon]="faSignOutAlt" class="h-4 w-4" [attr.aria-hidden]="true"></fa-icon>
+                  <span>Cerrar Sesión</span>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
