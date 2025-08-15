@@ -1,0 +1,94 @@
+# ESTRUCTURA OBLIGATORIA - NO MODIFICAR
+metadata:
+  feature_name: landing-auth-dashboard
+  created: 2025-08-15
+  estimated_hours: 13
+  priority: critical
+  design_style: inherit-from .agentpm/project/design.yaml
+
+git:
+  branch_name: feature/landing-auth-dashboard
+  base_branch: main
+
+context:
+  problem_statement: |
+    - El flujo actual carece de una landing pública y una página unificada de autenticación (login/register).
+    - Se requiere una experiencia onboarding rápida y UX moderna, aprovechando Supabase para el manejo completo de sesión vía tokens.
+    - Si un usuario está autenticado (tokens válidos), debe saltar landing y auth, y aterrizar en Dashboard sin intervención manual.
+    - La landing debe ser pública, con acceso visual al login/registro.
+    - El dashboard debe proteger Home y Teams, y permitir crear equipos (MVP).
+  current_impl_summary:
+    auth:
+      tokens: manejados vía Supabase (JWT), guardados en localStorage (access/refresh)
+      guard: protección en rutas (ver spec auth-review), redirección basada en sesión
+      backend: endpoints existentes bajo /api/Auth/
+    ux:
+      tailwind: paleta personalizada definida
+      angular: shell/component abstractions disponibles
+  design_inspiration:
+    - Layouts modernos (neutros, énfasis en el primario)
+    - Tab para login/register siguiendo best practices
+    - Redirección automática basada en token
+    - Dashboard minimalista con barra de navegación y secciones Home/Teams
+objectives:
+  - Landing pública visualmente atractiva con acción primaria (Comenzar/Iniciar sesión)
+  - Página de autenticación con tab login/register; registro exitoso autologuea y redirige a dashboard
+  - Protección y persistencia de sesión (si token válido, nunca veo landing ni auth)
+  - Dashboard protegido con Home y Teams
+  - Página para crear equipos (crear equipo MVP)
+  - Navegación intuitiva y accesible en mobile/desktop
+  - Acciones seguras: solo tengo acceso a dashboard tras login/registro exitoso
+acceptance_criteria:
+  - Desde modo incógnito veo landing pública → login/register → registro/login exitoso me lleva al dashboard
+  - Si tengo token válido, al abrir app me lleva directo a dashboard (skip landing y auth)
+  - Tras registrar me autologuea (no requiere segundo paso)
+  - Dashboard permite navegar entre Home y Teams
+  - En Teams puedo crear un equipo
+  - Si pierdo sesión/token, me expulsa a login; si refresco válido, recupera usuario
+  - No hay escenario donde dashboard se vea sin token válido
+scope:
+  in:
+    - Landing Page
+    - Página Auth (login/register tab)
+    - Manejo de sesión/token desde frontend vía Supabase
+    - Dashboard layout: Home, Teams
+    - Página Create Team
+    - Guards, interceptor, services para flujo completo
+  out:
+    - Third-party providers (login Google/sign in with Apple)
+    - Custom profile/roles
+    - Gestión avanzada de equipos (solo creación MVP)
+routing_changes:
+  files_to_modify:
+    - ../src/front/SportPlanner/src/app/app.routes.ts
+    - ../src/front/SportPlanner/src/app/core/guards/auth.guard.ts
+    - ../src/front/SportPlanner/src/app/core/services/auth.service.ts
+    - ../src/front/SportPlanner/src/app/core/interceptors/token.interceptor.ts
+frontend_changes:
+  - Crear página src/app/pages/landing/landing.page.ts
+  - Crear página src/app/pages/auth/auth.page.ts (tabs login, register)
+  - Crear dashboard layout src/app/pages/dashboard/dashboard.page.ts
+  - Crear página src/app/pages/teams/teams.page.ts (lista y crear equipo)
+  - Extender paleta Tailwind y estilos UX
+  - Integrar manejo de sesión Supabase (login, register, refresh, redirect)
+  - Proteger rutas con guard updated
+backend_changes:
+  - Revisar endpoints existentes de Supabase/Auth y ajuste si hace falta verify/refresh
+  - Verificar integración equipo/backend para creación de equipos
+  - No se modifica modelado avanzado de equipos (solo create MVP)
+testing:
+  unit:
+    - AuthService: login, register, refresh, redirect, auto-login post-register
+    - Guards: acceso rutas protegidas, skip landing
+    - TeamService: create
+  e2e:
+    - Flujo: abrir → landing → login/register → dashboard → crear equipo
+    - Flujo: token válido → abre y entra directo a dashboard
+    - Flujo: perder token → redirige a login
+risks:
+  - Flujos de token edge-case (expira/refresh/localStorage inconsistente)
+  - UX fragmentada si falla refresh tras registro/login
+metrics:
+  - % de usuarios autenticados que nunca ven landing tras primer login
+  - Tiempo boot to dashboard < 600ms (con token)
+

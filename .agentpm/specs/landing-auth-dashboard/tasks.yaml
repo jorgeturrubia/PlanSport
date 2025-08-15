@@ -1,0 +1,58 @@
+# ESTRUCTURA OBLIGATORIA - NO MODIFICAR
+metadata:
+  feature: landing-auth-dashboard
+  total_tasks: 14
+  estimated_hours: 13
+
+tasks:
+  setup:
+    - id: SETUP-001
+      description: Crear branch desde main
+      command: git checkout main && git pull && git checkout -b feature/landing-auth-dashboard
+      status: pending
+  frontend:
+    - id: FE-001
+      description: Crear página de Landing pública (src/app/pages/landing)
+      status: pending
+    - id: FE-002
+      description: Crear Auth Page con tab login/register (src/app/pages/auth) - Angular; lógica UI/UX
+      status: pending
+    - id: FE-003
+      description: Implementar login/register usando Supabase (integrar servicio existente en auth.service)
+      status: pending
+    - id: FE-004
+      description: Login exitoso redirige dashboard, register exitoso autologuea y redirige (lógica en auth.service)
+      status: pending
+    - id: FE-005
+      description: Implementar manejo visual y UX de estados, errores y loading
+      status: pending
+    - id: FE-006
+      description: Crear dashboard layout con Home y Teams, navegación con protección AuthGuard
+      status: pending
+    - id: FE-007
+      description: Página Teams permite crear equipo (formulario MVP, integra con backend/api actual)
+      status: pending
+    - id: FE-008
+      description: Añadir redirect automático si hay token válido (skip landing/auth, entra directo dashboard)
+      status: pending
+    - id: FE-009
+      description: Si pierdo token/session, UX clara (redirección a login inmediata)
+      status: pending
+    - id: FE-010
+      description: Apps guards/interceptors revisan token, refresh, user. Si token no válido, siempre login.
+      status: pending
+    - id: FE-011
+      description: Extender paleta Tailwind en theme.css para branding UX
+      status: pending
+  backend:
+    - id: BE-001
+      description: Revisar endpoint creación equipos y endpoints Auth (verify/refresh)
+      status: pending
+  testing:
+    - id: TEST-001
+      description: Test unitarios: AuthService, Guards, TeamService (create team)
+      status: pending
+    - id: TEST-002
+      description: Test e2e: Navegación completo, autologin tras registro, skip landing con token
+      status: pending
+
