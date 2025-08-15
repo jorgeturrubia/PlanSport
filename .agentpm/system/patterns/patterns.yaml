@@ -1,0 +1,330 @@
+# Patrones reutilizables para código
+patterns:
+  # Angular Patterns
+  angular-component-pattern: |
+    import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core'
+    import { CommonModule } from '@angular/common'
+    
+    @Component({
+      selector: 'app-[name]',
+      standalone: true,
+      imports: [CommonModule],
+      templateUrl: './[name].component.html',
+      styleUrl: './[name].component.scss',
+      changeDetection: ChangeDetectionStrategy.OnPush
+    })
+    export class [Name]Component {
+      // Dependency injection
+      private readonly service = inject([Name]Service)
+      
+      // State with signals
+      protected readonly loading = signal(false)
+      protected readonly items = signal<Item[]>([])
+      
+      // Computed values
+      protected readonly itemCount = computed(() => this.items().length)
+      
+      // Methods
+      async loadData(): Promise<void> {
+        this.loading.set(true)
+        try {
+          const data = await this.service.getData()
+          this.items.set(data)
+        } finally {
+          this.loading.set(false)
+        }
+      }
+    }
+    
+  angular-service-pattern: |
+    import { Injectable, inject } from '@angular/core'
+    import { HttpClient } from '@angular/common/http'
+    import { firstValueFrom } from 'rxjs'
+    
+    @Injectable({ providedIn: 'root' })
+    export class [Name]Service {
+      private readonly http = inject(HttpClient)
+      private readonly apiUrl = '/api/[resource]'
+      
+      async getAll(): Promise<[Model][]> {
+        return firstValueFrom(
+          this.http.get<[Model][]>(this.apiUrl)
+        )
+      }
+      
+      async getById(id: string): Promise<[Model]> {
+        return firstValueFrom(
+          this.http.get<[Model]>(`${this.apiUrl}/${id}`)
+        )
+      }
+      
+      async create(data: Create[Model]Dto): Promise<[Model]> {
+        return firstValueFrom(
+          this.http.post<[Model]>(this.apiUrl, data)
+        )
+      }
+      
+      async update(id: string, data: Update[Model]Dto): Promise<[Model]> {
+        return firstValueFrom(
+          this.http.put<[Model]>(`${this.apiUrl}/${id}`, data)
+        )
+      }
+      
+      async delete(id: string): Promise<void> {
+        return firstValueFrom(
+          this.http.delete<void>(`${this.apiUrl}/${id}`)
+        )
+      }
+    }
+    
+  angular-guard-pattern: |
+    import { inject } from '@angular/core'
+    import { Router } from '@angular/router'
+    import { CanActivateFn } from '@angular/router'
+    
+    export const authGuard: CanActivateFn = (route, state) => {
+      const authService = inject(AuthService)
+      const router = inject(Router)
+      
+      if (authService.isAuthenticated()) {
+        return true
+      }
+      
+      return router.createUrlTree(['/login'], {
+        queryParams: { returnUrl: state.url }
+      })
+    }
+    
+  # .NET Patterns
+  entity-base-pattern: |
+    public abstract class BaseEntity
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
+        public bool IsDeleted { get; set; } = false;
+        public string? CreatedBy { get; set; }
+        public string? UpdatedBy { get; set; }
+    }
+    
+  repository-pattern: |
+    public interface IRepository<T> where T : BaseEntity
+    {
+        Task<T?> GetByIdAsync(Guid id, CancellationToken ct = default);
+        Task<IEnumerable<T>> GetAllAsync(CancellationToken ct = default);
+        Task<T> AddAsync(T entity, CancellationToken ct = default);
+        Task UpdateAsync(T entity, CancellationToken ct = default);
+        Task DeleteAsync(Guid id, CancellationToken ct = default);
+        Task<bool> ExistsAsync(Guid id, CancellationToken ct = default);
+    }
+    
+    public class Repository<T> : IRepository<T> where T : BaseEntity
+    {
+        protected readonly AppDbContext _context;
+        protected readonly DbSet<T> _dbSet;
+        
+        public Repository(AppDbContext context)
+        {
+            _context = context;
+            _dbSet = context.Set<T>();
+        }
+        
+        public async Task<T?> GetByIdAsync(Guid id, CancellationToken ct = default)
+        {
+            return await _dbSet
+                .Where(x => x.Id == id && !x.IsDeleted)
+                .FirstOrDefaultAsync(ct);
+        }
+        
+        public async Task<IEnumerable<T>> GetAllAsync(CancellationToken ct = default)
+        {
+            return await _dbSet
+                .Where(x => !x.IsDeleted)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(ct);
+        }
+        
+        public async Task<T> AddAsync(T entity, CancellationToken ct = default)
+        {
+            await _dbSet.AddAsync(entity, ct);
+            await _context.SaveChangesAsync(ct);
+            return entity;
+        }
+        
+        public async Task UpdateAsync(T entity, CancellationToken ct = default)
+        {
+            entity.UpdatedAt = DateTime.UtcNow;
+            _dbSet.Update(entity);
+            await _context.SaveChangesAsync(ct);
+        }
+        
+        public async Task DeleteAsync(Guid id, CancellationToken ct = default)
+        {
+            var entity = await GetByIdAsync(id, ct);
+            if (entity != null)
+            {
+                entity.IsDeleted = true;
+                entity.UpdatedAt = DateTime.UtcNow;
+                await _context.SaveChangesAsync(ct);
+            }
+        }
+        
+        public async Task<bool> ExistsAsync(Guid id, CancellationToken ct = default)
+        {
+            return await _dbSet.AnyAsync(x => x.Id == id && !x.IsDeleted, ct);
+        }
+    }
+    
+  service-pattern: |
+    public interface I[Name]Service
+    {
+        Task<Result<[Name]Dto>> GetByIdAsync(Guid id, CancellationToken ct = default);
+        Task<Result<IEnumerable<[Name]Dto>>> GetAllAsync(CancellationToken ct = default);
+        Task<Result<[Name]Dto>> CreateAsync(Create[Name]Dto dto, CancellationToken ct = default);
+        Task<Result> UpdateAsync(Guid id, Update[Name]Dto dto, CancellationToken ct = default);
+        Task<Result> DeleteAsync(Guid id, CancellationToken ct = default);
+    }
+    
+    public class [Name]Service : I[Name]Service
+    {
+        private readonly I[Name]Repository _repository;
+        private readonly IMapper _mapper;
+        private readonly ILogger<[Name]Service> _logger;
+        private readonly IValidator<Create[Name]Dto> _createValidator;
+        private readonly IValidator<Update[Name]Dto> _updateValidator;
+        
+        public [Name]Service(
+            I[Name]Repository repository,
+            IMapper mapper,
+            ILogger<[Name]Service> logger,
+            IValidator<Create[Name]Dto> createValidator,
+            IValidator<Update[Name]Dto> updateValidator)
+        {
+            _repository = repository;
+            _mapper = mapper;
+            _logger = logger;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
+        }
+        
+        public async Task<Result<[Name]Dto>> GetByIdAsync(Guid id, CancellationToken ct = default)
+        {
+            try
+            {
+                var entity = await _repository.GetByIdAsync(id, ct);
+                if (entity == null)
+                {
+                    return Result<[Name]Dto>.NotFound($"[Name] with id {id} not found");
+                }
+                
+                var dto = _mapper.Map<[Name]Dto>(entity);
+                return Result<[Name]Dto>.Success(dto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting [Name] with id {Id}", id);
+                return Result<[Name]Dto>.Failure("An error occurred while retrieving the [Name]");
+            }
+        }
+        
+        public async Task<Result<[Name]Dto>> CreateAsync(Create[Name]Dto dto, CancellationToken ct = default)
+        {
+            // Validate
+            var validationResult = await _createValidator.ValidateAsync(dto, ct);
+            if (!validationResult.IsValid)
+            {
+                return Result<[Name]Dto>.ValidationFailure(validationResult.Errors);
+            }
+            
+            try
+            {
+                var entity = _mapper.Map<[Name]>(dto);
+                var created = await _repository.AddAsync(entity, ct);
+                var resultDto = _mapper.Map<[Name]Dto>(created);
+                
+                _logger.LogInformation("[Name] created with id {Id}", created.Id);
+                return Result<[Name]Dto>.Success(resultDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating [Name]");
+                return Result<[Name]Dto>.Failure("An error occurred while creating the [Name]");
+            }
+        }
+    }
+    
+  controller-pattern: |
+    [ApiController]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
+    [Authorize]
+    public class [Name]Controller : ControllerBase
+    {
+        private readonly I[Name]Service _service;
+        private readonly ILogger<[Name]Controller> _logger;
+        
+        public [Name]Controller(I[Name]Service service, ILogger<[Name]Controller> logger)
+        {
+            _service = service;
+            _logger = logger;
+        }
+        
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<[Name]Dto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll(CancellationToken ct)
+        {
+            var result = await _service.GetAllAsync(ct);
+            return result.IsSuccess ? Ok(result.Value) : HandleFailure(result);
+        }
+        
+        [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof([Name]Dto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
+        {
+            var result = await _service.GetByIdAsync(id, ct);
+            return result.IsSuccess ? Ok(result.Value) : HandleFailure(result);
+        }
+        
+        [HttpPost]
+        [ProducesResponseType(typeof([Name]Dto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Create([FromBody] Create[Name]Dto dto, CancellationToken ct)
+        {
+            var result = await _service.CreateAsync(dto, ct);
+            if (result.IsSuccess)
+            {
+                return CreatedAtAction(nameof(GetById), new { id = result.Value.Id }, result.Value);
+            }
+            return HandleFailure(result);
+        }
+        
+        private IActionResult HandleFailure(Result result)
+        {
+            return result.Error.Type switch
+            {
+                ErrorType.NotFound => NotFound(result.Error),
+                ErrorType.Validation => BadRequest(result.Error),
+                ErrorType.Conflict => Conflict(result.Error),
+                _ => StatusCode(500, "An error occurred")
+            };
+        }
+    }
+    
+  validator-pattern: |
+    public class Create[Name]DtoValidator : AbstractValidator<Create[Name]Dto>
+    {
+        public Create[Name]DtoValidator()
+        {
+            RuleFor(x => x.Name)
+                .NotEmpty().WithMessage("Name is required")
+                .MaximumLength(100).WithMessage("Name cannot exceed 100 characters");
+                
+            RuleFor(x => x.Email)
+                .NotEmpty().WithMessage("Email is required")
+                .EmailAddress().WithMessage("Invalid email format");
+                
+            RuleFor(x => x.Description)
+                .MaximumLength(500).WithMessage("Description cannot exceed 500 characters");
+        }
+    }
