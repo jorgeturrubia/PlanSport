@@ -1,0 +1,102 @@
+# ESTRUCTURA OBLIGATORIA - NO MODIFICAR
+project:
+  name: SportPlaner
+  version: "1.0.0"
+  created: 2025-08-15
+  root_path: ../  # Relativo a .agentpm
+  source_path: ../src/  # Donde está el código
+
+problem:
+  statement: "Facilitar la creación de planificaciones deportivas basadas en objetivos, sesiones y ejercicios, con un marketplace para reutilizar planificaciones y acelerar el trabajo de entrenadores y directores deportivos."
+  current_solutions: []
+  why_better: "Con muy pocos clics se habilita una planificación completa con objetivos, ejercicios y entrenamientos; además, permite compartir/importar contenido valorado por la comunidad (hasta 5 estrellas)."
+
+users:
+  primary:
+    type: "Entrenador o Director Deportivo"
+    needs:
+      - Crear y gestionar planificaciones por deporte
+      - Definir objetivos, sesiones y ejercicios
+      - Reutilizar/compartir planificaciones y ejercicios
+      - Controlar permisos/visibilidad por equipo
+    pain_points:
+      - Tiempo elevado en preparar temporadas y sesiones
+      - Dificultad para reutilizar conocimiento
+      - Falta de coherencia entre objetivos y sesiones
+  secondary:
+    type: "Colaboradores/Observadores asignados por el entrenador o club"
+    needs:
+      - Ver planificaciones y entrenamientos con permisos restringidos
+      - Aportar feedback sin editar (según rol)
+
+features:
+  mvp:  # Mínimo Viable
+    - id: F001
+      name: "Autenticación con Supabase (signup/login)"
+      priority: critical
+      complexity: medium
+    - id: F002
+      name: "Dashboard (Home)"
+      priority: critical
+      complexity: medium
+    - id: F003
+      name: "Gestión de equipos (crear equipo)"
+      priority: critical
+      complexity: medium
+  
+  phase2:  # Siguiente fase
+    - id: F004
+      name: "Planificaciones con objetivos, sesiones y ejercicios"
+      priority: high
+      complexity: high
+    - id: F005
+      name: "Marketplace para importar planificaciones/ejercicios"
+      priority: high
+      complexity: high
+    - id: F006
+      name: "Controles de visibilidad/roles por equipo/club"
+      priority: high
+      complexity: medium
+    - id: F007
+      name: "Valoraciones (hasta 5 estrellas) y filtros por deporte"
+      priority: medium
+      complexity: medium
+    - id: F008
+      name: "Runner de sesión (vista dinámica con cronómetro)"
+      priority: medium
+      complexity: medium
+    - id: F009
+      name: "Informes de objetivos, % de cobertura y progreso"
+      priority: medium
+      complexity: medium
+    - id: F010
+      name: "Calendario de entrenamientos (editar solo futuros)"
+      priority: medium
+      complexity: medium
+
+domain_notes:
+  subscriptions:
+    - free: "0€; crear 1 equipo y hasta 15 entrenamientos"
+    - coach: "Licencia para un entrenador; conceptos personalizados, itinerarios y entrenamientos ilimitados"
+    - club: "Gestión multi-equipo, rol director, validación de resultados"
+  relationships:
+    - "Un usuario puede tener suscripción gratuita y una no gratuita (solo 1 no gratuita)"
+    - "Usuarios invitados sin suscripción pueden usar la app si un admin los da de alta"
+    - "Club/organización tiene muchos equipos; equipo pertenece a una organización"
+    - "Equipo puede tener varias planificaciones; una planificación puede pertenecer a varios equipos"
+  planning_model:
+    - "Planificación con fecha inicio/fin, días/horas, pista entera/partida"
+    - "Planificación por conceptos o por itinerario (colección de conceptos) para creación rápida"
+    - "Conceptos clasificados por categoría y subcategoría (p.ej., Técnica individual > Bote: 'Cambio de mano')"
+    - "Ejercicios vinculados a uno o varios conceptos"
+    - "Objetivos con nivel de dificultad y tiempo estimado de aprendizaje"
+  teams:
+    - "Definir género (masculino/femenino) y categoría por edad"
+    - "Nivel A/B/C influye en complejidad de ejercicios"
+  governance:
+    - "Definir roles: administrador, director, entrenador; asignación de usuarios a equipos con permisos"
+  lifecycle:
+    - "Ocultar equipos/planificaciones (flag) para histórico sin borrar"
+  automation:
+    - "Al crear equipo, sugerir itinerario y autogenerar entrenamientos entre fechas de la planificación"
+

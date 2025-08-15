@@ -2,7 +2,7 @@ import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpErrorResponse } from
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
-import { catchError, throwError } from 'rxjs';
+import { catchError, throwError, from, of, switchMap } from 'rxjs';
 
 export const tokenInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
   const authService = inject(AuthService);
@@ -27,13 +27,28 @@ export const tokenInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, n
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        // Token expired or invalid
-        authService.logout(); // This will also navigate to login
+        const alreadyRetried = req.headers.has('X-Retry');
+        if (alreadyRetried) {
+          // Ya intentado, forzar logout
+          return from(authService.logout()).pipe(switchMap(() => throwError(() => error)));
+        }
+        // Intentar refresh una vez y reintentar la petición original
+        return from(authService.refreshAccessToken()).pipe(
+          switchMap((refreshed) => {
+            if (refreshed) {
+              const newToken = authService.getToken();
+              const retriedReq = req.clone({
+                setHeaders: newToken ? { Authorization: `Bearer ${newToken}`, 'X-Retry': '1' } : { 'X-Retry': '1' }
+              });
+              return next(retriedReq);
+            }
+            return from(authService.logout()).pipe(switchMap(() => throwError(() => error)));
+          })
+        );
       } else if (error.status === 403) {
         // Forbidden - insufficient permissions
         router.navigate(['/unauthorized']); // Assuming an unauthorized route exists
       }
-
       return throwError(() => error);
     })
   );

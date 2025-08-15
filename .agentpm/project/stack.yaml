@@ -1,0 +1,56 @@
+# ESTRUCTURA OBLIGATORIA - NO MODIFICAR
+frontend:
+  framework:
+    name: Angular
+    version: "20"
+  ui:
+    library: TailwindCSS
+    css: Tailwind v4
+  state:
+    manager: Signals
+    pattern: "Signals-first, feature stores"
+    
+backend:
+  framework:
+    name: ".NET"
+    version: "8"
+  architecture:
+    pattern: Hexagonal
+    layers: ["Domain", "Application", "Infrastructure", "Adapters"]
+  api:
+    style: REST
+    versioning: true
+    
+database:
+  primary:
+    type: PostgreSQL (Supabase)
+    version: TBD
+  orm:
+    name: EF Core
+    version: TBD
+    
+infrastructure:
+  hosting:
+    frontend: TBD
+    backend: TBD
+    database: Supabase
+  auth:
+    provider: Supabase
+    method: JWT
+  storage:
+    provider: TBD
+    cdn: TBD
+    
+documentation_sources:  # IMPORTANTE: Fuentes para fetch
+  frontend:
+    - name: "Angular Docs"
+      url: "https://angular.dev/overview"
+    - name: "Tailwind Docs"
+      url: "https://tailwindcss.com/docs"
+  backend:
+    - name: ".NET Docs"
+      url: "https://learn.microsoft.com/dotnet/"
+  best_practices:
+    - name: "Supabase Docs"
+      url: "https://supabase.com/docs"
+

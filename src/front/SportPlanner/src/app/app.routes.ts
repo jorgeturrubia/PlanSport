@@ -1,13 +1,16 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard'; // Import authGuard
+import { guestGuard } from './core/guards/guest.guard';
 
 export const routes: Routes = [
   {
     path: '',
+    canMatch: [guestGuard],
     loadComponent: () => import('./features/landing/landing/landing').then(m => m.LandingComponent)
   },
   {
     path: 'auth',
+    canMatch: [guestGuard],
     loadComponent: () => import('./features/auth/auth-tabs/auth-tabs').then(m => m.AuthTabsComponent),
     children: [
       {

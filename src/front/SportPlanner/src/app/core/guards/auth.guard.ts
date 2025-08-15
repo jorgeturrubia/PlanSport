@@ -2,22 +2,14 @@ import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = async (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // Wait for auth initialization
-  if (authService.isLoading()) { // Use isLoading() from AuthService
-    return new Promise<boolean>((resolve) => {
-      const checkAuth = setInterval(() => {
-        if (!authService.isLoading()) { // Use isLoading() from AuthService
-          clearInterval(checkAuth);
-          const result = checkAuthentication();
-          resolve(result === true);
-        }
-      }, 100);
-    });
-  }
+  // Esperar la inicialización del AuthService sin polling
+  try {
+    await authService.initialized;
+  } catch {}
 
   return checkAuthentication();
 

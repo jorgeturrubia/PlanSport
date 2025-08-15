@@ -124,7 +124,14 @@ namespace SportPlanner.Api.Services
                 {
                     AccessToken = session.AccessToken ?? string.Empty,
                     RefreshToken = session.RefreshToken ?? string.Empty,
-                    ExpiresIn = (int)session.ExpiresIn
+                    ExpiresIn = (int)session.ExpiresIn,
+                    User = new UserDto
+                    {
+                        Id = session.User?.Id ?? string.Empty,
+                        Email = session.User?.Email ?? string.Empty,
+                        FullName = session.User?.UserMetadata?.ContainsKey("full_name") == true ? 
+                            session.User.UserMetadata["full_name"]?.ToString() ?? string.Empty : string.Empty,
+                    }
                 };
             }
             catch (System.Exception ex)

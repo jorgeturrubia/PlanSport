@@ -103,7 +103,8 @@ namespace SportPlanner.Api.Controllers
                 data = new {
                     accessToken = result.AccessToken,
                     refreshToken = result.RefreshToken,
-                    expiresIn = result.ExpiresIn
+                    expiresIn = result.ExpiresIn,
+                    user = result.User
                 }
             });
         }
@@ -118,9 +119,14 @@ namespace SportPlanner.Api.Controllers
 
         [Authorize]
         [HttpGet("verify")]
-        public IActionResult Verify()
+        public async Task<IActionResult> Verify()
         {
-            return Ok(new { message = "Token is valid", User = User.Identity?.Name });
+            var profile = await _authService.GetProfileAsync();
+            if (profile == null)
+            {
+                return Unauthorized(new { success = false, message = "Invalid or missing session" });
+            }
+            return Ok(new { success = true, data = profile });
         }
 
         [HttpPost("forgot-password")]
@@ -196,10 +202,8 @@ namespace SportPlanner.Api.Controllers
         {
             var profile = await _authService.GetProfileAsync();
             if (profile == null)
-            {
-                return NotFound(new { message = "Profile not found" });
-            }
-            return Ok(profile);
+                return NotFound(new { success = false, message = "Profile not found" });
+            return Ok(new { success = true, data = profile });
         }
 
         [Authorize]
@@ -214,10 +218,8 @@ namespace SportPlanner.Api.Controllers
 
             var profile = await _authService.UpdateProfileAsync(updateProfileDto);
             if (profile == null)
-            {
-                return BadRequest(new { message = "Failed to update profile" });
-            }
-            return Ok(profile);
+                return BadRequest(new { success = false, message = "Failed to update profile" });
+            return Ok(new { success = true, data = profile });
         }
 
         [Authorize]

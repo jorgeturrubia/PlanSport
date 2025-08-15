@@ -1,12 +1,10 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthResponse, AuthResponseData, LoginCredentials, RefreshResponse, User, ProfileDto, UpdateProfileDto, ChangePasswordDto } from '../../features/auth/models/auth.interfaces';
 import { AuthErrorHandlerService } from './auth-error-handler.service';
 import { environment } from '../../../environments/environment';
-
-// --- SERVICE ---
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -14,61 +12,63 @@ export class AuthService {
   private readonly router = inject(Router);
   private readonly authErrorHandler = inject(AuthErrorHandlerService);
 
-  private readonly API_URL = `${environment.apiUrl}/api/Auth`; // From environment config - Note: Capital 'A' in Auth
+  private readonly API_URL = `${environment.apiUrl}/api/Auth`;
 
-  // --- STATE SIGNALS ---
   private readonly userSignal = signal<User | null>(null);
-  private readonly loadingSignal = signal(true); // Start as true until initial check is done
+  private readonly loadingSignal = signal(true);
   private readonly tokenSignal = signal<string | null>(null);
 
-  // --- PUBLIC READABLE SIGNALS ---
   readonly currentUser = this.userSignal.asReadonly();
   readonly isLoading = this.loadingSignal.asReadonly();
   readonly isAuthenticated = computed(() => !!this.currentUser());
 
-  // --- REDIRECT URL ---
   redirectUrl: string | null = null;
-
   private refreshTimer?: any;
 
+  private initResolver?: () => void;
+  readonly initialized: Promise<void>;
+
   constructor() {
+    this.initialized = new Promise<void>((resolve) => {
+      this.initResolver = resolve;
+    });
     this.initializeAuth();
   }
 
   private async initializeAuth(): Promise<void> {
     try {
-      const accessToken = localStorage.getItem('access_token');
-      const refreshToken = localStorage.getItem('refresh_token');
+      const accessToken = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+      const refreshToken = localStorage.getItem('refresh_token') || sessionStorage.getItem('refresh_token');
 
       if (accessToken && refreshToken) {
-        // TODO: Implement a /verify endpoint call for better security
-        // For now, we optimistically try to refresh
-        await this.refreshToken(refreshToken);
+        const verified = await this.verifyAccessTokenSafe();
+        if (!verified) {
+          await this.refreshAccessToken();
+        } else {
+          await this.loadUserProfileSafe();
+        }
       }
     } catch (error) {
       this.authErrorHandler.logError(error, 'AuthService.initializeAuth');
-      console.error('Auth initialization error:', error);
-      this.clearAuthData(); // Clear inconsistent data
+      this.clearAuthData();
     } finally {
       this.loadingSignal.set(false);
+      this.initResolver?.();
     }
   }
 
   async login(credentials: LoginCredentials): Promise<void> {
     try {
-      console.log('Attempting login to:', `${this.API_URL}/login`);
-      console.log('With credentials:', credentials);
       const response = await firstValueFrom(
         this.http.post<AuthResponse>(`${this.API_URL}/login`, credentials)
       );
-
       if (response.success) {
         this.handleAuthResponse(response.data);
+        await this.loadUserProfileSafe();
         const redirect = this.redirectUrl || '/dashboard';
         this.redirectUrl = null;
         await this.router.navigate([redirect]);
       } else {
-        // The component will handle displaying the error based on the HTTP error response
         throw new Error('Login failed');
       }
     } catch (error) {
@@ -82,12 +82,11 @@ export class AuthService {
       const response = await firstValueFrom(
         this.http.post<AuthResponse>(`${this.API_URL}/register`, userData)
       );
-      
       if (response.success) {
-          this.handleAuthResponse(response.data);
-          await this.router.navigate(['/dashboard']);
+        this.handleAuthResponse(response.data);
+        await this.router.navigate(['/dashboard']);
       } else {
-          throw new Error('Registration failed');
+        throw new Error('Registration failed');
       }
     } catch (error) {
       this.authErrorHandler.logError(error, 'AuthService.register');
@@ -103,7 +102,6 @@ export class AuthService {
       return response?.message ? true : false;
     } catch (error) {
       this.authErrorHandler.logError(error, 'AuthService.forgotPassword');
-      console.error('Forgot password request failed:', error);
       return false;
     }
   }
@@ -116,7 +114,6 @@ export class AuthService {
       return response?.message ? true : false;
     } catch (error) {
       this.authErrorHandler.logError(error, 'AuthService.resetPassword');
-      console.error('Reset password request failed:', error);
       return false;
     }
   }
@@ -129,7 +126,6 @@ export class AuthService {
       return response?.message ? true : false;
     } catch (error) {
       this.authErrorHandler.logError(error, 'AuthService.sendEmailVerification');
-      console.error('Send email verification request failed:', error);
       return false;
     }
   }
@@ -142,95 +138,108 @@ export class AuthService {
       return response?.message ? true : false;
     } catch (error) {
       this.authErrorHandler.logError(error, 'AuthService.verifyEmail');
-      console.error('Email verification failed:', error);
       return false;
     }
   }
 
   async logout(): Promise<void> {
-    const refreshToken = localStorage.getItem('refresh_token');
+    const refreshToken = localStorage.getItem('refresh_token') || sessionStorage.getItem('refresh_token');
     if (refreshToken) {
-        try {
-            await firstValueFrom(this.http.post(`${this.API_URL}/logout`, { refreshToken }));
-        } catch (error) {
-            this.authErrorHandler.logError(error, 'AuthService.logout');
-            console.error('Logout API call failed, clearing session locally anyway.', error);
-        }
+      try {
+        await firstValueFrom(this.http.post(`${this.API_URL}/logout`, { refreshToken }));
+      } catch (error) {
+        this.authErrorHandler.logError(error, 'AuthService.logout');
+      }
     }
     this.clearAuthData();
     await this.router.navigate(['/auth/login']);
   }
 
-  private async refreshToken(token: string): Promise<void> {
+  async refreshAccessToken(): Promise<boolean> {
+    const token = localStorage.getItem('refresh_token') || sessionStorage.getItem('refresh_token');
+    if (!token) return false;
     try {
-        const response = await firstValueFrom(
-            this.http.post<RefreshResponse>(`${this.API_URL}/refresh`, { refreshToken: token })
-        );
-        if(response.success) {
-            // A refresh response is slightly different, we need to get user data separately
-            // or assume it's the same user. For now, we just update tokens.
-            const { accessToken, refreshToken, expiresIn } = response.data;
-            localStorage.setItem('access_token', accessToken);
-            localStorage.setItem('refresh_token', refreshToken);
-            this.tokenSignal.set(accessToken);
-            
-            // We need to get the user profile again after refreshing
-            // TODO: await this.loadUserProfile();
-            
-            this.scheduleTokenRefresh(expiresIn);
-        } else {
-            this.clearAuthData();
-        }
+      const response = await firstValueFrom(
+        this.http.post<RefreshResponse>(`${this.API_URL}/refresh`, { refreshToken: token })
+      );
+      if (response.success) {
+        const { accessToken, refreshToken, expiresIn } = response.data;
+        try {
+          localStorage.setItem('access_token', accessToken);
+          localStorage.setItem('refresh_token', refreshToken);
+        } catch {}
+        this.tokenSignal.set(accessToken);
+        await this.loadUserProfileSafe();
+        this.scheduleTokenRefresh(expiresIn);
+        return true;
+      } else {
+        this.clearAuthData();
+        return false;
+      }
     } catch (error) {
-      this.authErrorHandler.logError(error, 'AuthService.refreshToken');
-      console.error('Token refresh failed:', error);
+      this.authErrorHandler.logError(error, 'AuthService.refreshAccessToken');
       this.clearAuthData();
-      await this.router.navigate(['/auth/login']);
+      return false;
     }
   }
 
   private handleAuthResponse(data: AuthResponseData): void {
     const { accessToken, refreshToken, expiresIn, user } = data;
-
-    localStorage.setItem('access_token', accessToken);
-    localStorage.setItem('refresh_token', refreshToken);
-    
+    try {
+      localStorage.setItem('access_token', accessToken);
+      localStorage.setItem('refresh_token', refreshToken);
+    } catch {}
     this.tokenSignal.set(accessToken);
     this.userSignal.set(user);
-
     this.scheduleTokenRefresh(expiresIn);
+  }
+
+  private async loadUserProfileSafe(): Promise<void> {
+    try {
+      const profile = await this.getProfile();
+      this.userSignal.set({ ...(this.userSignal() as any), ...profile } as unknown as User);
+    } catch (e) {
+      this.authErrorHandler.logError(e, 'AuthService.loadUserProfileSafe');
+    }
+  }
+
+  private async verifyAccessTokenSafe(): Promise<boolean> {
+    try {
+      const resp = await firstValueFrom(this.http.get<{ success: boolean; data: any }>(`${this.API_URL}/verify`));
+      return !!resp?.success;
+    } catch {
+      return false;
+    }
   }
 
   private scheduleTokenRefresh(expiresIn: number): void {
     if (this.refreshTimer) {
       clearTimeout(this.refreshTimer);
     }
-
-    // Refresh 1 minute before expiration to be safe
     const refreshInMs = (expiresIn - 60) * 1000;
-    
     this.refreshTimer = setTimeout(() => {
-      const refreshToken = localStorage.getItem('refresh_token');
-      if (refreshToken) {
-        this.refreshToken(refreshToken);
-      }
+      this.refreshAccessToken();
     }, refreshInMs);
   }
 
   private clearAuthData(): void {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    
+    try {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+    } catch {}
+    try {
+      sessionStorage.removeItem('access_token');
+      sessionStorage.removeItem('refresh_token');
+    } catch {}
     this.tokenSignal.set(null);
     this.userSignal.set(null);
-
     if (this.refreshTimer) {
       clearTimeout(this.refreshTimer);
     }
   }
 
   getToken(): string | null {
-    return this.tokenSignal() || localStorage.getItem('access_token');
+    return this.tokenSignal() || localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
   }
 
   async getProfile(): Promise<ProfileDto> {
@@ -238,7 +247,6 @@ export class AuthService {
       const response = await firstValueFrom(
         this.http.get<{ success: boolean; data: ProfileDto }>(`${this.API_URL}/profile`)
       );
-      
       if (response.success) {
         return response.data;
       } else {
@@ -255,9 +263,7 @@ export class AuthService {
       const response = await firstValueFrom(
         this.http.put<{ success: boolean; data: ProfileDto }>(`${this.API_URL}/profile`, profile)
       );
-      
       if (response.success) {
-        // Update the user signal with the new profile data
         this.userSignal.set({
           ...this.userSignal()!,
           fullName: response.data.fullName,
@@ -268,7 +274,6 @@ export class AuthService {
       return false;
     } catch (error) {
       this.authErrorHandler.logError(error, 'AuthService.updateProfile');
-      console.error('Profile update failed:', error);
       return false;
     }
   }
@@ -281,7 +286,6 @@ export class AuthService {
       return response?.success ? true : false;
     } catch (error) {
       this.authErrorHandler.logError(error, 'AuthService.changePassword');
-      console.error('Password change failed:', error);
       return false;
     }
   }
