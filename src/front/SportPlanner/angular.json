@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "PlanSport": {
+    "SportPlanner": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -14,9 +14,6 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -61,10 +58,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "PlanSport:build:production"
+              "buildTarget": "SportPlanner:build:production"
             },
             "development": {
-              "buildTarget": "PlanSport:build:development"
+              "buildTarget": "SportPlanner:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -75,10 +72,6 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               {
