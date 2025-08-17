@@ -356,29 +356,22 @@ export class LoginComponent {
       };
       
       this.authService.login(loginData, formValue.rememberMe).subscribe({
-        next: () => {
+        next: (response) => {
           this.loginSuccess.set(true);
           
           // Pequeño delay para mostrar el mensaje de éxito
           setTimeout(() => {
             // Obtener URL de retorno de los query params
-            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+            // Si no hay returnUrl específica, ir al dashboard (usuarios autenticados)
+            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
             this.router.navigate([returnUrl]);
           }, 1500);
         },
         error: (error) => {
           this.loginSuccess.set(false);
           
-          // Log detallado del error para debugging
-          console.error('Error en login:', error);
-          
           // Si el error tiene detalles específicos, los mostramos
           if (error.errorDetails) {
-            console.log('Tipo de error:', error.errorDetails.type);
-            console.log('Código de error:', error.errorDetails.code);
-            console.log('Es recuperable:', this.authService.isErrorRecoverable(error));
-            console.log('Requiere acción:', this.authService.doesErrorRequireAction(error));
-            
             // Manejar errores específicos si es necesario
             if (error.errorDetails.type === 'validation' && error.errorDetails.validationErrors) {
               // Mostrar errores de validación específicos en los campos
@@ -400,7 +393,6 @@ export class LoginComponent {
    */
   onForgotPassword(): void {
     // TODO: Implementar modal o navegación a página de recuperación
-    console.log('Forgot password clicked');
   }
 
   /**

@@ -17,6 +17,7 @@ import {
 } from '../models/auth.interfaces';
 import { TokenService } from './token.service';
 import { ErrorHandlerService, ErrorDetails } from './error-handler.service';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +28,8 @@ export class AuthService {
   private readonly tokenService = inject(TokenService);
   private readonly errorHandler = inject(ErrorHandlerService);
   
-  // URL base de la API (debería venir de environment)
-  private readonly API_URL = 'https://api.plansport.com/api';
+  // URL base de la API desde environment
+  private readonly API_URL = environment.apiUrl;
   
   // Estado reactivo con signals
   private readonly _authState = signal<AuthState>({
@@ -100,20 +101,22 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.API_URL}/auth/login`, credentials)
       .pipe(
         tap(response => {
-          // Almacenar tokens con preferencia de persistencia
-          this.tokenService.setTokens(
-            response.accessToken, 
-            response.refreshToken, 
-            rememberMe
-          );
-          
-          // Actualizar estado
-          this.updateAuthState({
-            user: response.user,
-            isAuthenticated: true,
-            isLoading: false,
-            error: null
-          });
+          if (response.data?.accessToken) {
+            // Almacenar tokens con preferencia de persistencia
+            this.tokenService.setTokens(
+              response.data.accessToken, 
+              response.data.refreshToken, 
+              rememberMe
+            );
+            
+            // Actualizar estado
+            this.updateAuthState({
+              user: response.data.user,
+              isAuthenticated: true,
+              isLoading: false,
+              error: null
+            });
+          }
         }),
         catchError(error => {
           const errorDetails = this.handleAuthError(error);
@@ -139,14 +142,14 @@ export class AuthService {
         tap(response => {
           // Almacenar tokens
           this.tokenService.setTokens(
-            response.accessToken, 
-            response.refreshToken, 
+            response.data.accessToken, 
+            response.data.refreshToken, 
             false // Por defecto no recordar en registro
           );
           
           // Actualizar estado
           this.updateAuthState({
-            user: response.user,
+            user: response.data.user,
             isAuthenticated: true,
             isLoading: false,
             error: null

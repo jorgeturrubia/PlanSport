@@ -70,6 +70,20 @@ Este spec se enfoca específicamente en:
 2. Redirección directa a `/dashboard`
 3. No pasa por la página de autenticación
 
+## 📊 Estado Actual
+
+**🟢 COMPLETADO** - Los botones ahora navegan correctamente según el estado de autenticación
+
+### Funcionalidad Actual:
+- ✅ Botones "Comenzar Gratis" y "Ver Demo" están visibles
+- ✅ Eventos de click están configurados
+- ✅ Navegación inteligente basada en estado de autenticación
+- ✅ Integración completa con AuthService
+- ✅ Estados de loading y feedback visual implementados
+- ✅ Manejo de errores robusto
+
+**Última actualización**: 2025-01-27 15:35
+
 ## 📊 Criterios de Éxito
 
 ### Funcionales:

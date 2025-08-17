@@ -19,10 +19,13 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  user: AuthUser;
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
+  success: boolean;
+  data: {
+    user: AuthUser;
+    accessToken: string;
+    refreshToken: string;
+    expiresIn: number;
+  };
 }
 
 export interface RegisterRequest {
@@ -34,10 +37,13 @@ export interface RegisterRequest {
 }
 
 export interface RegisterResponse {
-  user: AuthUser;
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
+  success: boolean;
+  data: {
+    user: AuthUser;
+    accessToken: string;
+    refreshToken: string;
+    expiresIn: number;
+  };
   message: string;
 }
 

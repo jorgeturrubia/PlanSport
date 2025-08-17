@@ -15,6 +15,15 @@ export class TokenService {
    * Almacena los tokens de autenticación
    */
   setTokens(accessToken: string, refreshToken: string, rememberMe: boolean = false): void {
+    // Debug temporal
+    console.log('setTokens llamado con:', {
+      accessToken: accessToken ? 'presente' : 'ausente',
+      accessTokenType: typeof accessToken,
+      accessTokenValue: accessToken,
+      refreshToken: refreshToken ? 'presente' : 'ausente',
+      rememberMe: rememberMe
+    });
+    
     // Configurar el tipo de almacenamiento según la preferencia del usuario
     this.setStorageType(rememberMe);
     
@@ -49,11 +58,40 @@ export class TokenService {
    */
   decodeToken(token: string): TokenPayload | null {
     try {
-      const payload = token.split('.')[1];
-      const decoded = atob(payload);
+      // Validar que el token no esté vacío o sea null/undefined
+      if (!token || typeof token !== 'string') {
+        console.warn('Token inválido: token vacío o no es string');
+        return null;
+      }
+
+      // Validar formato JWT (debe tener exactamente 3 partes separadas por puntos)
+      const parts = token.split('.');
+      if (parts.length !== 3) {
+        console.warn('Token inválido: formato JWT incorrecto, debe tener 3 partes');
+        return null;
+      }
+
+      const payload = parts[1];
+      
+      // Validar que el payload no esté vacío
+      if (!payload) {
+        console.warn('Token inválido: payload vacío');
+        return null;
+      }
+
+      // Agregar padding si es necesario para base64
+      let paddedPayload = payload;
+      const missingPadding = payload.length % 4;
+      if (missingPadding) {
+        paddedPayload += '='.repeat(4 - missingPadding);
+      }
+
+      const decoded = atob(paddedPayload);
       return JSON.parse(decoded) as TokenPayload;
     } catch (error) {
       console.error('Error decodificando token:', error);
+      // Limpiar token inválido del storage
+      this.clearTokens();
       return null;
     }
   }
@@ -130,7 +168,16 @@ export class TokenService {
    */
   hasValidToken(): boolean {
     const token = this.getAccessToken();
-    return !!token && !this.isTokenExpired(token);
+    if (!token) return false;
+    
+    // Validar formato básico del token antes de verificar expiración
+    if (typeof token !== 'string' || token.split('.').length !== 3) {
+      console.warn('Token con formato inválido detectado, limpiando storage');
+      this.clearTokens();
+      return false;
+    }
+    
+    return !this.isTokenExpired(token);
   }
 
   /**
