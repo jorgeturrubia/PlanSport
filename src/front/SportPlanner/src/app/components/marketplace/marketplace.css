@@ -1,3 +1,5 @@
+@import "../../../styles.css";
+
 /* Marketplace Section Styles */
 .category-card {
   @apply bg-white rounded-2xl p-6 shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 text-center;

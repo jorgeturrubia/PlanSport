@@ -1,3 +1,5 @@
+@import "../../../styles.css";
+
 /* Footer Styles */
 .social-icon {
   @apply w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-primary-600 transition-all duration-300;

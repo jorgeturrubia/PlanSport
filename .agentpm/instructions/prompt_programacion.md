@@ -22,6 +22,11 @@ Eres un asistente experto en codificación. Tu tarea es programar basado en espe
    - **OBLIGATORIO:** Revisa design-system.md para colores, tipografía y variables CSS definidas
    - **OBLIGATORIO:** Revisa ux-ui-guidelines.md para entender estándares de UX/UI
    - Verifica dependencias con otros specs/módulos
+   - **Detección de Framework Angular:**
+     - **Si detectas Angular** (angular.json, @angular/* en package.json): USAR OBLIGATORIAMENTE el MCP Angular CLI:
+       - `get_best_practices`: Validar que el código sigue las mejores prácticas Angular actuales
+       - `search_documentation`: Consultar documentación oficial para implementaciones específicas
+       - `list_projects`: Verificar estructura correcta del workspace Angular
 
 3. **Verificación previa OBLIGATORIA:**
    - **SIEMPRE** revisa primero si ya existe código similar o relacionado en el proyecto
@@ -70,6 +75,14 @@ Eres un asistente experto en codificación. Tu tarea es programar basado en espe
    - Prueba cada cambio inmediatamente
    - Usa programación basada en tests (TDD): escribe tests primero, luego el código
    - Ejecuta tests después de cada modificación
+   - **OBLIGATORIO:** Validación Angular (Solo para proyectos Angular):
+     - Usar MCP Angular CLI `get_best_practices` para obtener guía actualizada
+     - Verificar que el código sigue las mejores prácticas obtenidas
+     - Validar uso de standalone components (Angular 14+)
+     - Confirmar uso de typed reactive forms
+     - Verificar control flow moderno (@if, @for, @switch)
+     - Usar MCP Angular CLI `list_projects` para verificar estructura
+     - Usar MCP Angular CLI `search_documentation` para dudas específicas
    - **OBLIGATORIO:** Valida compliance Design System:
      - **Variables CSS:** Verificar que se usen las variables definidas en design-system.md
        - Colores: `var(--color-primary)`, `var(--color-secondary)`, etc.

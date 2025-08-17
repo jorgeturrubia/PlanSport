@@ -1,3 +1,5 @@
+@import "../../../styles.css";
+
 /* Subscriptions Section Styles */
 .pricing-card {
   @apply bg-white rounded-2xl shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 relative overflow-hidden;
@@ -69,8 +71,29 @@
   @apply text-primary-200;
 }
 
+.check-icon-simple {
+  @apply w-5 h-5 text-green-500 flex-shrink-0 flex items-center justify-center rounded-full bg-green-100 text-sm font-bold;
+}
+
+.pricing-card.featured .check-icon-simple {
+  @apply text-green-300 bg-green-200;
+}
+
+.x-icon-simple {
+  @apply w-5 h-5 text-gray-400 flex-shrink-0 flex items-center justify-center rounded-full bg-gray-100 text-sm font-bold;
+}
+
+.pricing-card.featured .x-icon-simple {
+  @apply text-primary-200 bg-primary-100;
+}
+
+/* Legacy SVG icon styles - keeping for any remaining SVG icons */
 .check-icon {
   @apply w-5 h-5 text-green-500 flex-shrink-0;
+  min-width: 1.25rem;
+  min-height: 1.25rem;
+  max-width: 1.25rem;
+  max-height: 1.25rem;
 }
 
 .pricing-card.featured .check-icon {
@@ -79,6 +102,10 @@
 
 .x-icon {
   @apply w-5 h-5 text-gray-400 flex-shrink-0;
+  min-width: 1.25rem;
+  min-height: 1.25rem;
+  max-width: 1.25rem;
+  max-height: 1.25rem;
 }
 
 .pricing-card.featured .x-icon {

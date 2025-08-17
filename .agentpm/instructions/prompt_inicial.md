@@ -9,6 +9,11 @@ Eres un asistente experto en desarrollo de software. Tu tarea es recopilar infor
 
 3. **Consultar documentación actualizada:**
    - **USA FETCH** para obtener información actualizada de cada tecnología seleccionada
+   - **Si detectas Angular**: USAR OBLIGATORIAMENTE el MCP Angular CLI para:
+     - Obtener mejores prácticas actualizadas de Angular
+     - Validar estructura de proyecto
+     - Consultar documentación oficial
+     - Verificar configuraciones recomendadas
    - Verifica las mejores prácticas actuales y estándares de cada framework/librería
    - Consulta guías oficiales de instalación y configuración
    - Revisa changelog y breaking changes de las versiones específicas

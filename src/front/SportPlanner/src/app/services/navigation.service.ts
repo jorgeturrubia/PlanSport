@@ -29,7 +29,7 @@ export class NavigationService {
   }
   
   getCurrentSection(): string {
-    const sections = ['caracteristicas', 'suscripciones', 'marketplace', 'resenas'];
+    const sections = ['hero', 'caracteristicas', 'suscripciones', 'marketplace', 'reviews'];
     const scrollPosition = window.scrollY + 100;
     
     for (const sectionId of sections) {

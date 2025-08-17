@@ -35,9 +35,10 @@ export class Header implements OnInit, OnDestroy {
   
   menuItems = [
     { label: 'Inicio', section: 'hero' },
-    { label: 'Características', section: 'features' },
-    { label: 'Precios', section: 'pricing' },
-    { label: 'Contacto', section: 'contact' }
+    { label: 'Características', section: 'caracteristicas' },
+    { label: 'Precios', section: 'suscripciones' },
+    { label: 'Marketplace', section: 'marketplace' },
+    { label: 'Reseñas', section: 'reviews' }
   ];
   
   navigateToSection(section: string): void {
