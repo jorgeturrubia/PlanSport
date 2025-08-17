@@ -3,7 +3,14 @@
     <div class="flex items-center justify-between h-16">
       <!-- Logo -->
       <div class="flex-shrink-0">
-        <h1 class="text-2xl font-bold text-primary-600">PlanSport</h1>
+        <h1 
+          class="text-2xl font-bold text-primary-600 cursor-pointer hover:text-primary-700 transition-colors duration-200"
+          (click)="onLogoClick()"
+          [class.opacity-50]="isNavigating()"
+          [class.cursor-not-allowed]="isNavigating()"
+        >
+          PlanSport
+        </h1>
       </div>
       
       <!-- Desktop Navigation -->
@@ -22,8 +29,36 @@
       
       <!-- Auth Buttons -->
       <div class="hidden md:flex items-center space-x-4">
-        <button (click)="onLogin()" class="btn-secondary">Iniciar Sesión</button>
-        <button (click)="onRegister()" class="btn-primary">Registrarse</button>
+        <button 
+          (click)="onLogin()" 
+          [disabled]="isNavigating()"
+          [class.opacity-50]="isNavigating()"
+          [class.cursor-not-allowed]="isNavigating()"
+          class="btn-secondary">
+          @if (isNavigating()) {
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+              <span>Cargando...</span>
+            </div>
+          } @else {
+            Iniciar Sesión
+          }
+        </button>
+        <button 
+          (click)="onRegister()" 
+          [disabled]="isNavigating()"
+          [class.opacity-50]="isNavigating()"
+          [class.cursor-not-allowed]="isNavigating()"
+          class="btn-primary">
+          @if (isNavigating()) {
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span>Cargando...</span>
+            </div>
+          } @else {
+            Registrarse
+          }
+        </button>
       </div>
       
       <!-- Mobile menu button -->
@@ -47,8 +82,36 @@
           {{ item.label }}
         </a>
         <div class="pt-4 pb-2 border-t border-gray-200 mt-4">
-          <button (click)="onLogin()" class="w-full mb-2 btn-secondary">Iniciar Sesión</button>
-          <button (click)="onRegister()" class="w-full btn-primary">Registrarse</button>
+          <button 
+            (click)="onLogin()" 
+            [disabled]="isNavigating()"
+            [class.opacity-50]="isNavigating()"
+            [class.cursor-not-allowed]="isNavigating()"
+            class="w-full mb-2 btn-secondary">
+            @if (isNavigating()) {
+              <div class="flex items-center justify-center gap-2">
+                <div class="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                <span>Cargando...</span>
+              </div>
+            } @else {
+              Iniciar Sesión
+            }
+          </button>
+          <button 
+            (click)="onRegister()" 
+            [disabled]="isNavigating()"
+            [class.opacity-50]="isNavigating()"
+            [class.cursor-not-allowed]="isNavigating()"
+            class="w-full btn-primary">
+            @if (isNavigating()) {
+              <div class="flex items-center justify-center gap-2">
+                <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>Cargando...</span>
+              </div>
+            } @else {
+              Registrarse
+            }
+          </button>
         </div>
       </div>
     </div>

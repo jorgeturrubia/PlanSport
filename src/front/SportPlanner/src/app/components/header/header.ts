@@ -1,7 +1,9 @@
-import { Component, inject, HostListener, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, HostListener, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { LucideAngularModule, Menu, X } from 'lucide-angular';
 import { NavigationService } from '../../services/navigation.service';
+import { AuthService } from '../../features/auth/services/auth.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -13,6 +15,8 @@ import { Subscription } from 'rxjs';
 })
 export class Header implements OnInit, OnDestroy {
   private navigationService = inject(NavigationService);
+  private router = inject(Router);
+  private authService = inject(AuthService);
   
   // Icon references for template
   readonly MenuIcon = Menu;
@@ -21,6 +25,9 @@ export class Header implements OnInit, OnDestroy {
   isMobileMenuOpen = false;
   activeSection = '';
   private activeSection$ = new Subscription();
+  
+  // Loading state for navigation
+  isNavigating = signal(false);
   
   ngOnInit(): void {
     // Subscribe to active section changes
@@ -55,13 +62,68 @@ export class Header implements OnInit, OnDestroy {
   }
   
   onLogin(): void {
-    // TODO: Implement login functionality
-    console.log('Login clicked');
+    this.handleNavigation('login');
   }
   
   onRegister(): void {
-    // TODO: Implement registration functionality
-    console.log('Register clicked');
+    this.handleNavigation('register');
+  }
+  
+  /**
+   * Maneja el click en el logo para navegar al home apropiado
+   */
+  onLogoClick(): void {
+    this.handleHomeNavigation();
+  }
+  
+  /**
+   * Navega al home apropiado según el estado de autenticación
+   */
+  private async handleHomeNavigation(): Promise<void> {
+    try {
+      this.isNavigating.set(true);
+      
+      // Si el usuario está autenticado, ir al dashboard
+      if (this.authService.isAuthenticated()) {
+        await this.router.navigate(['/dashboard']);
+      } else {
+        // Si no está autenticado, ir a la landing page
+        await this.router.navigate(['/']);
+      }
+      
+    } catch (error) {
+      console.error('Error en navegación del logo:', error);
+      // Navegación de fallback a la raíz
+      await this.router.navigate(['/']);
+    } finally {
+      this.isNavigating.set(false);
+    }
+  }
+  
+  /**
+   * Maneja la navegación basada en el estado de autenticación
+   */
+  private async handleNavigation(action: 'login' | 'register'): Promise<void> {
+    try {
+      this.isNavigating.set(true);
+      
+      // Si el usuario ya está autenticado, ir al dashboard
+      if (this.authService.isAuthenticated()) {
+        await this.router.navigate(['/dashboard']);
+        return;
+      }
+      
+      // Si no está autenticado, ir a la página de auth con el tab correspondiente
+      const tab = action === 'register' ? 'register' : 'login';
+      await this.router.navigate(['/auth'], { queryParams: { tab } });
+      
+    } catch (error) {
+      console.error('Error en navegación:', error);
+      // Navegación de fallback
+      await this.router.navigate(['/auth']);
+    } finally {
+      this.isNavigating.set(false);
+    }
   }
   
   @HostListener('document:click', ['$event'])

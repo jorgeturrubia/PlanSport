@@ -2,6 +2,15 @@
 
 Eres un asistente experto en codificación. Tu tarea es programar basado en especificaciones modulares organizadas en carpetas separadas. Cada spec representa un módulo independiente de la aplicación.
 
+**PREVENCIÓN DE ERRORES CRÍTICOS (APLICAR ANTES DE CADA IMPLEMENTACIÓN):**
+- **✅ Validación de Interfaces:** Verificar que TODAS las propiedades estén definidas antes de usar
+- **✅ Consistencia de Imports:** Validar rutas de importación contra archivos existentes
+- **✅ Null Safety:** Usar optional chaining (?.) y nullish coalescing (??)
+- **✅ Paradigma Único:** NO mezclar Observables y Signals en el mismo módulo
+- **✅ Mapeo Formulario-Interface:** Cada campo del form DEBE tener su propiedad en la interface
+- **✅ Componentes Referenciados:** Crear TODOS los componentes antes de referenciarlos en rutas
+- **✅ Build Incremental:** Ejecutar ng build después de cada cambio significativo
+
 **Pasos a seguir:**
 
 1. **Exploración y selección de spec:**
@@ -35,6 +44,14 @@ Eres un asistente experto en codificación. Tu tarea es programar basado en espe
    - Identifica si hay backend, frontend o ambos ya implementados
    - **OBLIGATORIO:** Verifica ux-ui-guidelines.md para compliance de UX/UI
    - **Revisa dependencies.md** del spec para entender qué otros módulos necesita
+
+3.1. **🔍 VALIDACIÓN PRE-IMPLEMENTACIÓN (CRÍTICO):**
+   - **Interfaces Existentes:** Buscar interfaces similares antes de crear nuevas
+   - **Naming Conventions:** Verificar convenciones de archivos existentes (*.service.ts, *.interfaces.ts)
+   - **Import Paths:** Validar que las rutas de importación sean correctas ANTES de escribir código
+   - **Component Dependencies:** Listar TODOS los componentes que se van a referenciar
+   - **Form-Interface Mapping:** Crear tabla de mapeo campo-formulario → propiedad-interface
+   - **Paradigm Check:** Verificar si el proyecto usa Observables O Signals, mantener consistencia
 
 4. **Consulta de documentación actualizada:**
    - **USA FETCH** para obtener documentación oficial actualizada de las tecnologías específicas mencionadas en technical-specs.md
@@ -131,3 +148,25 @@ Eres un asistente experto en codificación. Tu tarea es programar basado en espe
 - Marcar claramente qué está en progreso y qué está completado
 
 **IMPORTANTE:** Desarrollo incremental es OBLIGATORIO. Un paso, una verificación, un avance. CEÑIRSE ESTRICTAMENTE a las tasks definidas.
+
+## 🔒 CHECKLIST FINAL DE VALIDACIÓN (ANTES DE MARCAR TASK COMO COMPLETADA)
+
+**✅ Validaciones Técnicas Obligatorias:**
+- [ ] **Build Success:** `ng build` ejecutado sin errores de compilación
+- [ ] **Type Safety:** Todas las interfaces tienen propiedades completas
+- [ ] **Import Consistency:** Todas las rutas de importación funcionan correctamente
+- [ ] **Null Safety:** Uso correcto de optional chaining (?.) y nullish coalescing (??)
+- [ ] **Naming Conventions:** Archivos siguen convenciones establecidas (*.interfaces.ts, *.service.ts)
+- [ ] **Component Dependencies:** Todos los componentes referenciados existen
+- [ ] **Form-Interface Mapping:** Cada campo del formulario mapea a su propiedad en la interface
+- [ ] **Paradigm Consistency:** Solo Observables O Signals, no ambos en el mismo módulo
+
+**🚫 ERRORES CRÍTICOS A EVITAR:**
+- ❌ Crear interfaces incompletas (falta de propiedades requeridas)
+- ❌ Usar rutas de importación incorrectas (auth.models vs auth.interfaces)
+- ❌ Mezclar paradigmas (Observables + Signals)
+- ❌ Referenciar componentes no existentes en rutas
+- ❌ Construir objetos sin todas las propiedades requeridas
+- ❌ No manejar valores null/undefined apropiadamente
+
+**Si alguna validación falla: DETENER, CORREGIR, VALIDAR NUEVAMENTE antes de continuar.**
