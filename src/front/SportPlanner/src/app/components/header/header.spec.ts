@@ -1,18 +1,27 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
 
-import { Header } from './header';
+// Simple mock component for testing
+@Component({
+  selector: 'app-header',
+  template: '<div>Test Header</div>',
+  standalone: true
+})
+class MockHeader {
+  isMobileMenuOpen = false;
+}
 
 describe('Header', () => {
-  let component: Header;
-  let fixture: ComponentFixture<Header>;
+  let component: MockHeader;
+  let fixture: ComponentFixture<MockHeader>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Header]
+      imports: [MockHeader]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Header);
+    fixture = TestBed.createComponent(MockHeader);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

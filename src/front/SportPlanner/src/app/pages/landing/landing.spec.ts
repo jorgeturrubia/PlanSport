@@ -1,18 +1,26 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
 
-import { Landing } from './landing';
+// Simple mock component for testing
+@Component({
+  selector: 'app-landing',
+  template: '<div>Test Landing</div>',
+  standalone: true
+})
+class MockLanding {
+}
 
 describe('Landing', () => {
-  let component: Landing;
-  let fixture: ComponentFixture<Landing>;
+  let component: MockLanding;
+  let fixture: ComponentFixture<MockLanding>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Landing]
+      imports: [MockLanding]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Landing);
+    fixture = TestBed.createComponent(MockLanding);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -313,9 +313,33 @@ export class AuthService {
    * Redirige después del login exitoso
    */
   redirectAfterLogin(): void {
-    // TODO: Implementar lógica de redirección basada en el rol del usuario
-    // Por ahora redirigir al dashboard
-    this.router.navigate(['/dashboard']);
+    const user = this.user();
+    
+    if (!user) {
+      this.router.navigate(['/auth']);
+      return;
+    }
+
+    // Lógica de redirección basada en el rol del usuario
+    const userRole = user.role?.toLowerCase();
+    
+    switch (userRole) {
+      case 'admin':
+      case 'manager':
+        this.router.navigate(['/dashboard/admin']);
+        break;
+      case 'coach':
+      case 'coordinator':
+        this.router.navigate(['/dashboard/teams']);
+        break;
+      case 'assistant':
+        this.router.navigate(['/dashboard/schedule']);
+        break;
+      default:
+        // Redirección por defecto al dashboard principal
+        this.router.navigate(['/dashboard']);
+        break;
+    }
   }
 
   /**

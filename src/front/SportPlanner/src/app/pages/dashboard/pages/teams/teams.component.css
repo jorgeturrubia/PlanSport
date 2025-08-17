@@ -1,0 +1,310 @@
+/* Teams Page Styles */
+.teams-page {
+  @apply space-y-6;
+}
+
+/* Page header */
+.page-header {
+  @apply flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4;
+}
+
+.page-title {
+  @apply text-2xl font-bold text-gray-900 dark:text-white;
+}
+
+.header-actions {
+  @apply flex items-center gap-3;
+}
+
+.create-team-button {
+  @apply inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors duration-200;
+}
+
+/* Filters section */
+.filters-section {
+  @apply bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-700;
+}
+
+.filters-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-4;
+}
+
+.filter-group {
+  @apply space-y-2;
+}
+
+.filter-label {
+  @apply block text-sm font-medium text-gray-700 dark:text-gray-300;
+}
+
+.filter-input {
+  @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-colors duration-200;
+}
+
+.filter-select {
+  @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-colors duration-200;
+}
+
+/* Teams grid */
+.teams-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+.team-card {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-200 hover:shadow-md hover:border-primary-300 dark:hover:border-primary-600;
+}
+
+/* Team card header */
+.team-card-header {
+  @apply p-4 border-b border-gray-200 dark:border-gray-700;
+}
+
+.team-header-top {
+  @apply flex items-start justify-between mb-3;
+}
+
+.team-avatar {
+  @apply w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0;
+}
+
+.team-actions {
+  @apply flex items-center gap-1;
+}
+
+.team-action-button {
+  @apply p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500;
+}
+
+.team-action-icon {
+  @apply w-4 h-4 text-gray-500 dark:text-gray-400;
+}
+
+.team-name {
+  @apply text-lg font-semibold text-gray-900 dark:text-white mb-1;
+}
+
+.team-sport {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300;
+}
+
+/* Team card content */
+.team-card-content {
+  @apply p-4;
+}
+
+.team-stats {
+  @apply grid grid-cols-2 gap-4 mb-4;
+}
+
+.team-stat {
+  @apply text-center;
+}
+
+.team-stat-value {
+  @apply text-xl font-bold text-gray-900 dark:text-white;
+}
+
+.team-stat-label {
+  @apply text-xs text-gray-600 dark:text-gray-400;
+}
+
+.team-description {
+  @apply text-sm text-gray-600 dark:text-gray-400 line-clamp-2;
+}
+
+/* Team card footer */
+.team-card-footer {
+  @apply px-4 py-3 bg-gray-50 dark:bg-gray-700/50 flex items-center justify-between;
+}
+
+.team-created {
+  @apply text-xs text-gray-500 dark:text-gray-400;
+}
+
+.team-status {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.team-status.active {
+  @apply bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300;
+}
+
+.team-status.inactive {
+  @apply bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300;
+}
+
+/* Empty state */
+.empty-state {
+  @apply col-span-full text-center py-12;
+}
+
+.empty-state-icon {
+  @apply w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4;
+}
+
+.empty-state-title {
+  @apply text-xl font-semibold text-gray-900 dark:text-white mb-2;
+}
+
+.empty-state-description {
+  @apply text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto;
+}
+
+.empty-state-action {
+  @apply inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200;
+}
+
+/* Loading state */
+.loading-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+.loading-card {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 animate-pulse;
+}
+
+.loading-header {
+  @apply flex items-center gap-3 mb-4;
+}
+
+.loading-avatar {
+  @apply w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full;
+}
+
+.loading-text {
+  @apply flex-1 space-y-2;
+}
+
+.loading-line {
+  @apply h-4 bg-gray-200 dark:bg-gray-700 rounded;
+}
+
+.loading-line.short {
+  @apply w-3/4;
+}
+
+.loading-line.medium {
+  @apply w-1/2;
+}
+
+/* Modal styles */
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4;
+}
+
+.modal {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto;
+}
+
+.modal-header {
+  @apply px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between;
+}
+
+.modal-title {
+  @apply text-lg font-semibold text-gray-900 dark:text-white;
+}
+
+.modal-close {
+  @apply p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200;
+}
+
+.modal-content {
+  @apply p-6;
+}
+
+.modal-footer {
+  @apply px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-end gap-3;
+}
+
+.modal-button {
+  @apply px-4 py-2 rounded-lg font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800;
+}
+
+.modal-button.secondary {
+  @apply bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 focus:ring-gray-500;
+}
+
+.modal-button.primary {
+  @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
+}
+
+.modal-button.danger {
+  @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+}
+
+/* Form styles */
+.form-group {
+  @apply space-y-2;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 dark:text-gray-300;
+}
+
+.form-input {
+  @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-colors duration-200;
+}
+
+.form-textarea {
+  @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white resize-none transition-colors duration-200;
+}
+
+.form-select {
+  @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white transition-colors duration-200;
+}
+
+.form-error {
+  @apply text-sm text-red-600 dark:text-red-400;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .page-header {
+    @apply flex-col items-stretch;
+  }
+  
+  .filters-grid {
+    @apply grid-cols-1;
+  }
+  
+  .teams-grid {
+    @apply grid-cols-1;
+  }
+  
+  .modal {
+    @apply mx-4;
+  }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.team-card {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.team-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.team-card:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+/* Hover effects */
+.team-card:hover .team-avatar {
+  @apply scale-105;
+}
+
+.team-card:hover .team-name {
+  @apply text-primary-600 dark:text-primary-400;
+}

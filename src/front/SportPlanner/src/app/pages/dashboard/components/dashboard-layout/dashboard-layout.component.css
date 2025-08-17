@@ -1,0 +1,56 @@
+/* Dashboard Layout Styles */
+.dashboard-layout {
+  @apply min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200;
+}
+
+.dashboard-content {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* Sidebar collapsed state */
+.sidebar-collapsed .dashboard-content {
+  @apply ml-16;
+}
+
+/* Sidebar expanded state */
+.sidebar-expanded .dashboard-content {
+  @apply ml-64;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .dashboard-content {
+    @apply ml-0;
+  }
+  
+  .sidebar-collapsed .dashboard-content,
+  .sidebar-expanded .dashboard-content {
+    @apply ml-0;
+  }
+}
+
+/* Main content area */
+.main-content {
+  @apply flex-1 p-6;
+}
+
+/* Responsive padding */
+@media (max-width: 640px) {
+  .main-content {
+    @apply p-4;
+  }
+}
+
+/* Loading state */
+.loading-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.loading-spinner {
+  @apply animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600;
+}
+
+/* Smooth transitions for theme changes */
+* {
+  @apply transition-colors duration-200;
+}

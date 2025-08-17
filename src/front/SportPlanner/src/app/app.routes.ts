@@ -16,7 +16,7 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     canActivate: [authGuard], // Solo usuarios autenticados
-    loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
+    loadChildren: () => import('./pages/dashboard/dashboard.routes').then(m => m.dashboardRoutes)
   },
   {
     path: 'profile',

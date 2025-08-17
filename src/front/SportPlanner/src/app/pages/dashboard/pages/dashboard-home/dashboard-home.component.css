@@ -1,0 +1,225 @@
+/* Dashboard Home Styles */
+.dashboard-home {
+  @apply space-y-6;
+}
+
+/* Welcome section */
+.welcome-section {
+  @apply bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg p-6 shadow-sm;
+}
+
+.welcome-title {
+  @apply text-2xl font-bold mb-2;
+}
+
+.welcome-subtitle {
+  @apply text-primary-100 opacity-90;
+}
+
+/* Stats grid */
+.stats-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6;
+}
+
+.stat-card {
+  @apply bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-200 hover:shadow-md;
+}
+
+.stat-header {
+  @apply flex items-center justify-between mb-4;
+}
+
+.stat-icon {
+  @apply w-8 h-8 text-primary-600 dark:text-primary-400;
+}
+
+.stat-value {
+  @apply text-3xl font-bold text-gray-900 dark:text-white;
+}
+
+.stat-label {
+  @apply text-sm text-gray-600 dark:text-gray-400 font-medium;
+}
+
+.stat-change {
+  @apply text-xs font-medium flex items-center gap-1 mt-2;
+}
+
+.stat-change.positive {
+  @apply text-green-600 dark:text-green-400;
+}
+
+.stat-change.negative {
+  @apply text-red-600 dark:text-red-400;
+}
+
+.stat-change.neutral {
+  @apply text-gray-500 dark:text-gray-400;
+}
+
+/* Quick actions section */
+.quick-actions-section {
+  @apply bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700;
+}
+
+.section-title {
+  @apply text-lg font-semibold text-gray-900 dark:text-white mb-4;
+}
+
+.quick-actions-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4;
+}
+
+.quick-action {
+  @apply flex items-center gap-3 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer group;
+}
+
+.quick-action:hover {
+  @apply border-primary-300 dark:border-primary-600;
+}
+
+.quick-action-icon {
+  @apply w-6 h-6 text-primary-600 dark:text-primary-400 group-hover:scale-110 transition-transform duration-200;
+}
+
+.quick-action-content {
+  @apply flex-1;
+}
+
+.quick-action-title {
+  @apply font-medium text-gray-900 dark:text-white;
+}
+
+.quick-action-description {
+  @apply text-sm text-gray-600 dark:text-gray-400;
+}
+
+/* Recent teams section */
+.recent-teams-section {
+  @apply bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700;
+}
+
+.teams-list {
+  @apply space-y-3;
+}
+
+.team-item {
+  @apply flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer;
+}
+
+.team-avatar {
+  @apply w-10 h-10 rounded-full flex items-center justify-center text-white font-medium text-sm flex-shrink-0;
+}
+
+.team-info {
+  @apply flex-1 min-w-0;
+}
+
+.team-name {
+  @apply font-medium text-gray-900 dark:text-white truncate;
+}
+
+.team-details {
+  @apply text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2;
+}
+
+.team-sport {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300;
+}
+
+.team-players {
+  @apply text-gray-500 dark:text-gray-400;
+}
+
+/* Empty states */
+.empty-state {
+  @apply text-center py-12;
+}
+
+.empty-state-icon {
+  @apply w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4;
+}
+
+.empty-state-title {
+  @apply text-lg font-medium text-gray-900 dark:text-white mb-2;
+}
+
+.empty-state-description {
+  @apply text-gray-600 dark:text-gray-400 mb-6;
+}
+
+.empty-state-action {
+  @apply inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200;
+}
+
+/* Loading states */
+.loading-skeleton {
+  @apply animate-pulse;
+}
+
+.skeleton-text {
+  @apply bg-gray-200 dark:bg-gray-700 rounded h-4;
+}
+
+.skeleton-circle {
+  @apply bg-gray-200 dark:bg-gray-700 rounded-full;
+}
+
+.skeleton-rect {
+  @apply bg-gray-200 dark:bg-gray-700 rounded;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .welcome-section {
+    @apply p-4;
+  }
+  
+  .welcome-title {
+    @apply text-xl;
+  }
+  
+  .stat-card {
+    @apply p-4;
+  }
+  
+  .stat-value {
+    @apply text-2xl;
+  }
+  
+  .quick-actions-grid {
+    @apply grid-cols-1;
+  }
+  
+  .team-item {
+    @apply p-2;
+  }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-home > * {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.dashboard-home > *:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.dashboard-home > *:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.dashboard-home > *:nth-child(4) {
+  animation-delay: 0.3s;
+}
