@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, finalize } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Team, CreateTeamRequest, UpdateTeamRequest } from '../interfaces/team.interface';
+import { environment } from '../../../../environments/environment';
 
 export interface TeamsState {
   teams: Team[];
@@ -15,7 +16,7 @@ export interface TeamsState {
 })
 export class TeamsService {
   private http = inject(HttpClient);
-  private readonly API_BASE = '/api/teams';
+  private readonly API_BASE = `${environment.apiUrl}/teams`;
 
   // State signals
   private state = signal<TeamsState>({

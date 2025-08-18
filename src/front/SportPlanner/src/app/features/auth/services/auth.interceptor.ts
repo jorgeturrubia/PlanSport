@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
-import { HttpInterceptorFn, HttpRequest, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+import { HttpInterceptorFn, HttpRequest, HttpEvent, HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, switchMap, filter, take } from 'rxjs/operators';
-import { AuthService } from './auth.service';
+import { catchError, switchMap, filter, take, tap } from 'rxjs/operators';
 import { TokenService } from './token.service';
+import { environment } from '../../../../environments/environment';
 
 // Variables globales para el manejo de refresh token
 let isRefreshing = false;
@@ -13,8 +13,8 @@ let refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
  * Interceptor funcional para manejar autenticación automática
  */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(AuthService);
   const tokenService = inject(TokenService);
+  const http = inject(HttpClient);
   
   // Agregar token de autorización si está disponible
   const authRequest = addAuthorizationHeader(req, tokenService);
@@ -23,7 +23,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       // Manejar errores de autenticación
       if (error.status === 401) {
-        return handle401Error(authRequest, next, authService, tokenService);
+        return handle401Error(authRequest, next, http, tokenService);
       }
       
       if (error.status === 403) {
@@ -66,7 +66,7 @@ function isAuthEndpoint(url: string): boolean {
 function handle401Error(
   request: HttpRequest<any>, 
   next: (req: HttpRequest<any>) => Observable<HttpEvent<any>>, 
-  authService: AuthService, 
+  http: HttpClient, 
   tokenService: TokenService
 ): Observable<HttpEvent<any>> {
   if (!isRefreshing) {
@@ -76,7 +76,19 @@ function handle401Error(
     const refreshToken = tokenService.getRefreshToken();
     
     if (refreshToken) {
-      return authService.refreshToken().pipe(
+      // Implementar refreshToken directamente aquí en lugar de usar AuthService
+      const API_URL = environment.apiUrl;
+      const refreshRequest = { refreshToken };
+      
+      return http.post<any>(`${API_URL}/auth/refresh`, refreshRequest).pipe(
+        tap(response => {
+          // Actualizar tokens
+          tokenService.setTokens(
+            response.accessToken,
+            response.refreshToken,
+            tokenService.isRememberMeEnabled()
+          );
+        }),
         switchMap((tokenResponse: any) => {
           isRefreshing = false;
           refreshTokenSubject.next(tokenResponse.accessToken);
@@ -89,24 +101,29 @@ function handle401Error(
           isRefreshing = false;
           refreshTokenSubject.next(null);
           
-          // Si falla el refresh, cerrar sesión
-          authService.logout().subscribe();
+          // Si falla el refresh, limpiar tokens
+          tokenService.clearTokens();
           return throwError(() => error);
         })
       );
     } else {
-      // No hay refresh token, cerrar sesión
-      authService.logout().subscribe();
+      // No hay refresh token, limpiar tokens
+      tokenService.clearTokens();
       return throwError(() => new Error('No refresh token available'));
     }
   } else {
-    // Si ya se está renovando el token, esperar a que termine
+    // Hay un refresh en curso, esperar y reintentar con el nuevo token
     return refreshTokenSubject.pipe(
       filter(token => token !== null),
       take(1),
       switchMap((): Observable<HttpEvent<any>> => {
         const newAuthRequest = addAuthorizationHeader(request, tokenService);
         return next(newAuthRequest);
+      }),
+      catchError(error => {
+        // Si falla el reintento, limpiar tokens
+        tokenService.clearTokens();
+        return throwError(() => error);
       })
     );
   }

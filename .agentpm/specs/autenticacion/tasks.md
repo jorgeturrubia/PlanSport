@@ -17,57 +17,57 @@
 ## 🚀 Sprint 1: Fundamentos y Autenticación Básica (16h)
 
 ### 📱 1. Configuración Base del Módulo
-- [ ] **1.1** Crear estructura de carpetas del módulo auth
-  - [ ] `src/app/features/auth/`
-  - [ ] `src/app/features/auth/components/`
-  - [ ] `src/app/features/auth/services/`
-  - [ ] `src/app/features/auth/models/`
-  - [ ] `src/app/features/auth/guards/`
-  - [ ] `src/app/features/auth/validators/`
-- [ ] **1.2** Configurar rutas de autenticación
-  - [ ] Ruta `/auth` con componente principal
-  - [ ] Redirección desde `/login` y `/register` a `/auth`
-  - [ ] Configurar lazy loading del módulo
-- [ ] **1.3** Configurar interceptores HTTP
-  - [ ] Interceptor para agregar token automáticamente
-  - [ ] Interceptor para manejo de errores 401/403
-  - [ ] Interceptor para refresh token automático
+- [x] **1.1** Crear estructura de carpetas del módulo auth
+  - [x] `src/app/features/auth/`
+  - [x] `src/app/features/auth/components/`
+  - [x] `src/app/features/auth/services/`
+  - [x] `src/app/features/auth/models/`
+  - [x] `src/app/features/auth/guards/`
+  - [x] `src/app/features/auth/validators/`
+- [x] **1.2** Configurar rutas de autenticación
+  - [x] Ruta `/auth` con componente principal
+  - [x] Redirección desde `/login` y `/register` a `/auth`
+  - [x] Configurar lazy loading del módulo
+- [x] **1.3** Configurar interceptores HTTP
+  - [x] Interceptor para agregar token automáticamente
+  - [x] Interceptor para manejo de errores 401/403
+  - [x] Interceptor para refresh token automático
 
 **Tiempo estimado**: 4 horas
 
 ### 🔐 2. Modelos y Servicios Core
-- [ ] **2.1** Crear interfaces TypeScript
-  - [ ] `AuthUser` (basado en UserDto del backend)
-  - [ ] `LoginRequest` y `LoginResponse`
-  - [ ] `RegisterRequest` y `RegisterResponse`
-  - [ ] `AuthState` para manejo de estado
-- [ ] **2.2** Implementar AuthService
-  - [ ] Métodos login(), register(), logout()
-  - [ ] Método refreshToken() automático
-  - [ ] Método getCurrentUser()
-  - [ ] Manejo de localStorage para tokens
-  - [ ] Integración con backend API existente
-- [ ] **2.3** Implementar TokenService
-  - [ ] Almacenamiento seguro de tokens
-  - [ ] Validación de expiración
-  - [ ] Limpieza automática de tokens expirados
+- [x] **2.1** Crear interfaces TypeScript
+  - [x] `AuthUser` (basado en UserDto del backend)
+  - [x] `LoginRequest` y `LoginResponse`
+  - [x] `RegisterRequest` y `RegisterResponse`
+  - [x] `AuthState` para manejo de estado
+- [x] **2.2** Implementar AuthService
+  - [x] Métodos login(), register(), logout()
+  - [x] Método refreshToken() automático
+  - [x] Método getCurrentUser()
+  - [x] Manejo de localStorage para tokens
+  - [x] Integración con backend API existente
+- [x] **2.3** Implementar TokenService
+  - [x] Almacenamiento seguro de tokens
+  - [x] Validación de expiración
+  - [x] Limpieza automática de tokens expirados
 
 **Tiempo estimado**: 6 horas
 
 ### 🎨 3. Componente Principal de Autenticación
-- [ ] **3.1** Crear AuthPageComponent (Standalone)
-  - [ ] Estructura base con tabs (Login/Registro)
-  - [ ] Navegación entre tabs con estado
-  - [ ] Aplicar design system (colores verdes, tipografía Inter)
-  - [ ] Layout responsive optimizado para desktop
-- [ ] **3.2** Implementar sistema de tabs
-  - [ ] Tab activo con indicador visual
-  - [ ] Transiciones suaves entre tabs
-  - [ ] Mantener estado del formulario al cambiar tabs
-- [ ] **3.3** Integrar con router
-  - [ ] Query params para tab activo (?tab=login|register)
-  - [ ] Navegación programática
-  - [ ] Breadcrumbs y título dinámico
+- [x] **3.1** Crear AuthPageComponent (Standalone)
+  - [x] Estructura base con tabs (Login/Registro)
+  - [x] Navegación entre tabs con estado
+  - [x] Aplicar design system (colores verdes, tipografía Inter)
+  - [x] Layout responsive optimizado para desktop
+- [x] **3.2** Implementar sistema de tabs
+  - [x] Tab activo con indicador visual
+  - [x] Transiciones suaves entre tabs
+  - [x] Mantener estado del formulario al cambiar tabs
+- [x] **3.3** Integrar con router
+  - [x] Query params para tab activo (?tab=login|register)
+  - [x] Navegación programática
+  - [x] Breadcrumbs y título dinámico
 
 **Tiempo estimado**: 6 horas
 
@@ -76,48 +76,48 @@
 ## 🔑 Sprint 2: Formularios y Validación (14h)
 
 ### 📝 4. Formulario de Login
-- [ ] **4.1** Crear LoginFormComponent (Standalone)
-  - [ ] Reactive Forms con FormBuilder
-  - [ ] Campos: email, password
-  - [ ] Validaciones en tiempo real
-  - [ ] Aplicar estilos del design system
-- [ ] **4.2** Implementar validaciones
-  - [ ] Email válido y requerido
-  - [ ] Password mínimo 6 caracteres
-  - [ ] Mensajes de error personalizados
-  - [ ] Estados visuales (error, success, loading)
-- [ ] **4.3** Funcionalidad de login
-  - [ ] Integración con AuthService
-  - [ ] Loading state durante petición
-  - [ ] Manejo de errores del servidor
-  - [ ] Redirección automática al dashboard
-- [ ] **4.4** Características adicionales
-  - [ ] Checkbox "Recordarme"
-  - [ ] Link "¿Olvidaste tu contraseña?"
-  - [ ] Mostrar/ocultar contraseña
+- [x] **4.1** Crear LoginFormComponent (Standalone)
+  - [x] Reactive Forms con FormBuilder
+  - [x] Campos: email, password
+  - [x] Validaciones en tiempo real
+  - [x] Aplicar estilos del design system
+- [x] **4.2** Implementar validaciones
+  - [x] Email válido y requerido
+  - [x] Password mínimo 6 caracteres
+  - [x] Mensajes de error personalizados
+  - [x] Estados visuales (error, success, loading)
+- [x] **4.3** Funcionalidad de login
+  - [x] Integración con AuthService
+  - [x] Loading state durante petición
+  - [x] Manejo de errores del servidor
+  - [x] Redirección automática al dashboard
+- [x] **4.4** Características adicionales
+  - [x] Checkbox "Recordarme"
+  - [x] Link "¿Olvidaste tu contraseña?"
+  - [x] Mostrar/ocultar contraseña
 
 **Tiempo estimado**: 6 horas
 
 ### 📋 5. Formulario de Registro
-- [ ] **5.1** Crear RegisterFormComponent (Standalone)
-  - [ ] Reactive Forms con validaciones complejas
-  - [ ] Campos: fullName, email, password, confirmPassword
-  - [ ] Integración con design system
-- [ ] **5.2** Validaciones avanzadas
-  - [ ] Nombre completo (mínimo 2 palabras)
-  - [ ] Email único (validación asíncrona)
-  - [ ] Password seguro (mayúscula, minúscula, número)
-  - [ ] Confirmación de password coincidente
-  - [ ] Términos y condiciones (checkbox requerido)
-- [ ] **5.3** Funcionalidad de registro
-  - [ ] Integración con AuthService
-  - [ ] Manejo de errores específicos (email duplicado, etc.)
-  - [ ] Confirmación de registro exitoso
-  - [ ] Auto-login después del registro
-- [ ] **5.4** UX mejorada
-  - [ ] Indicador de fortaleza de contraseña
-  - [ ] Validación en tiempo real con debounce
-  - [ ] Mensajes de ayuda contextuales
+- [x] **5.1** Crear RegisterFormComponent (Standalone)
+  - [x] Reactive Forms con validaciones complejas
+  - [x] Campos: fullName, email, password, confirmPassword
+  - [x] Integración con design system
+- [x] **5.2** Validaciones avanzadas
+  - [x] Nombre completo (mínimo 2 palabras)
+  - [x] Email único (validación asíncrona)
+  - [x] Password seguro (mayúscula, minúscula, número)
+  - [x] Confirmación de password coincidente
+  - [x] Términos y condiciones (checkbox requerido)
+- [x] **5.3** Funcionalidad de registro
+  - [x] Integración con AuthService
+  - [x] Manejo de errores específicos (email duplicado, etc.)
+  - [x] Confirmación de registro exitoso
+  - [x] Auto-login después del registro
+- [x] **5.4** UX mejorada
+  - [x] Indicador de fortaleza de contraseña
+  - [x] Validación en tiempo real con debounce
+  - [x] Mensajes de ayuda contextuales
 
 **Tiempo estimado**: 8 horas
 
@@ -126,45 +126,45 @@
 ## 🛡️ Sprint 3: Seguridad y Experiencia Avanzada (10h)
 
 ### 🔒 6. Guards y Protección de Rutas
-- [ ] **6.1** Crear AuthGuard
-  - [ ] Verificar token válido
-  - [ ] Redireccionar a /auth si no autenticado
-  - [ ] Permitir acceso a rutas públicas
-- [ ] **6.2** Crear GuestGuard
-  - [ ] Redireccionar a dashboard si ya autenticado
-  - [ ] Aplicar a rutas de auth
-- [ ] **6.3** Implementar RoleGuard
-  - [ ] Verificar roles de usuario
-  - [ ] Manejo de permisos por organización
-  - [ ] Redirección a página de acceso denegado
+- [x] **6.1** Crear AuthGuard
+  - [x] Verificar token válido
+  - [x] Redireccionar a /auth si no autenticado
+  - [x] Permitir acceso a rutas públicas
+- [x] **6.2** Crear GuestGuard
+  - [x] Redireccionar a dashboard si ya autenticado
+  - [x] Aplicar a rutas de auth
+- [x] **6.3** Implementar RoleGuard
+  - [x] Verificar roles de usuario
+  - [x] Manejo de permisos por organización
+  - [x] Redirección a página de acceso denegado
 
 **Tiempo estimado**: 4 horas
 
 ### 🎯 7. Funcionalidades Avanzadas
-- [ ] **7.1** Recuperación de contraseña
-  - [ ] Modal/página para solicitar reset
-  - [ ] Integración con endpoint forgot-password
-  - [ ] Confirmación de email enviado
-- [ ] **7.2** Manejo de tokens automático
-  - [ ] Refresh token antes de expiración
-  - [ ] Logout automático si refresh falla
-  - [ ] Notificación de sesión expirada
-- [ ] **7.3** Estados de carga y feedback
-  - [ ] Skeleton loaders en formularios
-  - [ ] Toasts para notificaciones
-  - [ ] Animaciones de transición
+- [x] **7.1** Recuperación de contraseña
+  - [x] Modal/página para solicitar reset
+  - [x] Integración con endpoint forgot-password
+  - [x] Confirmación de email enviado
+- [x] **7.2** Manejo de tokens automático
+  - [x] Refresh token antes de expiración
+  - [x] Logout automático si refresh falla
+  - [x] Notificación de sesión expirada
+- [x] **7.3** Estados de carga y feedback
+  - [x] Skeleton loaders en formularios
+  - [x] Toasts para notificaciones
+  - [x] Animaciones de transición
 
 **Tiempo estimado**: 4 horas
 
 ### 🔗 8. Integración con Landing Page
-- [ ] **8.1** Modificar landing page
-  - [ ] Agregar botones "Iniciar Sesión" y "Registrarse"
-  - [ ] Links que redirijan a `/auth?tab=login` y `/auth?tab=register`
-  - [ ] Mantener diseño consistente
-- [ ] **8.2** Navegación global
-  - [ ] Header con estado de autenticación
-  - [ ] Menú de usuario autenticado
-  - [ ] Logout desde cualquier página
+- [x] **8.1** Modificar landing page
+  - [x] Agregar botones "Iniciar Sesión" y "Registrarse"
+  - [x] Links que redirijan a `/auth?tab=login` y `/auth?tab=register`
+  - [x] Mantener diseño consistente
+- [x] **8.2** Navegación global
+  - [x] Header con estado de autenticación
+  - [x] Menú de usuario autenticado
+  - [x] Logout desde cualquier página
 
 **Tiempo estimado**: 2 horas
 

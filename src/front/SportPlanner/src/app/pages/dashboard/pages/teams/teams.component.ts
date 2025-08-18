@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, Plus, Edit, Trash2, Users, Search, Filter } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
 import { TeamsService } from '../../services/teams.service';
 import { Team, CreateTeamRequest, UpdateTeamRequest, SPORT_LABELS, TEAM_COLORS } from '../../interfaces/team.interface';
 
@@ -317,12 +317,7 @@ import { Team, CreateTeamRequest, UpdateTeamRequest, SPORT_LABELS, TEAM_COLORS }
 export class TeamsComponent {
   teamsService = inject(TeamsService);
 
-  readonly PlusIcon = Plus;
-  readonly EditIcon = Edit;
-  readonly Trash2Icon = Trash2;
-  readonly UsersIcon = Users;
-  readonly SearchIcon = Search;
-  readonly FilterIcon = Filter;
+  // Los iconos ya están importados directamente
 
   // Search and filters
   searchTerm = signal('');

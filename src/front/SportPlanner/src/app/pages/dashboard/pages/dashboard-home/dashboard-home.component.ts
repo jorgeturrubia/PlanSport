@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { LucideAngularModule, Users, Trophy, Calendar, Plus, TrendingUp, Activity, Target } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
 import { AuthService } from '../../../../features/auth/services/auth.service';
 import { AuthUser } from '../../../../features/auth/models/auth.interfaces';
 import { TeamsService } from '../../services/teams.service';
@@ -173,10 +173,7 @@ export class DashboardHomeComponent {
   private teamsService = inject(TeamsService);
   private authService = inject(AuthService);
 
-  readonly UsersIcon = Users;
-  readonly CalendarIcon = Calendar;
-  readonly TargetIcon = Target;
-  readonly TrendingUpIcon = TrendingUp;
+  // No need to reassign icons as they are already imported with the correct names
 
   // Computed properties
   currentUser = computed(() => this.authService.user());
