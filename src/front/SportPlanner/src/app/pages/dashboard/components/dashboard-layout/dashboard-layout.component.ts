@@ -3,12 +3,11 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
+// Removed direct icon imports; icons are provided globally via LUCIDE_ICONS in app.config.ts
 import { AuthService } from '../../../../features/auth/services/auth.service';
 import { AuthUser } from '../../../../features/auth/models/auth.interfaces';
 import { ThemeService } from '../../services/theme.service';
 import { TeamsService } from '../../services/teams.service';
-import { DashboardHeaderComponent } from '../dashboard-header/dashboard-header.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 import { UserMenuComponent } from '../user-menu/user-menu.component';
 import { NavigationItem, SidebarState } from '../../interfaces/navigation.interface';
@@ -23,8 +22,6 @@ import { User } from '../../interfaces/user.interface';
     RouterModule,
     FormsModule,
     LucideAngularModule,
-    DashboardHeaderComponent,
-    SidebarComponent,
     ThemeToggleComponent,
     UserMenuComponent
   ],

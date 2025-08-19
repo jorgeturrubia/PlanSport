@@ -284,6 +284,11 @@ Use the file-creator subagent to create the file: sub-specs/technical-spec.md us
     - justification for each
     - version requirements
   </external_dependencies_conditional>
+  <version_policy>
+    NEVER specify older/downgraded versions of existing frameworks or libraries
+    Use MCP tools (tailwind-svelte-assistant, angular-cli, context7, fetch) for current documentation
+    Maintain or upgrade versions only, never downgrade
+  </version_policy>
 </spec_sections>
 
 <example_template>

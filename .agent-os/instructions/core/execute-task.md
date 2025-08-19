@@ -74,6 +74,22 @@ Search and extract relevant sections from technical-spec.md to understand the te
 
 Use the context-fetcher subagent to retrieve relevant sections from @.agent-os/standards/best-practices.md that apply to the current task's technology stack and feature type.
 
+<version_policy>
+  <never_downgrade>
+    NEVER downgrade versions of frameworks, libraries, or tools
+    If current framework/library documentation is needed, use available MCP tools:
+    - tailwind-svelte-assistant for Tailwind CSS info
+    - angular-cli for Angular documentation
+    - context7 for library documentation
+    - fetch for web-based documentation
+  </never_downgrade>
+  <documentation_sources>
+    - Use MCP tools for up-to-date documentation
+    - Fetch from official sources when needed
+    - Avoid assumptions about older versions
+  </documentation_sources>
+</version_policy>
+
 <selective_reading>
   <search_best_practices>
     FIND sections relevant to:

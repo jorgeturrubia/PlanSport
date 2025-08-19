@@ -8,10 +8,21 @@
       "Bash(sed:*)",
       "Bash(npm test:*)",
       "Bash(npm run build:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(where claude)",
+      "Bash(claude mcp:*)",
+      "Bash(claude config show)",
+      "mcp__filesystem__list_directory",
+      "mcp__filesystem__list_allowed_directories",
+      "Bash(npm run lint)",
+      "Bash(npm run:*)",
+      "Bash(npx ng lint:*)"
     ],
     "additionalDirectories": [
-      "C:\\c\\Proyectos"
+      "C:\\Proyectos",
+      "C:\\Users\\Alejandro.Ruiz",
+      "C:\\",
+      "C:\\Proyectos\\PlanSport\\.agent-os\\instructions\\core"
     ]
   }
 }
