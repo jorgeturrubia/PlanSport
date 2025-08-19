@@ -1,0 +1,16 @@
+<div 
+  [class]="getContainerClasses()"
+  (click)="onClick()"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()"
+  (keydown)="onKeyDown($event)"
+  [attr.tabindex]="clickable && !disabled ? 0 : -1"
+  [attr.role]="clickable ? 'button' : null"
+  [attr.aria-label]="'Sport icon for ' + sport"
+  [attr.aria-disabled]="disabled"
+>
+  <lucide-icon 
+    [name]="getIconName()"
+    [class]="getIconClasses()"
+  ></lucide-icon>
+</div>

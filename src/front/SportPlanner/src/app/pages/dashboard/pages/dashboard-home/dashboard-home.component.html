@@ -1,0 +1,189 @@
+<div class="dashboard-home space-y-6">
+  <!-- Welcome Header -->
+  <div class="welcome-header bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200/20 dark:border-gray-700/20">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+      ¡Bienvenido, {{ currentUser()?.firstName || 'Usuario' }}!
+    </h1>
+    <p class="text-gray-600 dark:text-gray-400 text-lg">
+      Aquí tienes un resumen de tu actividad deportiva
+    </p>
+  </div>
+
+  <!-- Enhanced Statistics Grid with New Components -->
+  <div class="statistics-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Total Teams Card -->
+    <app-statistics-card
+      title="Total Equipos"
+      [value]="totalTeams()"
+      subtitle="+2 este mes"
+      [progress]="75"
+      colorTheme="green"
+      sportIcon="football"
+      [clickable]="true"
+      (cardClick)="onTeamsClick()"
+    ></app-statistics-card>
+
+    <!-- Total Players Card -->
+    <app-statistics-card
+      title="Total Jugadores"
+      [value]="totalPlayers()"
+      [subtitle]="totalTeams() > 0 ? 'En ' + totalTeams() + ' equipos' : 'Sin equipos'"
+      [progress]="Math.min(totalPlayers() * 5, 100)"
+      colorTheme="blue"
+      sportIcon="basketball"
+      [clickable]="true"
+    ></app-statistics-card>
+
+    <!-- Upcoming Trainings Card -->
+    <app-statistics-card
+      title="Entrenamientos"
+      value="0"
+      subtitle="Próximamente"
+      [progress]="0"
+      colorTheme="amber"
+      sportIcon="athletics"
+      [disabled]="true"
+    ></app-statistics-card>
+
+    <!-- Performance Card -->
+    <app-statistics-card
+      title="Rendimiento"
+      value="85%"
+      subtitle="+5% vs mes anterior"
+      [progress]="85"
+      colorTheme="purple"
+      sportIcon="other"
+      [clickable]="true"
+    ></app-statistics-card>
+  </div>
+
+  <!-- Enhanced Quick Actions Hub -->
+  <div class="quick-actions-hub relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-900/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-2xl p-6">
+    <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+    <div class="relative z-10">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Acciones Rápidas</h2>
+        <app-sport-icon 
+          sport="other" 
+          color="green" 
+          size="medium">
+        </app-sport-icon>
+      </div>
+      <div class="actions-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <button 
+          routerLink="/dashboard/teams"
+          class="action-button group relative overflow-hidden bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl p-4 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/25"
+        >
+          <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="relative z-10 flex items-center justify-center">
+            <app-sport-icon 
+              sport="football" 
+              color="green" 
+              size="small"
+              class="mr-2">
+            </app-sport-icon>
+            Gestionar Equipos
+          </div>
+        </button>
+        
+        <button 
+          class="action-button group relative overflow-hidden bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl p-4 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          disabled
+        >
+          <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="relative z-10 flex items-center justify-center">
+            <app-sport-icon 
+              sport="athletics" 
+              color="blue" 
+              size="small"
+              class="mr-2">
+            </app-sport-icon>
+            Programar Entrenamiento
+          </div>
+          <div class="absolute top-2 right-2">
+            <span class="inline-flex items-center px-2 py-1 rounded-md bg-blue-800/50 text-xs font-medium text-blue-100">
+              Pronto
+            </span>
+          </div>
+        </button>
+        
+        <button 
+          class="action-button group relative overflow-hidden bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl p-4 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          disabled
+        >
+          <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="relative z-10 flex items-center justify-center">
+            <app-sport-icon 
+              sport="other" 
+              color="purple" 
+              size="small"
+              class="mr-2">
+            </app-sport-icon>
+            Ver Estadísticas
+          </div>
+          <div class="absolute top-2 right-2">
+            <span class="inline-flex items-center px-2 py-1 rounded-md bg-purple-800/50 text-xs font-medium text-purple-100">
+              Pronto
+            </span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Teams with Sport Icons -->
+  <div class="recent-teams bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200/20 dark:border-gray-700/20" *ngIf="recentTeams().length > 0">
+    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+      Equipos Recientes
+    </h2>
+    <div class="teams-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div 
+        *ngFor="let team of recentTeams()" 
+        class="team-card border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-all duration-200 hover:scale-105"
+      >
+        <div class="flex items-center mb-3">
+          <app-sport-icon
+            [sport]="team.sport"
+            [color]="getTeamColorTheme(team.color)"
+            size="medium"
+            class="mr-3"
+          ></app-sport-icon>
+          <h3 class="text-sm font-medium text-gray-900 dark:text-white">{{ team.name }}</h3>
+        </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ team.sport | titlecase }}</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400">{{ team.playersCount }} jugadores</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Empty State -->
+  <div 
+    *ngIf="totalTeams() === 0" 
+    class="empty-state bg-white dark:bg-gray-800 rounded-xl shadow-sm p-12 text-center border border-gray-200/20 dark:border-gray-700/20"
+  >
+    <app-sport-icon 
+      sport="football" 
+      color="gray" 
+      size="xlarge"
+      class="mx-auto mb-6">
+    </app-sport-icon>
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
+      ¡Comienza creando tu primer equipo!
+    </h3>
+    <p class="text-gray-600 dark:text-gray-400 mb-6">
+      Los equipos te ayudarán a organizar y gestionar a tus jugadores de manera eficiente.
+    </p>
+    <button 
+      routerLink="/dashboard/teams"
+      class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium"
+    >
+      <app-sport-icon 
+        sport="football" 
+        color="green" 
+        size="small"
+        class="mr-2">
+      </app-sport-icon>
+      Crear Primer Equipo
+    </button>
+  </div>
+</div>
