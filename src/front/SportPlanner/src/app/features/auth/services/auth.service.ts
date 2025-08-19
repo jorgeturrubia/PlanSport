@@ -235,7 +235,7 @@ export class AuthService {
    * Obtiene los datos del usuario actual
    */
   getCurrentUser(): Observable<AuthUser> {
-    return this.http.get<AuthUser>(`${this.API_URL}/auth/me`)
+    return this.http.get<AuthUser>(`${this.API_URL}/auth/profile`)
       .pipe(
         tap(user => {
           this.updateAuthState({ user });
@@ -244,7 +244,7 @@ export class AuthService {
           // Si falla, intentar renovar token
           if (error.status === 401) {
             return this.refreshToken().pipe(
-              switchMap(() => this.http.get<AuthUser>(`${this.API_URL}/auth/me`)),
+              switchMap(() => this.http.get<AuthUser>(`${this.API_URL}/auth/profile`)),
               tap(user => {
                 this.updateAuthState({ user });
               })
