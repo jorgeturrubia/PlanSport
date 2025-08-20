@@ -413,14 +413,7 @@ html {
   border-color: var(--border-secondary);
 }
 
-/* Sidebar animation utilities */
-.sidebar-expanded {
-  width: var(--sidebar-width);
-}
-
-.sidebar-collapsed {
-  width: var(--sidebar-collapsed-width);
-}
+/* Sidebar animation utilities removed - handled by component-specific CSS */
 
 /* Focus and interaction states */
 .focus-ring {

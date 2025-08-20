@@ -1,0 +1,3 @@
+# Spec Summary (Lite)
+
+Implementar un dashboard moderno con sidebar colapsable y navbar con toggle de tema oscuro/claro que proporcione una experiencia de usuario excelente y navegación intuitiva. El sidebar incluirá navegación principal (Home, Equipos), separador con iniciales del usuario, mientras que el navbar tendrá avatar de usuario, email y menú desplegable con logout, todo con animaciones suaves y diseño responsive.

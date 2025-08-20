@@ -1,18 +1,10 @@
-import { Component, signal, computed, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { NgIcon } from '@ng-icons/core';
-import { Subject, takeUntil } from 'rxjs';
-import { AuthService } from '../../../../features/auth/services/auth.service';
-import { AuthUser } from '../../../../features/auth/models/auth.interfaces';
-import { ThemeService } from '../../services/theme.service';
-import { TeamsService } from '../../services/teams.service';
-import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
-import { UserMenuComponent } from '../user-menu/user-menu.component';
+import { RouterOutlet } from '@angular/router';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { heroBars3, heroXMark, heroMagnifyingGlass, heroBell, heroUser } from '@ng-icons/heroicons/outline';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { NavigationItem, SidebarState } from '../../interfaces/navigation.interface';
-import { User } from '../../interfaces/user.interface';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -20,139 +12,95 @@ import { User } from '../../interfaces/user.interface';
   imports: [
     CommonModule,
     RouterOutlet,
-    RouterModule,
-    FormsModule,
-    NgIcon,
-    ThemeToggleComponent,
-    UserMenuComponent,
-    SidebarComponent
+    NgIconComponent,
+    SidebarComponent,
+    HeaderComponent
   ],
-  templateUrl: './dashboard-layout.component.html',
+  providers: [
+    provideIcons({ heroBars3, heroXMark, heroMagnifyingGlass, heroBell, heroUser })
+  ],
+  template: `
+    <div class="dashboard-layout">
+      <!-- Sidebar -->
+      <app-sidebar 
+        [isCollapsed]="sidebarCollapsed()"
+        [isMobile]="isMobile()"
+        (toggleSidebar)="toggleSidebar()"
+      ></app-sidebar>
+      
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Header -->
+        <app-header 
+          [isMobile]="isMobile()"
+          [sidebarCollapsed]="sidebarCollapsed()"
+          (toggleSidebar)="toggleSidebar()"
+        ></app-header>
+        
+        <!-- Content Area -->
+        <main class="content-area">
+          <router-outlet></router-outlet>
+        </main>
+      </div>
+      
+      <!-- Mobile Overlay -->
+      <div 
+        *ngIf="isMobile() && !sidebarCollapsed()"
+        class="mobile-overlay"
+        (click)="toggleSidebar()"
+      ></div>
+    </div>
+  `,
   styleUrls: ['./dashboard-layout.component.css']
 })
 export class DashboardLayoutComponent implements OnInit, OnDestroy {
-  private authService = inject(AuthService);
-  private themeService = inject(ThemeService);
-  private teamsService = inject(TeamsService);
-  private destroy$ = new Subject<void>();
-
-  // Sidebar state management
-  sidebarState = signal<SidebarState>({
-    isCollapsed: false,
-    activeItem: null
-  });
-
-  // Mobile detection
-  isMobile = signal<boolean>(false);
+  // Signals para el estado
+  private sidebarCollapsedSignal = signal(false);
+  private isMobileSignal = signal(false);
   
-  // Search functionality
-  searchQuery = signal<string>('');
-
-  // Current user data
-  currentUser = computed(() => this.authService.user());
-
-  // Theme state
-  currentTheme = computed(() => this.themeService.currentTheme());
-  isDarkMode = computed(() => this.themeService.isDarkMode());
+  // Computed properties
+  sidebarCollapsed = computed(() => this.sidebarCollapsedSignal());
+  isMobile = computed(() => this.isMobileSignal());
   
-  // Teams data
-  teams = computed(() => this.teamsService.teams());
-  recentTeams = computed(() => 
-    this.teams()
-      .sort((a: any, b: any) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-      .slice(0, 3)
-  );
-  
-  // Navigation items
-  navigationItems: NavigationItem[] = [
-    {
-      id: 'dashboard',
-      label: 'Inicio',
-      icon: 'home',
-      route: '/dashboard',
-      isActive: false
-    },
-    {
-      id: 'teams',
-      label: 'Equipos',
-      icon: 'users',
-      route: '/dashboard/teams',
-      isActive: false
-    }
-  ];
+  private resizeListener?: () => void;
 
-  ngOnInit(): void {
-    this.loadUserPreferences();
+  ngOnInit() {
     this.checkMobileView();
+    this.loadUserPreferences();
     
-    // Listen for window resize
-    window.addEventListener('resize', () => this.checkMobileView());
-    
-    // Theme transitions are handled automatically by the ThemeService
-    // No manual subscription needed as we're using signals
-  }
-  
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    window.removeEventListener('resize', () => this.checkMobileView());
+    // Listener para cambios de tamaño de ventana
+    this.resizeListener = () => this.checkMobileView();
+    window.addEventListener('resize', this.resizeListener);
   }
 
-  toggleSidebar(): void {
-    this.sidebarState.update(state => ({
-      ...state,
-      isCollapsed: !state.isCollapsed
-    }));
-    
+  ngOnDestroy() {
+    if (this.resizeListener) {
+      window.removeEventListener('resize', this.resizeListener);
+    }
+  }
+
+  toggleSidebar() {
+    this.sidebarCollapsedSignal.update(collapsed => !collapsed);
     this.saveUserPreferences();
   }
 
-  onNavigationClick(item: NavigationItem): void {
-    this.sidebarState.update(state => ({
-      ...state,
-      activeItem: item.id
-    }));
-  }
-
-  private loadUserPreferences(): void {
-    // Load user preferences from localStorage or user profile
-    const savedSidebarState = localStorage.getItem('planSport-sidebar-collapsed');
+  private checkMobileView() {
+    this.isMobileSignal.set(window.innerWidth < 1024);
     
-    if (savedSidebarState !== null) {
-      this.sidebarState.update(state => ({
-        ...state,
-        isCollapsed: JSON.parse(savedSidebarState)
-      }));
-    }
-  }
-
-  private saveUserPreferences(): void {
-    // Save sidebar state to localStorage
-    localStorage.setItem(
-      'planSport-sidebar-collapsed', 
-      JSON.stringify(this.sidebarState().isCollapsed)
-    );
-  }
-  
-  private checkMobileView(): void {
-    this.isMobile.set(window.innerWidth < 1280); // xl breakpoint
-  }
-  
-  onSearchChange(query: string): void {
-    this.searchQuery.set(query);
-    // TODO: Implement search functionality
-    console.log('Searching for:', query);
-  }
-  
-  onSidebarNavigationClick(item: NavigationItem): void {
-    this.onNavigationClick(item);
-    
-    // Close sidebar on mobile after navigation
+    // En móvil, colapsar sidebar por defecto
     if (this.isMobile()) {
-      this.sidebarState.update(state => ({
-        ...state,
-        isCollapsed: true
-      }));
+      this.sidebarCollapsedSignal.set(true);
     }
+  }
+
+  private loadUserPreferences() {
+    const savedState = localStorage.getItem('dashboard-sidebar-collapsed');
+    if (savedState !== null && !this.isMobile()) {
+      this.sidebarCollapsedSignal.set(JSON.parse(savedState));
+    }
+  }
+
+  private saveUserPreferences() {
+    localStorage.setItem('dashboard-sidebar-collapsed', JSON.stringify(this.sidebarCollapsed()));
   }
 }
