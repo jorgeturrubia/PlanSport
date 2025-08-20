@@ -1,9 +1,10 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgIcon } from '@ng-icons/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { heroPlus, heroMagnifyingGlass, heroTrash, heroPencil, heroXMark } from '@ng-icons/heroicons/outline';
 import { TeamsService } from '../../services/teams.service';
-import { Team, CreateTeamRequest, UpdateTeamRequest, SPORT_LABELS, TEAM_COLORS } from '../../interfaces/team.interface';
+import { Team, CreateTeamRequest, UpdateTeamRequest, SPORT_LABELS, TEAM_COLORS, COLOR_OPTIONS, SPORT_OPTIONS } from '../../interfaces/team.interface';
 
 @Component({
   selector: 'app-teams',
@@ -12,6 +13,9 @@ import { Team, CreateTeamRequest, UpdateTeamRequest, SPORT_LABELS, TEAM_COLORS }
     CommonModule,
     FormsModule,
     NgIcon
+  ],
+  providers: [
+    provideIcons({ heroPlus, heroMagnifyingGlass, heroTrash, heroPencil, heroXMark })
   ],
   template: `
     <div class="space-y-6">
@@ -221,12 +225,12 @@ import { Team, CreateTeamRequest, UpdateTeamRequest, SPORT_LABELS, TEAM_COLORS }
                 <button
                   *ngFor="let color of availableColors"
                   type="button"
-                  (click)="teamForm.color = color"
+                  (click)="teamForm.color = color.value"
                   class="w-8 h-8 rounded-full border-2 transition-all"
-                  [style.background-color]="color"
-                  [class.border-gray-900]="teamForm.color === color"
-                  [class.border-gray-300]="teamForm.color !== color"
-                  [class.scale-110]="teamForm.color === color"
+                  [style.background-color]="color.bg"
+                  [class.border-gray-900]="teamForm.color === color.value"
+                  [class.border-gray-300]="teamForm.color !== color.value"
+                  [class.scale-110]="teamForm.color === color.value"
                 ></button>
               </div>
             </div>
@@ -334,14 +338,14 @@ export class TeamsComponent {
     name: '',
     sport: '',
     category: '',
-    color: TEAM_COLORS[0],
+    color: COLOR_OPTIONS[0].value,
     playersCount: 0,
     description: ''
   };
 
   // Available options
   availableSports = Object.entries(SPORT_LABELS).map(([value, label]) => ({ value, label }));
-  availableColors = TEAM_COLORS;
+  availableColors = COLOR_OPTIONS;
 
   // Computed properties
   filteredTeams = computed(() => {
@@ -448,7 +452,7 @@ export class TeamsComponent {
       name: '',
       sport: '',
       category: '',
-      color: TEAM_COLORS[0],
+      color: COLOR_OPTIONS[0].value,
       playersCount: 0,
       description: ''
     };

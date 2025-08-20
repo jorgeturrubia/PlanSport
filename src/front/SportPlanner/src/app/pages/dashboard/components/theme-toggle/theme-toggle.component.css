@@ -1,0 +1,38 @@
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  @apply flex items-center justify-center p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900;
+}
+
+.theme-toggle-btn:hover {
+  @apply transform scale-105;
+}
+
+.theme-toggle-btn:active {
+  @apply transform scale-95;
+}
+
+/* Theme Icon */
+.theme-icon {
+  @apply w-5 h-5 transition-transform duration-200;
+}
+
+/* Animation for icon change */
+.theme-toggle-btn:hover .theme-icon {
+  @apply rotate-12;
+}
+
+/* Focus states for accessibility */
+.theme-toggle-btn:focus-visible {
+  @apply ring-2 ring-blue-500 ring-offset-2 dark:ring-offset-gray-900;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .theme-toggle-btn {
+    @apply p-1.5;
+  }
+  
+  .theme-icon {
+    @apply w-4 h-4;
+  }
+}

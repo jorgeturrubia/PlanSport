@@ -1,0 +1,35 @@
+/* Dashboard Layout Styles */
+.dashboard-layout {
+  @apply min-h-screen bg-gray-50 dark:bg-gray-900;
+}
+
+.main-content {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.sidebar-open .main-content {
+  @apply ml-64;
+}
+
+.sidebar-closed .main-content {
+  @apply ml-0;
+}
+
+@media (max-width: 768px) {
+  .sidebar-open .main-content,
+  .sidebar-closed .main-content {
+    @apply ml-0;
+  }
+}
+
+/* Content area */
+.content-area {
+  @apply p-4 md:p-6 lg:p-8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .content-area {
+    @apply p-3;
+  }
+}

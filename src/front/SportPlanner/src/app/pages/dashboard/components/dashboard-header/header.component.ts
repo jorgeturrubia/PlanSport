@@ -2,8 +2,9 @@ import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroBars3, heroMoon, heroSun, heroUser, heroArrowRightOnRectangle } from '@ng-icons/heroicons/outline';
-import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
+
 import { UserMenuComponent } from '../user-menu/user-menu.component';
+import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-header',

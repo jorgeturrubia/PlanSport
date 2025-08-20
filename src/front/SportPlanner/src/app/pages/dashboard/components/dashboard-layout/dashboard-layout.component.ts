@@ -4,7 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroBars3, heroXMark, heroMagnifyingGlass, heroBell, heroUser } from '@ng-icons/heroicons/outline';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { HeaderComponent } from '../header/header.component';
+import { HeaderComponent } from '../dashboard-header/header.component';
 
 @Component({
   selector: 'app-dashboard-layout',
