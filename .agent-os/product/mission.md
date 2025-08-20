@@ -2,100 +2,125 @@
 
 ## Pitch
 
-SportPlanner es una plataforma de planificación deportiva que ayuda a entrenadores y clubes a crear, gestionar y compartir planificaciones de entrenamiento proporcionando un marketplace de ejercicios valorados y herramientas de automatización para generar entrenamientos completos con muy pocos clicks.
+PlanSport es una plataforma integral de planificación deportiva multi-deporte que permite a entrenadores crear, compartir y ejecutar planificaciones de entrenamiento de manera colaborativa. Con muy pocos clicks, los usuarios pueden acceder a planificaciones completas con objetivos, ejercicios y entrenamientos creados por la comunidad de entrenadores, facilitando el desarrollo deportivo a través de un marketplace de conocimiento deportivo.
 
 ## Users
 
 ### Primary Customers
 
-- **Entrenadores individuales**: Profesionales que necesitan crear y gestionar planificaciones para sus equipos
-- **Clubes deportivos**: Organizaciones que gestionan múltiples equipos y necesitan coordinación entre entrenadores
-- **Directores deportivos**: Responsables de supervisar y validar los resultados de entrenamientos de múltiples equipos
+- **Entrenadores**: Profesionales y amateur que necesitan crear planificaciones eficientes para sus equipos
+- **Clubes Deportivos**: Organizaciones que gestionan múltiples equipos y requieren supervisión directiva
+- **Entrenadores Freelance**: Profesionales independientes que trabajan con equipos de diferentes clubes
 
 ### User Personas
 
-**Entrenador Individual** (25-50 años)
-- **Role:** Entrenador de equipos juveniles o amateur
-- **Context:** Gestiona 1-3 equipos, necesita planificaciones efectivas pero tiene tiempo limitado
-- **Pain Points:** Crear planificaciones desde cero consume mucho tiempo, dificultad para encontrar ejercicios apropiados para el nivel del equipo
-- **Goals:** Optimizar tiempo de preparación, acceder a ejercicios de calidad, seguir progreso del equipo
+**Entrenador de Equipo** (25-55 años)
+- **Rol:** Entrenador principal de equipo
+- **Contexto:** Entrena equipos específicos 2-4 días por semana, necesita planificaciones estructuradas
+- **Pain Points:** Crear planificaciones desde cero consume mucho tiempo, falta de ejercicios variados, dificultad para seguir el progreso
+- **Goals:** Acceder rápidamente a planificaciones probadas, personalizar entrenamientos según nivel del equipo, hacer seguimiento efectivo
 
-**Director de Club** (35-60 años)
-- **Role:** Director deportivo o coordinador de club
-- **Context:** Supervisa múltiples entrenadores y equipos, busca consistencia y calidad
-- **Pain Points:** Falta de visibilidad sobre las planificaciones, inconsistencia entre entrenadores, dificultad para evaluar efectividad
-- **Goals:** Estandarizar métodos de entrenamiento, supervisar progreso, optimizar recursos del club
+**Director Deportivo** (35-60 años)
+- **Rol:** Responsable de múltiples equipos en un club
+- **Contexto:** Supervisa el trabajo de varios entrenadores, debe asegurar calidad y coherencia
+- **Pain Points:** Falta de visibilidad sobre planificaciones, dificultad para evaluar efectividad de entrenamientos
+- **Goals:** Supervisar y validar planificaciones, acceder a reportes de progreso, mantener estándares de calidad
 
-**Entrenador Profesional** (30-55 años)
-- **Role:** Entrenador de equipos competitivos o profesionales
-- **Context:** Maneja equipos de alto rendimiento, necesita planificaciones detalladas y personalizadas
-- **Pain Points:** Necesidad de crear conceptos y ejercicios personalizados, gestión compleja de periodización
-- **Goals:** Maximizar rendimiento del equipo, crear metodologías propias, compartir conocimiento
+**Entrenador Novato** (20-35 años)
+- **Rol:** Entrenador con poca experiencia
+- **Contexto:** Necesita aprender y aplicar metodologías probadas
+- **Pain Points:** Falta de conocimiento para crear planificaciones efectivas, inseguridad sobre ejercicios apropiados
+- **Goals:** Acceder a planificaciones de entrenadores experimentados, aprender metodologías, ganar confianza
 
 ## The Problem
 
-### Planificación Manual Ineficiente
+### Planificación Deportiva Fragmentada
 
-Los entrenadores invierten horas creando planificaciones desde cero, repitiendo trabajo que otros ya han realizado. Esto resulta en menos tiempo dedicado al entrenamiento real y desarrollo de los jugadores.
+Los entrenadores crean planificaciones aisladamente, reinventando constantemente ejercicios y metodologías ya probadas por otros. Esto resulta en pérdida de tiempo, inconsistencia en la calidad y aprovechamiento subóptimo del conocimiento colectivo deportivo.
 
-**Our Solution:** Marketplace de planificaciones pre-creadas y valoradas que permite importar y personalizar entrenamientos completos.
+**Nuestra Solución:** Marketplace de planificaciones donde entrenadores pueden compartir, valorar y reutilizar planificaciones completas con muy pocos clicks.
 
-### Falta de Estructura en Ejercicios
+### Creación Manual Intensiva
 
-Los ejercicios no están organizados por conceptos, niveles de dificultad o categorías, dificultando la búsqueda de contenido apropiado para cada equipo y sesión.
+Crear una planificación completa desde cero requiere semanas de trabajo: definir objetivos, buscar ejercicios, programar sesiones, calcular progresiones. Esto consume 70-80% del tiempo disponible del entrenador.
 
-**Our Solution:** Sistema de categorización por conceptos, subcategorías, niveles de dificultad y tiempo de aprendizaje estimado.
+**Nuestra Solución:** Sistema de generación automática de entrenamientos basado en itinerarios predefinidos y planificaciones de la comunidad, reduciendo el tiempo de setup a minutos.
 
-### Ausencia de Herramientas de Seguimiento
+### Falta de Seguimiento Estructurado
 
-No existen herramientas integradas para ejecutar entrenamientos, hacer seguimiento del progreso y generar informes sobre el cumplimiento de objetivos planificados.
+Los entrenadores carecen de herramientas para hacer seguimiento efectivo del cumplimiento de objetivos y progreso real de sus planificaciones, resultando en entrenamientos sin rumbo claro.
 
-**Our Solution:** Vista dinámica de entrenamiento con cronómetro, calendarios de seguimiento e informes de progreso automatizados.
-
-### Aislamiento del Conocimiento
-
-Los entrenadores trabajan de forma aislada sin poder beneficiarse del conocimiento y experiencia de otros profesionales del deporte.
-
-**Our Solution:** Plataforma colaborativa donde los entrenadores pueden compartir y valorar planificaciones, ejercicios y metodologías.
+**Nuestra Solución:** Dashboard de seguimiento en tiempo real con informes automáticos de progreso, cumplimiento de objetivos y análisis de efectividad.
 
 ## Differentiators
 
-### Automatización Inteligente
+### Marketplace de Conocimiento Deportivo
 
-A diferencia de las herramientas tradicionales de planificación deportiva que requieren configuración manual extensiva, SportPlanner puede generar automáticamente todos los entrenamientos de una planificación basándose en objetivos, frecuencia y duración. Esto reduce el tiempo de setup de semanas a minutos.
+A diferencia de aplicaciones genéricas de planificación, PlanSport crea una comunidad donde entrenadores experimentados comparten planificaciones completas valoradas por la comunidad. Esto permite acceso inmediato a metodologías probadas con sistema de rating de 5 estrellas.
 
-### Marketplace Colaborativo con Valoraciones
+### Configuración Ultra-Rápida
 
-Mientras otras plataformas ofrecen bibliotecas estáticas de ejercicios, nuestro marketplace permite a los entrenadores compartir, valorar y filtrar contenido basado en experiencias reales. Esto asegura que solo el contenido de mayor calidad y efectividad esté disponible.
+Mientras otras aplicaciones requieren configuración manual extensa, PlanSport permite crear planificaciones completas en 3 clicks: seleccionar deporte, elegir itinerario, generar entrenamientos automáticamente para todo el período.
 
-### Sistema de Suscripción Flexible
+### Multi-Deporte con Especialización
 
-A diferencia de las soluciones todo-o-nada del mercado, ofrecemos un modelo freemium que permite a los entrenadores empezar gratis y escalar según sus necesidades, incluyendo opciones para usuarios que no pagan pero son agregados por clubes.
+Unlike sport-specific apps, PlanSport maneja múltiples deportes manteniendo la especialización necesaria para cada uno, con conceptos, ejercicios y metodologías específicas por disciplina deportiva.
 
 ## Key Features
 
 ### Core Features
 
-- **Gestión de Equipos:** Creación y administración de equipos con categorías por edad, género y nivel de competencia
-- **Biblioteca de Conceptos:** Organización de objetivos de entrenamiento por categorías y subcategorías (técnica individual, táctica, física)
-- **Marketplace de Ejercicios:** Búsqueda, filtrado y valoración de ejercicios compartidos por la comunidad
-- **Planificación Automática:** Generación automática de entrenamientos basada en itinerarios predefinidos y objetivos
-- **Calendario de Entrenamientos:** Visualización y gestión de entrenamientos futuros y pasados con capacidad de modificación
+- **Autenticación con Supabase:** Sistema seguro de login con roles diferenciados (gratuito, entrenador, club)
+- **Gestión de Equipos Multi-Nivel:** Creación de clubes, equipos con categorización por edad, género y nivel (A, B, C)
+- **Conceptos y Objetivos Categorizados:** Sistema jerárquico de objetivos deportivos con categoría/subcategoría y nivel de dificultad
+- **Planificaciones Inteligentes:** Creación automática basada en itinerarios o configuración manual de conceptos
 
-### Subscription Features
+### Collaboration Features
 
-- **Suscripción Gratuita:** Creación de 1 equipo y hasta 15 entrenamientos
-- **Suscripción Entrenador:** Equipos ilimitados, conceptos personalizados, itinerarios personalizados
-- **Suscripción Club:** Gestión multi-equipo, roles de director, validación de resultados
-
-### Execution Features
-
-- **Vista Dinámica de Entrenamiento:** Interfaz paso a paso con cronómetro para ejecutar entrenamientos en tiempo real
-- **Informes de Progreso:** Análisis de cumplimiento de objetivos, porcentajes de conceptos entrenados vs planificados
-- **Gestión de Roles:** Sistema de permisos que permite asignar usuarios a equipos específicos con diferentes niveles de acceso
+- **Marketplace de Planificaciones:** Importar y compartir planificaciones con sistema de valoración comunitaria
+- **Ejercicios Vinculados:** Base de datos de ejercicios conectados a conceptos específicos para entrenamiento efectivo
+- **Gestión de Permisos:** Sistema granular de permisos por usuario y equipo dentro de organizaciones
+- **Calendario Integrado:** Vista de entrenamientos pasados y futuros con restricciones de modificación
 
 ### Advanced Features
 
-- **Conceptos Personalizados:** Creación de objetivos de entrenamiento específicos por entrenador o club
-- **Itinerarios Reutilizables:** Plantillas de secuencias de conceptos para rápida configuración de planificaciones
-- **Niveles de Dificultad:** Clasificación de ejercicios y conceptos según complejidad para equipos de diferentes niveles (A, B, C)
+- **Generación Automática de Entrenamientos:** Creación completa de sesiones para período definido basado en planificación
+- **Vista Dinámica de Entrenamiento:** Interfaz paso a paso con cronómetro para ejecución en tiempo real
+- **Reportes y Analytics:** Informes de distribución de objetivos, progreso y cumplimiento de planificaciones
+- **Personalización vs Templates:** Balance entre facilidad de uso (pocos clicks) y personalización avanzada
+
+## Subscription Model
+
+### Versión Gratuita (0€)
+- 1 equipo máximo
+- 15 entrenamientos límite
+- Acceso básico a marketplace
+- Funcionalidades esenciales
+
+### Versión Entrenador
+- Equipos ilimitados para un entrenador
+- Conceptos personalizados
+- Itinerarios propios
+- Entrenamientos ilimitados
+- Acceso completo a marketplace
+
+### Versión Club
+- Gestión de múltiples equipos
+- Rol de director para validación
+- Usuarios adicionales sin suscripción propia
+- Funcionalidades avanzadas de supervisión
+- Analytics organizacionales
+
+## Technical Architecture
+
+### Multi-Tenancy y Permisos
+- Usuarios pueden tener suscripción gratuita + una suscripción premium simultáneamente
+- Sistema de roles: Administrador, Director, Entrenador con permisos granulares por equipo
+- Usuarios invitados (sin suscripción) con acceso limitado asignado por administradores
+
+### Data Relationships
+- Club → Múltiples Equipos
+- Equipo → Múltiples Planificaciones (many-to-many)
+- Planificación → Conceptos directos o Itinerarios (que contienen conceptos)
+- Conceptos → Múltiples Ejercicios (many-to-many)
+- Sistema de visibilidad con flags para ocultar equipos/planificaciones obsoletas

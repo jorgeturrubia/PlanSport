@@ -1,129 +1,193 @@
 # Product Roadmap
 
-## Phase 0: Already Completed
+## Phase 1: Foundation & Authentication (MVP)
 
-The following features have been implemented:
-
-- [x] **Landing Page** - Marketing website with hero section, features overview, and subscription plans
-- [x] **Authentication System** - Complete user registration, login, JWT token management with Supabase
-- [x] **Dashboard Layout** - Main application layout with navigation, theme toggle, and user menu
-- [x] **Basic Team Management** - CRUD operations for teams with sport types, categories, and color coding
-- [x] **Role-based Access Control** - Guards and routing for authenticated vs guest users
-- [x] **Responsive Design** - Mobile-first design with Tailwind CSS
-- [x] **Error Handling** - Centralized error management and user feedback
-- [x] **State Management** - Signal-based reactive state for auth and teams
-
-## Phase 1: Subscription System & Core User Management
-
-**Goal:** Implement subscription management and user role system
-**Success Criteria:** Users can purchase subscriptions and access features based on their plan
+**Goal:** Establecer la base de la aplicación con autenticación Supabase y landing page
+**Success Criteria:** Usuario puede registrarse, elegir suscripción y acceder al dashboard básico
 
 ### Features
 
-- [ ] **Subscription Management** - Integration with payment system for Gratuita, Entrenador, Club plans `L`
-- [ ] **User Role System** - Admin, Director, Entrenador roles with permission-based access `M`
-- [ ] **Club/Organization Management** - Create and manage clubs with multiple teams `L`
-- [ ] **Team Assignment System** - Assign users to specific teams with role-based permissions `M`
-- [ ] **Subscription Limits Enforcement** - Restrict features based on subscription plan (team count, training count) `M`
-- [ ] **User Invitation System** - Club admins can invite users without requiring subscription `L`
+- [ ] Landing Page - Página de presentación con información de suscripciones y características `L`
+- [ ] Autenticación Supabase - Login, registro, recuperación de contraseña integrado con Supabase Auth `M`
+- [ ] Sistema de Suscripciones - Gestión de planes: Gratuito (0€), Entrenador, Club `M`
+- [ ] Selección de Deporte - Usuario debe elegir deporte principal al registrarse `S`
+- [ ] Dashboard Básico - Interfaz principal post-login con navegación básica `M`
+- [ ] Gestión de Perfil - Edición de datos de usuario y configuración de cuenta `S`
+- [ ] Sistema de Roles - Implementación básica de roles: Admin, Director, Entrenador `M`
 
 ### Dependencies
 
-- Supabase database schema for subscriptions, organizations, and user-team relationships
-- Payment gateway integration (Stripe recommended)
+- Configuración Supabase completa
+- Integración Angular 20 + Tailwind CSS 4
+- Hero Icons integration
+- .NET 8 API base structure
 
-## Phase 2: Concepts & Exercise Management
+## Phase 2: Core Team Management
 
-**Goal:** Build the core content management system for training concepts and exercises
-**Success Criteria:** Users can create, categorize, and manage training concepts and exercises
+**Goal:** Implementar gestión completa de equipos y estructura organizacional
+**Success Criteria:** Usuario puede crear clubes, equipos y gestionar membresías
 
 ### Features
 
-- [ ] **Concept Management** - Create and organize training objectives by category/subcategory `L`
-- [ ] **Exercise Library** - CRUD operations for exercises linked to concepts `L`
-- [ ] **Difficulty & Time Estimation** - Classify exercises by difficulty level and learning time `M`
-- [ ] **Personal vs Shared Content** - Distinguish between custom user content and application defaults `M`
-- [ ] **Exercise-Concept Linking** - Many-to-many relationship between exercises and concepts `M`
-- [ ] **Content Categorization** - Técnica individual, táctica, física categories with subcategories `S`
+- [ ] Creación de Clubes/Entidades - Gestión de organizaciones deportivas `M`
+- [ ] Gestión de Equipos - CRUD completo con categorización (edad, género, nivel A/B/C) `L`
+- [ ] Sistema de Permisos Granular - Asignación de usuarios a equipos específicos `L`
+- [ ] Invitación de Usuarios - Sistema para añadir usuarios sin suscripción propia `M`
+- [ ] Dashboard de Equipos - Vista de equipos con estadísticas básicas `M`
+- [ ] Configuración de Equipos - Días de entrenamiento, horarios, instalaciones `S`
+- [ ] Sistema de Visibilidad - Flags para ocultar/mostrar equipos y planificaciones `S`
 
 ### Dependencies
 
-- Core concept taxonomy definition
-- Database schema for concepts, exercises, and relationships
+- Phase 1 completion
+- Supabase Row Level Security (RLS) implementation
+- Multi-tenancy architecture
 
-## Phase 3: Planning System & Itineraries
+## Phase 3: Objectives & Exercise System
 
-**Goal:** Implement the core planning functionality with automated training generation
-**Success Criteria:** Users can create complete training plans and auto-generate sessions
+**Goal:** Implementar sistema de conceptos, objetivos y ejercicios deportivos
+**Success Criteria:** Base de datos completa de conceptos categorizados y ejercicios vinculados
 
 ### Features
 
-- [ ] **Training Plan Creation** - Define plans with start/end dates, training days, and hours `L`
-- [ ] **Itinerary System** - Create reusable concept sequences for rapid plan setup `L`
-- [ ] **Automated Training Generation** - Generate all training sessions based on plan parameters `XL`
-- [ ] **Plan-Team Assignment** - Assign plans to teams with many-to-many relationships `M`
-- [ ] **Training Schedule Management** - Calendar view with session management `L`
-- [ ] **Plan Templates** - Save and reuse successful planning configurations `M`
+- [ ] Conceptos Deportivos - Sistema jerárquico con categoría/subcategoría por deporte `L`
+- [ ] Gestión de Ejercicios - CRUD de ejercicios con vinculación a conceptos múltiples `L`
+- [ ] Conceptos Personalizados - Creación de conceptos custom por entrenador `M`
+- [ ] Clasificación por Dificultad - Niveles de dificultad y tiempo estimado de aprendizaje `S`
+- [ ] Biblioteca de Ejercicios - Filtros por deporte, concepto, nivel, duración `M`
+- [ ] Importación de Datos - Sistema para cargar conceptos y ejercicios predefinidos `M`
+- [ ] Validación de Coherencia - Reglas para asegurar coherencia entre conceptos y ejercicios `S`
 
 ### Dependencies
 
-- Completed concept and exercise management
-- Algorithm for intelligent training session generation
+- Phase 2 completion
+- Database schema for multi-sport concepts
+- Content management for default exercises/concepts
 
-## Phase 4: Marketplace & Community Features
+## Phase 4: Planning System
 
-**Goal:** Build the collaborative marketplace for sharing and rating content
-**Success Criteria:** Users can discover, import, and rate shared plans and exercises
+**Goal:** Sistema completo de planificaciones con itinerarios y generación automática
+**Success Criteria:** Crear planificación completa en menos de 5 clicks
 
 ### Features
 
-- [ ] **Content Marketplace** - Browse and search shared plans, exercises, and itineraries `XL`
-- [ ] **Rating & Review System** - 5-star rating system with comments and feedback `L`
-- [ ] **Advanced Search & Filters** - Filter by sport, category, difficulty, rating, age group `L`
-- [ ] **Content Import System** - One-click import of marketplace content to personal library `M`
-- [ ] **Content Publishing** - Publish personal content to marketplace with privacy controls `M`
-- [ ] **Community Moderation** - Report inappropriate content and admin moderation tools `L`
+- [ ] Creación de Planificaciones - Configuración con fechas, horarios, días de entrenamiento `L`
+- [ ] Sistema de Itinerarios - Templates predefinidos con conceptos agrupados `L`
+- [ ] Generación Automática de Entrenamientos - Crear todas las sesiones del período automáticamente `XL`
+- [ ] Asignación Multi-Equipo - Planificaciones compartidas entre varios equipos `M`
+- [ ] Configuración de Instalaciones - Pista completa vs. partida, lugares específicos `S`
+- [ ] Validación de Planificaciones - Reglas de coherencia para conceptos y progresión `M`
+- [ ] Calendario de Planificaciones - Vista temporal con entrenamientos futuros y pasados `M`
 
 ### Dependencies
 
-- Robust content categorization system
-- Content approval and moderation workflows
+- Phase 3 completion
+- Complex business logic for automatic session generation
+- Calendar integration libraries
 
-## Phase 5: Training Execution & Analytics
+## Phase 5: Session Execution & Tracking
 
-**Goal:** Provide real-time training execution tools and comprehensive analytics
-**Success Criteria:** Coaches can execute training sessions and track progress effectively
+**Goal:** Herramientas para ejecutar entrenamientos en tiempo real y hacer seguimiento
+**Success Criteria:** Entrenadores pueden dirigir sesiones usando la app y registrar progreso
 
 ### Features
 
-- [ ] **Dynamic Training View** - Step-by-step session execution with timer and navigation `L`
-- [ ] **Session Completion Tracking** - Mark concepts as trained and track progress `M`
-- [ ] **Progress Analytics** - Reports on planned vs executed training, concept coverage `L`
-- [ ] **Training Calendar** - Visual calendar with past/future sessions and modification controls `M`
-- [ ] **Hide/Archive System** - Hide old plans and teams without deletion `S`
-- [ ] **Export & Reporting** - Generate training reports in PDF/Excel formats `M`
+- [ ] Vista Dinámica de Entrenamiento - Interfaz paso a paso con cronómetro integrado `L`
+- [ ] Registro de Ejecución - Marcar ejercicios como completados/modificados `M`
+- [ ] Control de Asistencia - Registro de presencia de deportistas `S`
+- [ ] Modificaciones en Tiempo Real - Ajustes sobre la marcha durante entrenamientos `M`
+- [ ] Histórico de Sesiones - Registro completo de lo ejecutado vs. planificado `M`
+- [ ] Notas y Observaciones - Comentarios por sesión y ejercicio individual `S`
+- [ ] Exportación de Sesiones - PDF/Excel de entrenamientos realizados `S`
 
 ### Dependencies
 
-- Completed planning system
-- Session execution tracking infrastructure
+- Phase 4 completion
+- Real-time synchronization with Supabase
+- Offline capabilities for field use
 
-## Phase 6: Advanced Features & Enterprise
+## Phase 6: Analytics & Reporting
 
-**Goal:** Add advanced functionality for professional and enterprise users
-**Success Criteria:** Platform supports complex organizational structures and advanced analytics
+**Goal:** Sistema completo de reportes y análisis de cumplimiento de objetivos
+**Success Criteria:** Dashboards comprehensivos con insights accionables sobre progreso
 
 ### Features
 
-- [ ] **Advanced Analytics Dashboard** - Detailed insights on team performance and progress trends `XL`
-- [ ] **Multi-season Management** - Manage training plans across multiple seasons `L`
-- [ ] **Advanced Role Management** - Custom roles and granular permissions `L`
-- [ ] **API & Integrations** - Open API for third-party integrations `XL`
-- [ ] **Mobile App** - Native mobile application for iOS/Android `XL`
-- [ ] **Offline Mode** - Sync capabilities for offline training execution `L`
-- [ ] **Advanced Notifications** - Email/push notifications for training reminders and updates `M`
+- [ ] Dashboard de Objetivos - Distribución porcentual de conceptos en planificaciones `L`
+- [ ] Reportes de Progreso - Análisis de planificado vs. entrenado vs. pendiente `L`
+- [ ] Analytics por Equipo - Métricas específicas de rendimiento y adherencia `M`
+- [ ] Comparativas Temporales - Evolución de equipos entre períodos/temporadas `M`
+- [ ] Alertas de Cumplimiento - Notificaciones automáticas de desviaciones `S`
+- [ ] Reportes para Directores - Vistas ejecutivas para validación y supervisión `M`
+- [ ] Exportación de Informes - PDF/Excel con gráficos y análisis detallados `M`
 
 ### Dependencies
 
-- Stable core platform
-- Mobile development team or framework decision
+- Phase 5 completion
+- Advanced analytics libraries
+- Data visualization components
+
+## Phase 7: Marketplace & Community
+
+**Goal:** Plataforma comunitaria para compartir planificaciones valoradas
+**Success Criteria:** 1000+ planificaciones compartidas con sistema de rating funcional
+
+### Features
+
+- [ ] Marketplace de Planificaciones - Explorar planificaciones públicas con filtros avanzados `XL`
+- [ ] Sistema de Rating - Valoración de 1-5 estrellas con comentarios `M`
+- [ ] Importación de Planificaciones - Un click para adoptar planificaciones del marketplace `L`
+- [ ] Publicación de Planificaciones - Compartir propias planificaciones con la comunidad `M`
+- [ ] Filtros Avanzados - Por deporte, categoría, nivel, valoración, autor `M`
+- [ ] Perfiles de Entrenadores - Reputación y portfolio de planificaciones publicadas `M`
+- [ ] Sistema de Seguimiento - Follow a entrenadores destacados `S`
+- [ ] Trending y Populares - Algoritmos para destacar mejores planificaciones `S`
+
+### Dependencies
+
+- Phase 6 completion
+- Community moderation tools
+- Search and recommendation algorithms
+
+## Phase 8: Advanced Features & Scale
+
+**Goal:** Características avanzadas para usuarios enterprise y optimizaciones
+**Success Criteria:** Soporte para organizaciones grandes (100+ equipos) con rendimiento óptimo
+
+### Features
+
+- [ ] API Pública - Integraciones con otras plataformas deportivas `L`
+- [ ] Modo Multi-Organizacional - Gestión de múltiples clubes por usuario `L`
+- [ ] Plantillas Avanzadas - Templates complejos con lógica condicional `M`
+- [ ] Integración con Wearables - Datos de dispositivos para análisis de rendimiento `XL`
+- [ ] Machine Learning - Recomendaciones personalizadas de ejercicios y planificaciones `XL`
+- [ ] Modo Offline Avanzado - Sincronización completa para uso sin internet `L`
+- [ ] White Label - Customización de marca para grandes organizaciones `M`
+
+### Dependencies
+
+- Phase 7 completion
+- Scalable infrastructure
+- ML/AI infrastructure and partnerships
+
+## Success Metrics per Phase
+
+### Phase 1-2: Foundation
+- 100 usuarios registrados
+- 50 equipos creados
+- 3 suscripciones de pago
+
+### Phase 3-4: Core Features  
+- 500 conceptos en sistema
+- 1000 ejercicios catalogados
+- 100 planificaciones creadas
+
+### Phase 5-6: Execution
+- 1000 entrenamientos ejecutados
+- 50 reportes generados mensualmente
+- 80% tasa de cumplimiento de planificaciones
+
+### Phase 7-8: Community
+- 1000 planificaciones en marketplace
+- 10000 importaciones de planificaciones
+- 500 entrenadores activos mensualmente
