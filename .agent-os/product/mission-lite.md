@@ -1,5 +1,0 @@
-# Product Mission (Lite)
-
-SportPlanner es una plataforma de planificación deportiva que ayuda a entrenadores y clubes a crear, gestionar y compartir planificaciones de entrenamiento proporcionando un marketplace de ejercicios valorados y herramientas de automatización para generar entrenamientos completos con muy pocos clicks.
-
-SportPlanner sirve a entrenadores individuales y clubes deportivos que necesitan optimizar el tiempo de preparación de entrenamientos y acceder a contenido de calidad validado por la comunidad. A diferencia de las herramientas tradicionales que requieren configuración manual extensiva, SportPlanner automatiza la generación de entrenamientos completos basándose en objetivos y puede crear una planificación completa con todos sus entrenamientos en minutos en lugar de horas.

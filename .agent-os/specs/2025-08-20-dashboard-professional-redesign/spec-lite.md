@@ -1,3 +1,0 @@
-# Spec Summary (Lite)
-
-Rediseñar completamente el dashboard actual con un estilo profesional moderno que incluya modo oscuro/claro con toggle en el header, sidebar expandible/contraíble y una experiencia de usuario mejorada. Este rediseño elevará la percepción profesional de la plataforma SportPlanner y mejorará significativamente la usabilidad para entrenadores y clubes deportivos, implementando un sistema de temas completo con persistencia de estado y una navegación lateral moderna con animaciones suaves.
