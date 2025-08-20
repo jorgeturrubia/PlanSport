@@ -11,395 +11,267 @@ import { AuthValidators, getFirstErrorMessage } from '../../validators/auth.vali
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
-      <div class="form-header">
-        <h2 class="form-title">Crear cuenta</h2>
-        <p class="form-subtitle">Únete a PlanSport y comienza tu entrenamiento</p>
-      </div>
-
-      @if (authService.error()) {
-        <div class="error-message" role="alert">
-          <span class="error-icon">⚠️</span>
-          {{ authService.error() }}
-        </div>
-      }
-
-      @if (registerSuccess()) {
-        <div class="success-message" role="status">
-          <span class="success-icon">✅</span>
-          ¡Cuenta creada exitosamente! Redirigiendo...
-        </div>
-      }
-
-      <!-- Nombre -->
-      <div class="form-group">
-        <label for="firstName" class="form-label">Nombre</label>
-        <input
-          id="firstName"
-          type="text"
-          formControlName="firstName"
-          class="form-input"
-          [class.error]="hasFieldError('firstName')"
-          [class.success]="firstNameControl.valid && firstNameControl.dirty"
-          placeholder="Tu nombre"
-          autocomplete="given-name"
-        />
-        @if (hasFieldError('firstName')) {
-          <div class="field-error">
-            {{ getFieldErrorMessage('firstName') }}
+    <div class="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center p-4">
+      <div class="max-w-md w-full space-y-8">
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+          <!-- Header -->
+          <div class="text-center mb-8">
+            <div class="mx-auto h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+              <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+              </svg>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900">Crear cuenta</h2>
+            <p class="mt-2 text-gray-600">Únete y comienza tu journey</p>
           </div>
-        }
-      </div>
 
-      <!-- Apellido -->
-      <div class="form-group">
-        <label for="lastName" class="form-label">Apellido</label>
-        <input
-          id="lastName"
-          type="text"
-          formControlName="lastName"
-          class="form-input"
-          [class.error]="hasFieldError('lastName')"
-          [class.success]="lastNameControl.valid && lastNameControl.dirty"
-          placeholder="Tu apellido"
-          autocomplete="family-name"
-        />
-        @if (hasFieldError('lastName')) {
-          <div class="field-error">
-            {{ getFieldErrorMessage('lastName') }}
-          </div>
-        }
-      </div>
+          <!-- Error Message -->
+          @if (authService.error()) {
+            <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-center space-x-3" role="alert">
+              <svg class="h-5 w-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <p class="text-sm text-red-700">{{ authService.error() }}</p>
+            </div>
+          }
 
-      <!-- Email -->
-      <div class="form-group">
-        <label for="email" class="form-label">Correo electrónico</label>
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          class="form-input"
-          [class.error]="hasFieldError('email')"
-          [class.success]="emailControl.valid && emailControl.dirty"
-          placeholder="tu@email.com"
-          autocomplete="email"
-        />
-        @if (hasFieldError('email')) {
-          <div class="field-error">
-            {{ getFieldErrorMessage('email') }}
-          </div>
-        }
-      </div>
+          <!-- Success Message -->
+          @if (registerSuccess()) {
+            <div class="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 flex items-center space-x-3" role="status">
+              <svg class="h-5 w-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <p class="text-sm text-green-700">¡Cuenta creada exitosamente! Redirigiendo...</p>
+            </div>
+          }
 
-      <!-- Contraseña -->
-      <div class="form-group">
-        <label for="password" class="form-label">Contraseña</label>
-        <div class="password-input-container">
-          <input
-            id="password"
-            [type]="showPassword() ? 'text' : 'password'"
-            formControlName="password"
-            class="form-input"
-            [class.error]="hasFieldError('password')"
-            [class.success]="passwordControl.valid && passwordControl.dirty"
-            placeholder="Mínimo 8 caracteres"
-            autocomplete="new-password"
-          />
-          <button
-            type="button"
-            class="password-toggle"
-            (click)="togglePasswordVisibility()"
-            [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
-          >
-            @if (showPassword()) {
-              👁️
-            } @else {
-              🙈
+          <!-- Form -->
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+            <!-- Name Field -->
+            <div>
+              <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">
+                Nombre completo
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                  </svg>
+                </div>
+                <input
+                  id="firstName"
+                  type="text"
+                  formControlName="firstName"
+                  class="block w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                  [class]="hasFieldError('firstName') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 
+                           (firstNameControl.valid && firstNameControl.dirty) ? 'border-green-300 focus:ring-green-500 focus:border-green-500' : 'border-gray-300'"
+                  placeholder="Ingresa tu nombre completo"
+                  autocomplete="name"
+                />
+              </div>
+              @if (hasFieldError('firstName')) {
+                <p class="mt-1 text-sm text-red-600">{{ getFieldErrorMessage('firstName') }}</p>
+              }
+            </div>
+
+            <!-- Email Field -->
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                Correo electrónico
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                  </svg>
+                </div>
+                <input
+                  id="email"
+                  type="email"
+                  formControlName="email"
+                  class="block w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                  [class]="hasFieldError('email') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 
+                           (emailControl.valid && emailControl.dirty) ? 'border-green-300 focus:ring-green-500 focus:border-green-500' : 'border-gray-300'"
+                  placeholder="Ingresa tu correo"
+                  autocomplete="email"
+                />
+              </div>
+              @if (hasFieldError('email')) {
+                <p class="mt-1 text-sm text-red-600">{{ getFieldErrorMessage('email') }}</p>
+              }
+            </div>
+
+            <!-- Password Field -->
+            <div>
+              <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                Contraseña
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  </svg>
+                </div>
+                <input
+                  id="password"
+                  [type]="showPassword() ? 'text' : 'password'"
+                  formControlName="password"
+                  class="block w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                  [class]="hasFieldError('password') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 
+                           (passwordControl.valid && passwordControl.dirty) ? 'border-green-300 focus:ring-green-500 focus:border-green-500' : 'border-gray-300'"
+                  placeholder="Crea una contraseña"
+                  autocomplete="new-password"
+                />
+                <button
+                  type="button"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  (click)="togglePasswordVisibility()"
+                  [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                >
+                  @if (showPassword()) {
+                    <svg class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>
+                    </svg>
+                  } @else {
+                    <svg class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                  }
+                </button>
+              </div>
+              
+              @if (hasFieldError('password')) {
+                <p class="mt-1 text-sm text-red-600">{{ getFieldErrorMessage('password') }}</p>
+              }
+              
+              <!-- Password Strength Indicator -->
+              @if (passwordControl.value && !isPasswordStrong()) {
+                <div class="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div class="text-xs font-medium text-blue-700 mb-1">Requisitos de contraseña:</div>
+                  @for (error of getPasswordStrengthErrors(); track error) {
+                    <div class="text-xs text-blue-600">• {{ error }}</div>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Confirm Password Field -->
+            <div>
+              <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
+                Confirmar contraseña
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  </svg>
+                </div>
+                <input
+                  id="confirmPassword"
+                  [type]="showPassword() ? 'text' : 'password'"
+                  formControlName="confirmPassword"
+                  class="block w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                  [class]="hasFieldError('confirmPassword') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 
+                           (confirmPasswordControl.valid && confirmPasswordControl.dirty) ? 'border-green-300 focus:ring-green-500 focus:border-green-500' : 'border-gray-300'"
+                  placeholder="Confirma tu contraseña"
+                  autocomplete="new-password"
+                />
+              </div>
+              
+              @if (hasFieldError('confirmPassword')) {
+                <p class="mt-1 text-sm text-red-600">{{ getFieldErrorMessage('confirmPassword') }}</p>
+              }
+              
+              <!-- Password Match Indicator -->
+              @if (confirmPasswordControl.value && confirmPasswordControl.value.length > 0) {
+                <div class="mt-1 flex items-center">
+                  @if (passwordControl.value === confirmPasswordControl.value) {
+                    <div class="flex items-center text-green-600">
+                      <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                      </svg>
+                      <span class="text-xs">Las contraseñas coinciden</span>
+                    </div>
+                  } @else {
+                    <div class="flex items-center text-red-600">
+                      <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                      <span class="text-xs">Las contraseñas no coinciden</span>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Terms and Conditions -->
+            <div class="flex items-center">
+              <input
+                id="accept-terms"
+                type="checkbox"
+                formControlName="acceptTerms"
+                class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+              />
+              <label for="accept-terms" class="ml-2 block text-sm text-gray-700">
+                Acepto los{' '}
+                <button type="button" class="text-purple-600 hover:text-purple-500">
+                  Términos de Servicio
+                </button>{' '}
+                y{' '}
+                <button type="button" class="text-purple-600 hover:text-purple-500">
+                  Política de Privacidad
+                </button>
+              </label>
+            </div>
+            @if (acceptTermsControl.invalid && acceptTermsControl.touched) {
+              <p class="mt-1 text-sm text-red-600">
+                Debes aceptar los términos y condiciones
+              </p>
             }
-          </button>
+
+            <!-- Submit Button -->
+            <button
+              type="submit"
+              [disabled]="registerForm.invalid || authService.isLoading()"
+              class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              @if (authService.isLoading()) {
+                <div class="flex items-center space-x-2">
+                  <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <span>Creando cuenta...</span>
+                </div>
+              } @else {
+                Crear cuenta
+              }
+            </button>
+          </form>
+
+          <!-- Sign In Link -->
+          <div class="mt-6">
+            <div class="relative">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-gray-300" />
+              </div>
+              <div class="relative flex justify-center text-sm">
+                <span class="px-2 bg-white text-gray-500">¿Ya tienes una cuenta?</span>
+              </div>
+            </div>
+            <div class="mt-6 text-center">
+              <button
+                type="button"
+                class="font-medium text-purple-600 hover:text-purple-500"
+                (click)="onSignIn()"
+              >
+                Iniciar sesión
+              </button>
+            </div>
+          </div>
         </div>
-        @if (hasFieldError('password')) {
-          <div class="field-error">
-            {{ getFieldErrorMessage('password') }}
-          </div>
-        }
-        @if (passwordControl.value && !isPasswordStrong()) {
-          <div class="password-strength">
-            <div class="strength-title">Requisitos de contraseña:</div>
-            @for (error of getPasswordStrengthErrors(); track error) {
-              <div class="strength-requirement">• {{ error }}</div>
-            }
-          </div>
-        }
       </div>
-
-      <!-- Confirmar Contraseña -->
-      <div class="form-group">
-        <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
-        <div class="password-input-container">
-          <input
-            id="confirmPassword"
-            [type]="showPassword() ? 'text' : 'password'"
-            formControlName="confirmPassword"
-            class="form-input"
-            [class.error]="hasFieldError('confirmPassword')"
-            [class.success]="confirmPasswordControl.valid && confirmPasswordControl.dirty"
-            placeholder="Confirma tu contraseña"
-            autocomplete="new-password"
-          />
-        </div>
-        @if (hasFieldError('confirmPassword')) {
-          <div class="field-error">
-            {{ getFieldErrorMessage('confirmPassword') }}
-          </div>
-        }
-      </div>
-
-      <!-- Términos y condiciones -->
-      <div class="form-group">
-        <label class="checkbox-label">
-          <input
-            type="checkbox"
-            formControlName="acceptTerms"
-            class="checkbox-input"
-          />
-          <span class="checkbox-text">
-            Acepto los 
-            <a href="/terms" class="terms-link" target="_blank">Términos de Servicio</a> y 
-            <a href="/privacy" class="terms-link" target="_blank">Política de Privacidad</a>
-          </span>
-        </label>
-        @if (acceptTermsControl.invalid && acceptTermsControl.touched) {
-          <div class="field-error">
-            Debes aceptar los términos y condiciones
-          </div>
-        }
-      </div>
-
-      <!-- Botón de envío -->
-      <button
-        type="submit"
-        class="submit-button"
-        [disabled]="registerForm.invalid || authService.isLoading()"
-      >
-        @if (authService.isLoading()) {
-          <span class="button-spinner"></span>
-          Creando cuenta...
-        } @else {
-          Crear Cuenta
-        }
-      </button>
-    </form>
+    </div>
   `,
-  styles: [`
-    .register-form {
-      width: 100%;
-    }
-
-    .form-header {
-      text-align: center;
-      margin-bottom: var(--spacing-6);
-    }
-
-    .form-title {
-      font-size: var(--font-size-xl);
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-gray-900);
-      margin: 0 0 var(--spacing-2) 0;
-    }
-
-    .form-subtitle {
-      font-size: var(--font-size-sm);
-      color: var(--color-gray-600);
-      margin: 0;
-    }
-
-    .error-message {
-      background: var(--color-error-50);
-      border: 1px solid var(--color-error-200);
-      color: var(--color-error-700);
-      padding: var(--spacing-3);
-      border-radius: var(--border-radius-md);
-      font-size: var(--font-size-sm);
-      margin-bottom: var(--spacing-4);
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-2);
-    }
-
-    .success-message {
-      background: var(--color-success-50);
-      border: 1px solid var(--color-success-200);
-      color: var(--color-success-700);
-      padding: var(--spacing-3);
-      border-radius: var(--border-radius-md);
-      font-size: var(--font-size-sm);
-      margin-bottom: var(--spacing-4);
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-2);
-    }
-
-    .error-icon,
-    .success-icon {
-      font-size: var(--font-size-base);
-      flex-shrink: 0;
-    }
-
-    .form-group {
-      margin-bottom: var(--spacing-4);
-    }
-
-    .form-label {
-      display: block;
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-medium);
-      color: var(--color-gray-700);
-      margin-bottom: var(--spacing-2);
-    }
-
-    .form-input {
-      width: 100%;
-      padding: var(--spacing-3);
-      border: 1px solid var(--color-gray-300);
-      border-radius: var(--border-radius-md);
-      font-size: var(--font-size-base);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      box-sizing: border-box;
-    }
-
-    .form-input:focus {
-      outline: none;
-      border-color: var(--color-primary-500);
-      box-shadow: 0 0 0 3px var(--color-primary-100);
-    }
-
-    .form-input.error {
-      border-color: var(--color-error-500);
-    }
-
-    .form-input.error:focus {
-      box-shadow: 0 0 0 3px var(--color-error-100);
-    }
-
-    .form-input.success {
-      border-color: var(--color-success-500);
-    }
-
-    .form-input.success:focus {
-      box-shadow: 0 0 0 3px var(--color-success-100);
-    }
-
-    .password-input-container {
-      position: relative;
-    }
-
-    .password-toggle {
-      position: absolute;
-      right: var(--spacing-3);
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: var(--spacing-1);
-      font-size: var(--font-size-sm);
-    }
-
-    .field-error {
-      color: var(--color-error-600);
-      font-size: var(--font-size-xs);
-      margin-top: var(--spacing-1);
-    }
-
-    .password-strength {
-      margin-top: var(--spacing-2);
-      padding: var(--spacing-2);
-      background: var(--color-blue-50);
-      border-radius: var(--border-radius-sm);
-      border: 1px solid var(--color-blue-200);
-    }
-
-    .strength-title {
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-medium);
-      color: var(--color-blue-700);
-      margin-bottom: var(--spacing-1);
-    }
-
-    .strength-requirement {
-      font-size: var(--font-size-xs);
-      color: var(--color-blue-600);
-      line-height: 1.3;
-    }
-
-    .checkbox-label {
-      display: flex;
-      align-items: flex-start;
-      cursor: pointer;
-      gap: var(--spacing-2);
-    }
-
-    .checkbox-input {
-      margin-top: 2px;
-      flex-shrink: 0;
-    }
-
-    .checkbox-text {
-      font-size: var(--font-size-sm);
-      color: var(--color-gray-700);
-      line-height: 1.4;
-    }
-
-    .terms-link {
-      color: var(--color-primary-600);
-      text-decoration: none;
-    }
-
-    .terms-link:hover {
-      text-decoration: underline;
-    }
-
-    .submit-button {
-      width: 100%;
-      background: var(--color-primary-600);
-      color: white;
-      border: none;
-      padding: var(--spacing-3) var(--spacing-4);
-      border-radius: var(--border-radius-md);
-      font-size: var(--font-size-base);
-      font-weight: var(--font-weight-medium);
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--spacing-2);
-    }
-
-    .submit-button:hover:not(:disabled) {
-      background: var(--color-primary-700);
-    }
-
-    .submit-button:disabled {
-      background: var(--color-gray-400);
-      cursor: not-allowed;
-    }
-
-    .button-spinner {
-      width: 16px;
-      height: 16px;
-      border: 2px solid transparent;
-      border-top: 2px solid currentColor;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  `]
+  styles: []
 })
 export class RegisterComponent {
   private readonly fb = inject(FormBuilder);
@@ -472,6 +344,13 @@ export class RegisterComponent {
   isPasswordStrong(): boolean {
     const control = this.registerForm.get('password');
     return !!(control && control.value && !control.errors?.['passwordStrength']);
+  }
+
+  /**
+   * Maneja la navegación al formulario de inicio de sesión
+   */
+  onSignIn(): void {
+    this.router.navigate(['/auth/login']);
   }
 
   /**
