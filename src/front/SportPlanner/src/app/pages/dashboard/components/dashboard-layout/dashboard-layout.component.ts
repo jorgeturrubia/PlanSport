@@ -2,8 +2,7 @@ import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule } from 'lucide-angular';
-// Removed direct icon imports; icons are provided globally via LUCIDE_ICONS in app.config.ts
+import { NgIcon } from '@ng-icons/core';
 import { AuthService } from '../../../../features/auth/services/auth.service';
 import { AuthUser } from '../../../../features/auth/models/auth.interfaces';
 import { ThemeService } from '../../services/theme.service';
@@ -21,7 +20,7 @@ import { User } from '../../interfaces/user.interface';
     RouterOutlet,
     RouterModule,
     FormsModule,
-    LucideAngularModule,
+    NgIcon,
     ThemeToggleComponent,
     UserMenuComponent
   ],

@@ -25,10 +25,10 @@ describe('SportIconComponent', () => {
     fixture.detectChanges();
 
     // Act
-    const iconElement = fixture.debugElement.query(By.css('lucide-icon'));
+    const iconElement = fixture.debugElement.query(By.css('ng-icon'));
 
     // Assert
-    expect(iconElement.componentInstance.name).toBe('users'); // Football uses users icon
+    expect(iconElement.componentInstance.name).toBe('heroUsers'); // Football uses users icon
   });
 
   it('should display correct icon for basketball sport', () => {
@@ -37,10 +37,10 @@ describe('SportIconComponent', () => {
     fixture.detectChanges();
 
     // Act
-    const iconElement = fixture.debugElement.query(By.css('lucide-icon'));
+    const iconElement = fixture.debugElement.query(By.css('ng-icon'));
 
     // Assert
-    expect(iconElement.componentInstance.name).toBe('target');
+    expect(iconElement.componentInstance.name).toBe('heroViewfinderCircle');
   });
 
   it('should apply correct size class', () => {
@@ -73,10 +73,10 @@ describe('SportIconComponent', () => {
     fixture.detectChanges();
 
     // Act
-    const iconElement = fixture.debugElement.query(By.css('lucide-icon'));
+    const iconElement = fixture.debugElement.query(By.css('ng-icon'));
 
     // Assert
-    expect(iconElement.componentInstance.name).toBe('activity');
+    expect(iconElement.componentInstance.name).toBe('heroFire');
   });
 
   it('should apply active state correctly', () => {
@@ -123,7 +123,7 @@ describe('SportIconComponent', () => {
     fixture.detectChanges();
 
     // Act
-    const iconElement = fixture.debugElement.query(By.css('lucide-icon'));
+    const iconElement = fixture.debugElement.query(By.css('ng-icon'));
 
     // Assert
     expect(iconElement.componentInstance.name).toBe('star');
@@ -143,15 +143,15 @@ describe('SportIconComponent', () => {
 
   it('should return correct icon name for all supported sports', () => {
     const sportIconMappings = [
-      { sport: 'football', expectedIcon: 'users' },
-      { sport: 'basketball', expectedIcon: 'target' },
-      { sport: 'volleyball', expectedIcon: 'zap' },
-      { sport: 'tennis', expectedIcon: 'circle' },
-      { sport: 'swimming', expectedIcon: 'waves' },
-      { sport: 'athletics', expectedIcon: 'trending-up' },
-      { sport: 'handball', expectedIcon: 'hand' },
-      { sport: 'rugby', expectedIcon: 'shield' },
-      { sport: 'hockey', expectedIcon: 'minimize-2' }
+      { sport: 'football', expectedIcon: 'heroUsers' },
+      { sport: 'basketball', expectedIcon: 'heroViewfinderCircle' },
+      { sport: 'volleyball', expectedIcon: 'heroBolt' },
+      { sport: 'tennis', expectedIcon: 'heroStop' },
+      { sport: 'swimming', expectedIcon: 'heroSpeakerWave' },
+      { sport: 'athletics', expectedIcon: 'heroArrowTrendingUp' },
+      { sport: 'handball', expectedIcon: 'heroHandRaised' },
+      { sport: 'rugby', expectedIcon: 'heroShieldCheck' },
+      { sport: 'hockey', expectedIcon: 'heroMinus' }
     ];
 
     sportIconMappings.forEach(({ sport, expectedIcon }) => {

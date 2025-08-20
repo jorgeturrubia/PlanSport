@@ -1,7 +1,7 @@
 import { Component, computed, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { LucideAngularModule } from 'lucide-angular';
+import { NgIcon } from '@ng-icons/core';
 import { NavigationItem } from '../../interfaces/navigation.interface';
 
 @Component({
@@ -10,7 +10,7 @@ import { NavigationItem } from '../../interfaces/navigation.interface';
   imports: [
     CommonModule,
     RouterModule,
-    LucideAngularModule
+    NgIcon
   ],
   template: `
     <aside 
@@ -45,8 +45,8 @@ import { NavigationItem } from '../../interfaces/navigation.interface';
               (click)="onNavigationClick(item)"
             >
               <ng-container [ngSwitch]="item.icon">
-                <lucide-icon name="home" *ngSwitchCase="'home'" class="w-5 h-5 flex-shrink-0"></lucide-icon>
-              <lucide-icon name="users" *ngSwitchCase="'users'" class="w-5 h-5 flex-shrink-0"></lucide-icon>
+                <ng-icon name="heroHome" *ngSwitchCase="'home'" class="w-5 h-5 flex-shrink-0"></ng-icon>
+                <ng-icon name="heroUsers" *ngSwitchCase="'users'" class="w-5 h-5 flex-shrink-0"></ng-icon>
               </ng-container>
               <span 
                 *ngIf="!isCollapsed()" 
@@ -65,7 +65,6 @@ export class SidebarComponent {
   isCollapsed = input<boolean>(false);
   navigationClick = output<NavigationItem>();
 
-  // No need to reassign icons as we're using LucideAngularModule
 
   navigationItems = computed<NavigationItem[]>(() => [
     {

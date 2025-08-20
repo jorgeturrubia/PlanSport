@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, Sun, Moon, Monitor } from 'lucide-angular';
+import { NgIcon } from '@ng-icons/core';
 import { ThemeService } from '../../services/theme.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { ThemeService } from '../../services/theme.service';
   standalone: true,
   imports: [
     CommonModule,
-    LucideAngularModule
+    NgIcon
   ],
   template: `
     <button
@@ -17,19 +17,15 @@ import { ThemeService } from '../../services/theme.service';
       [attr.aria-label]="'Cambiar a tema ' + getNextThemeLabel()"
       title="Cambiar tema"
     >
-      <lucide-icon 
+      <ng-icon 
         [name]="getCurrentThemeIcon()" 
         class="w-5 h-5 text-gray-600 dark:text-gray-300"
-      ></lucide-icon>
+      ></ng-icon>
     </button>
   `
 })
 export class ThemeToggleComponent {
   private themeService = inject(ThemeService);
-
-  readonly SunIcon = Sun;
-  readonly MoonIcon = Moon;
-  readonly MonitorIcon = Monitor;
 
   toggleTheme(): void {
     this.themeService.toggleTheme();
@@ -40,13 +36,13 @@ export class ThemeToggleComponent {
     
     switch (currentTheme) {
       case 'light':
-        return 'sun';
+        return 'heroSun';
       case 'dark':
-        return 'moon';
+        return 'heroMoon';
       case 'system':
-        return 'monitor';
+        return 'heroComputerDesktop';
       default:
-        return 'sun';
+        return 'heroSun';
     }
   }
 

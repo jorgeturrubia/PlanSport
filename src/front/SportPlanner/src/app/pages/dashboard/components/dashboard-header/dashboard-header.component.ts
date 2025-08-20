@@ -1,7 +1,7 @@
 import { Component, inject, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { LucideAngularModule, Menu } from 'lucide-angular';
+import { NgIcon } from '@ng-icons/core';
 import { AuthService } from '../../../../features/auth/services/auth.service';
 import { UserMenuComponent } from '../user-menu/user-menu.component';
 import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
@@ -11,7 +11,7 @@ import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
   standalone: true,
   imports: [
     CommonModule,
-    LucideAngularModule,
+    NgIcon,
     UserMenuComponent,
     ThemeToggleComponent
   ],
@@ -24,7 +24,7 @@ import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
           class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           aria-label="Toggle sidebar"
         >
-          <lucide-icon [name]="'menu'" class="w-5 h-5 text-gray-600 dark:text-gray-300"></lucide-icon>
+          <ng-icon name="heroBars3" class="w-5 h-5 text-gray-600 dark:text-gray-300"></ng-icon>
         </button>
         
         <!-- PlanSport Logo that redirects to home -->
@@ -50,7 +50,6 @@ export class DashboardHeaderComponent {
   
   toggleSidebar = output<void>();
 
-  // No need to reassign icons as we're using LucideAngularModule
   
   navigateToHome(): void {
     this.router.navigate(['/']);

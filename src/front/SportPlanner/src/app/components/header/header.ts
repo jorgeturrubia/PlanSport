@@ -1,7 +1,7 @@
 import { Component, inject, HostListener, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { LucideAngularModule, Menu, X } from 'lucide-angular';
+import { NgIcon } from '@ng-icons/core';
 import { NavigationService } from '../../services/navigation.service';
 import { AuthService } from '../../features/auth/services/auth.service';
 import { Subscription } from 'rxjs';
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, NgIcon],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
@@ -18,9 +18,9 @@ export class Header implements OnInit, OnDestroy {
   private router = inject(Router);
   private authService = inject(AuthService);
   
-  // Icon references for template
-  readonly MenuIcon = Menu;
-  readonly XIcon = X;
+  // Icon references for template  
+  readonly MenuIcon = 'heroBars3';
+  readonly XIcon = 'heroXMark';
   
   isMobileMenuOpen = false;
   activeSection = '';

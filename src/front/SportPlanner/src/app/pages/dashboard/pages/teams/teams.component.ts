@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule } from 'lucide-angular';
+import { NgIcon } from '@ng-icons/core';
 import { TeamsService } from '../../services/teams.service';
 import { Team, CreateTeamRequest, UpdateTeamRequest, SPORT_LABELS, TEAM_COLORS } from '../../interfaces/team.interface';
 
@@ -11,7 +11,7 @@ import { Team, CreateTeamRequest, UpdateTeamRequest, SPORT_LABELS, TEAM_COLORS }
   imports: [
     CommonModule,
     FormsModule,
-    LucideAngularModule
+    NgIcon
   ],
   template: `
     <div class="space-y-6">
@@ -27,7 +27,7 @@ import { Team, CreateTeamRequest, UpdateTeamRequest, SPORT_LABELS, TEAM_COLORS }
           (click)="openCreateModal()"
           class="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
         >
-          <lucide-icon name="plus" class="w-5 h-5 mr-2"></lucide-icon>
+          <ng-icon name="heroPlus" class="w-5 h-5 mr-2"></ng-icon>
           Nuevo Equipo
         </button>
       </div>
@@ -38,7 +38,7 @@ import { Team, CreateTeamRequest, UpdateTeamRequest, SPORT_LABELS, TEAM_COLORS }
           <!-- Search -->
           <div class="flex-1">
             <div class="relative">
-              <lucide-icon name="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"></lucide-icon>
+              <ng-icon name="heroMagnifyingGlass" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"></ng-icon>
               <input
                 type="text"
                 [(ngModel)]="searchTerm"
@@ -99,21 +99,21 @@ import { Team, CreateTeamRequest, UpdateTeamRequest, SPORT_LABELS, TEAM_COLORS }
                   class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                   title="Editar equipo"
                 >
-                  <lucide-icon name="edit" class="w-4 h-4"></lucide-icon>
+                  <ng-icon name="heroPencil" class="w-4 h-4"></ng-icon>
                 </button>
                 <button
                   (click)="confirmDelete(team)"
                   class="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                   title="Eliminar equipo"
                 >
-                  <lucide-icon name="trash-2" class="w-4 h-4"></lucide-icon>
+                  <ng-icon name="heroTrash" class="w-4 h-4"></ng-icon>
                 </button>
               </div>
             </div>
             
             <!-- Team Stats -->
             <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-              <lucide-icon name="users" class="w-4 h-4 mr-1"></lucide-icon>
+              <ng-icon name="heroUsers" class="w-4 h-4 mr-1"></ng-icon>
               <span>{{ team.playersCount }} jugadores</span>
             </div>
             
@@ -135,7 +135,7 @@ import { Team, CreateTeamRequest, UpdateTeamRequest, SPORT_LABELS, TEAM_COLORS }
 
       <!-- Empty State -->
       <div *ngIf="!teamsService.loading() && filteredTeams().length === 0" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-12 text-center">
-        <lucide-icon name="users" class="w-16 h-16 text-gray-400 mx-auto mb-4"></lucide-icon>
+        <ng-icon name="heroUsers" class="w-16 h-16 text-gray-400 mx-auto mb-4"></ng-icon>
         <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
           {{ searchTerm() || selectedSport() ? 'No se encontraron equipos' : '¡Crea tu primer equipo!' }}
         </h3>
@@ -147,7 +147,7 @@ import { Team, CreateTeamRequest, UpdateTeamRequest, SPORT_LABELS, TEAM_COLORS }
           (click)="openCreateModal()"
           class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
         >
-          <lucide-icon name="plus" class="w-5 h-5 mr-2"></lucide-icon>
+          <ng-icon name="heroPlus" class="w-5 h-5 mr-2"></ng-icon>
           Crear Primer Equipo
         </button>
       </div>

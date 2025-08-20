@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule } from 'lucide-angular';
+import { NgIcon } from '@ng-icons/core';
 
 export type SportType = 
   | 'football' 
@@ -25,7 +25,7 @@ export interface SportIconMapping {
 @Component({
   selector: 'app-sport-icon',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, NgIcon],
   templateUrl: './sport-icon.component.html',
   styleUrls: ['./sport-icon.component.css']
 })
@@ -48,17 +48,17 @@ export class SportIconComponent {
 
   // Sport to icon mapping
   private sportIconMap: SportIconMapping = {
-    'football': 'users',
-    'basketball': 'target',
-    'volleyball': 'zap',
-    'tennis': 'circle',
-    'swimming': 'waves',
-    'athletics': 'trending-up',
-    'handball': 'hand',
-    'rugby': 'shield',
-    'hockey': 'minimize-2',
-    'other': 'activity',
-    'default': 'activity'
+    'football': 'heroUsers',
+    'basketball': 'heroViewfinderCircle',
+    'volleyball': 'heroBolt',
+    'tennis': 'heroStop',
+    'swimming': 'heroSpeakerWave',
+    'athletics': 'heroArrowTrendingUp',
+    'handball': 'heroHandRaised',
+    'rugby': 'heroShieldCheck',
+    'hockey': 'heroMinus',
+    'other': 'heroFire',
+    'default': 'heroFire'
   };
 
   // Size classes mapping
@@ -172,17 +172,17 @@ export class SportIconComponent {
   // Utility methods for external use
   static getSportIcon(sport: SportType | string): string {
     const defaultMap: SportIconMapping = {
-      'football': 'users',
-      'basketball': 'target',
-      'volleyball': 'zap',
-      'tennis': 'circle',
-      'swimming': 'waves',
-      'athletics': 'trending-up',
-      'handball': 'hand',
-      'rugby': 'shield',
-      'hockey': 'minimize-2',
-      'other': 'activity',
-      'default': 'activity'
+      'football': 'heroUsers',
+      'basketball': 'heroViewfinderCircle',
+      'volleyball': 'heroBolt',
+      'tennis': 'heroStop',
+      'swimming': 'heroSpeakerWave',
+      'athletics': 'heroArrowTrendingUp',
+      'handball': 'heroHandRaised',
+      'rugby': 'heroShieldCheck',
+      'hockey': 'heroMinus',
+      'other': 'heroFire',
+      'default': 'heroFire'
     };
     return defaultMap[sport] || defaultMap['default'];
   }

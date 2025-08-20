@@ -1,7 +1,6 @@
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { LucideAngularModule, Users, Target, Calendar, TrendingUp } from 'lucide-angular';
 import { AuthService } from '../../../../features/auth/services/auth.service';
 import { AuthUser } from '../../../../features/auth/models/auth.interfaces';
 import { TeamsService } from '../../services/teams.service';
@@ -14,7 +13,6 @@ import { SportIconComponent } from '../../../../shared/components/sport-icon/spo
   imports: [
     CommonModule,
     RouterModule,
-    LucideAngularModule,
     StatisticsCardComponent,
     SportIconComponent
   ],

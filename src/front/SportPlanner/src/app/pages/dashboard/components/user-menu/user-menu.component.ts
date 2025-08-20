@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { LucideAngularModule, ChevronDown, LogOut } from 'lucide-angular';
+import { NgIcon } from '@ng-icons/core';
 import { AuthService } from '../../../../features/auth/services/auth.service';
 import { AuthUser } from '../../../../features/auth/models/auth.interfaces';
 
@@ -10,7 +10,7 @@ import { AuthUser } from '../../../../features/auth/models/auth.interfaces';
   standalone: true,
   imports: [
     CommonModule,
-    LucideAngularModule
+    NgIcon
   ],
   template: `
     <div class="relative">
@@ -39,11 +39,11 @@ import { AuthUser } from '../../../../features/auth/models/auth.interfaces';
         </div>
         
         <!-- Chevron -->
-        <lucide-icon 
-          name="chevron-down" 
+        <ng-icon 
+          name="heroChevronDown" 
           class="w-4 h-4 text-gray-500 dark:text-gray-400 transition-transform"
           [class.rotate-180]="isMenuOpen()"
-        ></lucide-icon>
+        ></ng-icon>
       </button>
 
       <!-- Dropdown Menu -->
@@ -55,7 +55,7 @@ import { AuthUser } from '../../../../features/auth/models/auth.interfaces';
           (click)="logout()"
           class="w-full flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
         >
-          <lucide-icon name="log-out" class="w-4 h-4 mr-3"></lucide-icon>
+          <ng-icon name="heroPower" class="w-4 h-4 mr-3"></ng-icon>
           Cerrar Sesión
         </button>
       </div>
@@ -67,9 +67,6 @@ export class UserMenuComponent {
   private router = inject(Router);
 
   isMenuOpen = signal(false);
-  
-  readonly ChevronDownIcon = ChevronDown;
-  readonly LogOutIcon = LogOut;
 
   currentUser = computed(() => this.authService.user());
   

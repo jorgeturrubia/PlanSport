@@ -22,7 +22,7 @@
             (click)="toggleSidebar()"
           >
             <span class="sr-only">Cerrar sidebar</span>
-            <lucide-icon name="x" class="h-6 w-6 text-white"></lucide-icon>
+            <ng-icon name="heroXMark" class="h-6 w-6 text-white"></ng-icon>
           </button>
         </div>
         
@@ -51,7 +51,7 @@
                       [class]="rla.isActive ? 'bg-green-500/20 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800/50'"
                       (click)="onNavigationClick(item)"
                     >
-                      <lucide-icon [name]="item.icon" class="h-6 w-6 shrink-0 transition-transform group-hover:scale-110"></lucide-icon>
+                      <ng-icon [name]="'hero' + (item.icon === 'home' ? 'Home' : item.icon === 'users' ? 'Users' : 'Home')" class="h-6 w-6 shrink-0 transition-transform group-hover:scale-110"></ng-icon>
                       {{ item.label }}
                     </a>
                   </li>
@@ -101,7 +101,7 @@
                   [class]="rla.isActive ? 'bg-green-500/20 text-white shadow-lg' : 'text-gray-400 hover:text-white hover:bg-gray-800/50'"
                   (click)="onNavigationClick(item)"
                 >
-                  <lucide-icon [name]="item.icon" class="h-6 w-6 shrink-0 transition-all duration-200 group-hover:scale-110"></lucide-icon>
+                  <ng-icon [name]="'hero' + (item.icon === 'home' ? 'Home' : item.icon === 'users' ? 'Users' : 'Home')" class="h-6 w-6 shrink-0 transition-all duration-200 group-hover:scale-110"></ng-icon>
                   {{ item.label }}
                 </a>
               </li>
@@ -161,7 +161,7 @@
         (click)="toggleSidebar()"
       >
         <span class="sr-only">Abrir sidebar</span>
-        <lucide-icon name="menu" class="h-5 w-5"></lucide-icon>
+        <ng-icon name="heroBars3" class="h-5 w-5"></ng-icon>
       </button>
 
       <!-- Enhanced search bar -->
@@ -169,10 +169,10 @@
         <div class="relative flex-1 max-w-md">
           <label for="search-field" class="sr-only">Buscar</label>
           <div class="relative">
-            <lucide-icon 
-              name="search" 
+            <ng-icon 
+              name="heroMagnifyingGlass" 
               class="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400 ml-3"
-            ></lucide-icon>
+            ></ng-icon>
             <input 
               id="search-field" 
               type="search" 
@@ -197,7 +197,7 @@
           class="relative p-2.5 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all duration-200"
         >
           <span class="sr-only">Ver notificaciones</span>
-          <lucide-icon name="bell" class="h-5 w-5"></lucide-icon>
+          <ng-icon name="heroBell" class="h-5 w-5"></ng-icon>
           <!-- Notification badge -->
           <span class="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full animate-pulse"></span>
         </button>

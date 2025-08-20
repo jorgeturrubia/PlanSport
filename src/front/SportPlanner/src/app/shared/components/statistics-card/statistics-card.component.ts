@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, signal, computed, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule } from 'lucide-angular';
+import { NgIcon } from '@ng-icons/core';
 import { SportIconComponent } from '../sport-icon/sport-icon.component';
 
 export interface StatisticsCardData {
@@ -20,7 +20,7 @@ export interface StatisticsCardData {
 @Component({
   selector: 'app-statistics-card',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule, SportIconComponent],
+  imports: [CommonModule, NgIcon, SportIconComponent],
   templateUrl: './statistics-card.component.html',
   styleUrls: ['./statistics-card.component.css']
 })
