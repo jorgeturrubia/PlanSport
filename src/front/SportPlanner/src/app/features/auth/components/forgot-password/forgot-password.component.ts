@@ -104,7 +104,7 @@ import { AuthValidators } from '../../validators/auth.validators';
             </div>
             <h2 class="text-2xl font-bold text-gray-900 mb-2">Revisa tu correo</h2>
             <p class="text-gray-600 mb-6">
-              Hemos enviado un enlace de restablecimiento de contraseña a{' '}
+              Hemos enviado un enlace de restablecimiento de contraseña a 
               <span class="font-medium text-gray-900">{{ submittedEmail() }}</span>
             </p>
             <div class="space-y-4">

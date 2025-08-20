@@ -214,11 +214,11 @@ import { AuthValidators, getFirstErrorMessage } from '../../validators/auth.vali
                 class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
               />
               <label for="accept-terms" class="ml-2 block text-sm text-gray-700">
-                Acepto los{' '}
+                Acepto los 
                 <button type="button" class="text-purple-600 hover:text-purple-500">
                   Términos de Servicio
-                </button>{' '}
-                y{' '}
+                </button> 
+                y 
                 <button type="button" class="text-purple-600 hover:text-purple-500">
                   Política de Privacidad
                 </button>
@@ -251,7 +251,7 @@ import { AuthValidators, getFirstErrorMessage } from '../../validators/auth.vali
           <div class="mt-6">
             <div class="relative">
               <div class="absolute inset-0 flex items-center">
-                <div class="w-full border-t border-gray-300" />
+                <div class="w-full border-t border-gray-300"></div>
               </div>
               <div class="relative flex justify-center text-sm">
                 <span class="px-2 bg-white text-gray-500">¿Ya tienes una cuenta?</span>
