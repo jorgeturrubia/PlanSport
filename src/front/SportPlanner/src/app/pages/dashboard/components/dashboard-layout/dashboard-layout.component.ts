@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroBars3, heroXMark, heroMagnifyingGlass, heroBell, heroUser } from '@ng-icons/heroicons/outline';
+// NgIconComponent removed - not used in template
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HeaderComponent } from '../dashboard-header/header.component';
 
@@ -12,13 +11,10 @@ import { HeaderComponent } from '../dashboard-header/header.component';
   imports: [
     CommonModule,
     RouterOutlet,
-    NgIconComponent,
     SidebarComponent,
     HeaderComponent
   ],
-  providers: [
-    provideIcons({ heroBars3, heroXMark, heroMagnifyingGlass, heroBell, heroUser })
-  ],
+  // No providers needed - icons moved to child components
   template: `
     <div class="dashboard-layout">
       <!-- Sidebar -->
@@ -29,7 +25,7 @@ import { HeaderComponent } from '../dashboard-header/header.component';
       ></app-sidebar>
       
       <!-- Main Content -->
-      <div class="main-content">
+      <div class="main-content" [class.sidebar-collapsed]="sidebarCollapsed()">
         <!-- Header -->
         <app-header 
           [isMobile]="isMobile()"
