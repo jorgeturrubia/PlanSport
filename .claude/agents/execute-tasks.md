@@ -1,9 +1,7 @@
 ---
-description: Rules to initiate execution of a set of tasks using Agent OS
-globs:
-alwaysApply: false
-version: 1.0
-encoding: UTF-8
+name: execute-tasks
+description: Rules to initiate execution of a set of tasks using Agent OS. Orchestrates execution of one or more tasks for a given spec.
+tools: read,write,edit,bash,grep,ls
 ---
 
 # Task Execution Rules
@@ -13,7 +11,7 @@ encoding: UTF-8
 Initiate execution of one or more tasks for a given spec.
 
 <pre_flight_check>
-  EXECUTE: @.agent-os/instructions/meta/pre-flight.md
+  EXECUTE: Use pre-flight agent
 </pre_flight_check>
 
 <process_flow>
@@ -41,7 +39,7 @@ Identify which tasks to execute from the spec (using spec_srd_reference file pat
 
 ### Step 2: Context Analysis
 
-Use the context-fetcher subagent to gather minimal context for task understanding by always loading spec tasks.md, and conditionally loading @.agent-os/product/mission-lite.md, spec-lite.md, and sub-specs/technical-spec.md if not already in context.
+Use the context-fetcher subagent to gather minimal context for task understanding by always loading spec tasks.md, and conditionally loading .agent-os/product/mission-lite.md, spec-lite.md, and sub-specs/technical-spec.md if not already in context.
 
 <instructions>
   ACTION: Use context-fetcher subagent to:
@@ -50,7 +48,6 @@ Use the context-fetcher subagent to gather minimal context for task understandin
     - REQUEST: "Get technical approach from technical-spec.md"
   PROCESS: Returned information
 </instructions>
-
 
 <context_gathering>
   <essential_docs>
@@ -124,11 +121,11 @@ Use the git-workflow subagent to manage git branches to ensure proper isolation 
 
 ### Step 5: Task Execution Loop
 
-Execute all assigned parent tasks and their subtasks using the task-executor agent, continuing until all tasks are complete.
+Execute all assigned parent tasks and their subtasks using the execute-task agent, continuing until all tasks are complete.
 
 <execution_flow>
  FOR each parent_task assigned in Step 1:
-   EXECUTE agent: task-executor with:
+   EXECUTE agent: execute-task with:
      - parent_task_number
      - all associated subtasks
    WAIT for task completion
@@ -158,7 +155,7 @@ Execute all assigned parent tasks and their subtasks using the task-executor age
 </task_status_check>
 
 <instructions>
- ACTION: Use task-executor agent for each parent task
+ ACTION: Use execute-task agent for each parent task
  DELEGATE: Task execution to specialized agent
  LOOP: Through all assigned parent tasks
  UPDATE: Task status after each completion
@@ -168,21 +165,36 @@ Execute all assigned parent tasks and their subtasks using the task-executor age
 
 </step>
 
-<step number="6" name="complete_tasks">
+<step number="6" name="completion_management">
 
-### Step 6: Run the task completion steps
+### Step 6: Completion Management
 
-After all tasks in tasks.md have been implemented, use @.agent-os/instructions/core/complete-tasks.md to run our series of steps we always run when finishing and delivering a new feature.
+After all tasks in tasks.md have been implemented, use project-manager agent to verify completion and update tracking documentation.
 
 <instructions>
-  LOAD: @.agent-os/instructions/core/complete-tasks.md once
-  ACTION: execute all steps in the complete-tasks.md process_flow.
+  ACTION: Use project-manager agent
+  REQUEST: "Verify completion of all tasks for this spec:
+            - Check task implementation against requirements
+            - Update task status in tasks.md if needed
+            - Update roadmap progress
+            - Create completion recap documentation"
+  PROCESS: Project manager verification and documentation
+  CONFIRM: All tracking documents are updated
 </instructions>
+
+<completion_handoff>
+  The project-manager agent will:
+  1. Verify all tasks are properly implemented
+  2. Mark tasks as complete in documentation
+  3. Update roadmap with progress
+  4. Create recap documentation
+  5. Provide final completion summary
+</completion_handoff>
 
 </step>
 
 </process_flow>
 
 <post_flight_check>
-  EXECUTE: @.agent-os/instructions/meta/post-flight.md
+  EXECUTE: Use pre-flight agent
 </post_flight_check>

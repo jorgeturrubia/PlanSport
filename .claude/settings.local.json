@@ -1,19 +1,8 @@
+
 {
   "permissions": {
     "allow": [
-      "mcp__filesystem__directory_tree",
-      "mcp__filesystem__list_directory",
-      "mcp__filesystem__read_text_file",
-      "mcp__angular-cli__get_best_practices",
-      "mcp__context7__resolve-library-id",
-      "mcp__context7__get-library-docs",
-      "WebSearch",
-      "WebFetch(domain:www.npmjs.com)",
-      "Bash(npm install:*)",
-      "WebFetch(domain:heroicons.com)",
-      "Bash(npm uninstall:*)",
-      "Bash(npm run build:*)",
-      "mcp__filesystem__create_directory"
+      "*"
     ],
     "deny": [],
     "ask": []
