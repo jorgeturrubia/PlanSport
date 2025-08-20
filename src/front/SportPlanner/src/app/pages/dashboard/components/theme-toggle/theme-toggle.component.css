@@ -1,81 +1,112 @@
-/* Theme Toggle Styles */
+/* Professional Theme Toggle Styles */
 .theme-toggle {
   @apply relative;
 }
 
-/* Theme toggle button */
+/* Enhanced theme toggle button */
 .theme-toggle-button {
-  @apply p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800;
+  @apply relative p-3 rounded-xl bg-background hover:bg-surface-hover border border-border
+         transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 
+         focus:ring-primary/50 focus:ring-offset-2 dark:focus:ring-offset-background
+         shadow-sm hover:shadow-md active:scale-95;
 }
 
-/* Theme icon */
+.theme-toggle-button.loading {
+  @apply pointer-events-none opacity-75;
+}
+
+/* Enhanced theme icon */
 .theme-icon {
-  @apply w-5 h-5 text-gray-600 dark:text-gray-300 transition-colors duration-200;
+  @apply w-5 h-5 text-text-secondary transition-all duration-300;
 }
 
 .theme-toggle-button:hover .theme-icon {
-  @apply text-primary-600 dark:text-primary-400;
+  @apply text-primary scale-110;
 }
 
-/* Theme dropdown */
+.theme-toggle-button:active .theme-icon {
+  @apply scale-95;
+}
+
+/* Enhanced theme dropdown */
 .theme-dropdown {
-  @apply absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 opacity-0 scale-95 transform transition-all duration-200 origin-top-right;
+  @apply absolute right-0 top-full mt-3 w-56 bg-background border border-border rounded-xl 
+         shadow-xl backdrop-blur-sm py-2 z-50 opacity-0 scale-95 transform 
+         transition-all duration-300 origin-top-right;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .theme-dropdown.open {
   @apply opacity-100 scale-100;
+  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Theme options */
+/* Enhanced theme options */
 .theme-option {
-  @apply flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer;
+  @apply flex items-center gap-3 px-4 py-3 mx-2 text-sm text-text-primary 
+         hover:bg-surface-hover rounded-lg transition-all duration-200 cursor-pointer
+         focus:outline-none focus:bg-surface-hover;
 }
 
-.theme-option:focus {
-  @apply outline-none bg-gray-100 dark:bg-gray-700;
+.theme-option:hover {
+  @apply transform translate-x-1;
 }
 
 .theme-option.active {
-  @apply bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300;
+  @apply bg-primary/10 text-primary border-l-2 border-primary;
 }
 
 .theme-option.active .theme-option-icon {
-  @apply text-primary-600 dark:text-primary-400;
+  @apply text-primary;
 }
 
-/* Theme option icons */
+.theme-option.active .theme-option-text .theme-label {
+  @apply font-semibold;
+}
+
+/* Enhanced theme option icons */
 .theme-option-icon {
-  @apply w-4 h-4 text-gray-500 dark:text-gray-400 flex-shrink-0;
+  @apply w-5 h-5 text-text-secondary flex-shrink-0 transition-all duration-200;
 }
 
-/* Theme option text */
+.theme-option:hover .theme-option-icon {
+  @apply text-primary scale-110;
+}
+
+/* Enhanced theme option text */
 .theme-option-text {
   @apply flex-1;
 }
 
-/* Active indicator */
+/* Enhanced active indicator */
 .theme-option-check {
-  @apply w-4 h-4 text-primary-600 dark:text-primary-400 opacity-0 transition-opacity duration-200;
+  @apply w-4 h-4 text-primary opacity-0 transition-all duration-300 scale-75;
 }
 
 .theme-option.active .theme-option-check {
-  @apply opacity-100;
+  @apply opacity-100 scale-100;
+  animation: checkmark 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Theme labels */
+/* Enhanced theme labels */
 .theme-label {
-  @apply font-medium;
+  @apply font-medium text-text-primary transition-colors duration-200;
 }
 
 .theme-description {
-  @apply text-xs text-gray-500 dark:text-gray-400 mt-0.5;
+  @apply text-xs text-text-secondary mt-0.5 transition-colors duration-200;
 }
 
-/* Animation for dropdown */
+.theme-option:hover .theme-description {
+  @apply text-text-primary;
+}
+
+/* Enhanced animations */
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-10px) scale(0.95);
+    transform: translateY(-12px) scale(0.9);
   }
   to {
     opacity: 1;
@@ -83,8 +114,28 @@
   }
 }
 
-.theme-dropdown.open {
-  animation: slideDown 0.2s ease-out;
+@keyframes checkmark {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) rotate(-45deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(0deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 /* Mobile responsive */
@@ -113,13 +164,28 @@
   @apply scale-110;
 }
 
-/* Tooltip for accessibility */
+/* Enhanced tooltip */
 .theme-tooltip {
-  @apply absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded opacity-0 pointer-events-none transition-opacity duration-200 whitespace-nowrap;
+  @apply absolute bottom-full mb-3 left-1/2 transform -translate-x-1/2 px-3 py-2 
+         bg-surface text-text-primary text-xs rounded-lg opacity-0 pointer-events-none 
+         transition-all duration-300 whitespace-nowrap shadow-lg border border-border
+         scale-95;
 }
 
 .theme-toggle-button:hover .theme-tooltip {
-  @apply opacity-100;
+  @apply opacity-100 scale-100;
+  animation: tooltipShow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes tooltipShow {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
 }
 
 /* Focus trap for accessibility */

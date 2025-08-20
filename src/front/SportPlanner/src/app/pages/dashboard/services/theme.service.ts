@@ -1,7 +1,13 @@
-import { Injectable, signal, effect, PLATFORM_ID, inject } from '@angular/core';
+import { Injectable, signal, effect, PLATFORM_ID, inject, computed } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 export type Theme = 'light' | 'dark' | 'system';
+
+export interface ThemeConfig {
+  enableTransitions: boolean;
+  transitionDuration: number;
+  persistPreference: boolean;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -9,32 +15,59 @@ export type Theme = 'light' | 'dark' | 'system';
 export class ThemeService {
   private platformId = inject(PLATFORM_ID);
   private readonly THEME_KEY = 'planSport-theme';
+  private readonly CONFIG_KEY = 'planSport-theme-config';
   
-  // Signal for current theme
+  // Signals for theme management
   currentTheme = signal<Theme>('system');
-  
-  // Signal for effective theme (resolved system preference)
   effectiveTheme = signal<'light' | 'dark'>('light');
+  isTransitioning = signal<boolean>(false);
+  
+  // Configuration signal
+  config = signal<ThemeConfig>({
+    enableTransitions: true,
+    transitionDuration: 200,
+    persistPreference: true
+  });
+  
+  // Computed properties for better UX
+  isDarkMode = computed(() => this.effectiveTheme() === 'dark');
+  isLightMode = computed(() => this.effectiveTheme() === 'light');
+  isSystemTheme = computed(() => this.currentTheme() === 'system');
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
+      this.loadConfiguration();
       this.initializeTheme();
       this.setupSystemThemeListener();
       
       // Effect to persist theme changes and apply to DOM
       effect(() => {
         const theme = this.currentTheme();
-        this.persistTheme(theme);
-        this.applyTheme(theme);
+        if (this.config().persistPreference) {
+          this.persistTheme(theme);
+        }
+        this.applyThemeWithTransition(theme);
       });
+      
+      // Effect to persist configuration changes
+      effect(() => {
+        const config = this.config();
+        this.persistConfiguration(config);
+      });
+    }
+  }
+
+  private loadConfiguration(): void {
+    const savedConfig = this.getSavedConfiguration();
+    if (savedConfig) {
+      this.config.set({ ...this.config(), ...savedConfig });
     }
   }
 
   private initializeTheme(): void {
     const savedTheme = this.getSavedTheme();
-    const systemTheme = this.getSystemTheme();
     
-    if (savedTheme) {
+    if (savedTheme && this.config().persistPreference) {
       this.currentTheme.set(savedTheme);
     } else {
       this.currentTheme.set('system');
@@ -85,33 +118,73 @@ export class ThemeService {
     }
   }
 
-  private applyTheme(theme: Theme): void {
+  private applyThemeWithTransition(theme: Theme): void {
     if (typeof document !== 'undefined') {
       const root = document.documentElement;
+      const config = this.config();
+      
+      // Set transitioning state
+      this.isTransitioning.set(true);
+      
+      // Add transition class if enabled
+      if (config.enableTransitions) {
+        root.style.setProperty('--theme-transition-duration', `${config.transitionDuration}ms`);
+        root.classList.add('theme-transitioning');
+      }
       
       // Remove existing theme classes
       root.classList.remove('light', 'dark');
       
       // Apply new theme
-      if (theme === 'system') {
-        const systemTheme = this.getSystemTheme();
-        root.classList.add(systemTheme);
-        root.setAttribute('data-theme', systemTheme);
-      } else {
-        root.classList.add(theme);
-        root.setAttribute('data-theme', theme);
-      }
+      const effectiveTheme = theme === 'system' ? this.getSystemTheme() : theme;
+      root.classList.add(effectiveTheme);
+      root.setAttribute('data-theme', effectiveTheme);
       
       this.updateEffectiveTheme();
+      
+      // Remove transition class after animation
+      if (config.enableTransitions) {
+        setTimeout(() => {
+          root.classList.remove('theme-transitioning');
+          this.isTransitioning.set(false);
+        }, config.transitionDuration);
+      } else {
+        this.isTransitioning.set(false);
+      }
     }
   }
 
-  // Public methods
+  private getSavedConfiguration(): Partial<ThemeConfig> | null {
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem(this.CONFIG_KEY);
+      try {
+        return saved ? JSON.parse(saved) : null;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  private persistConfiguration(config: ThemeConfig): void {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(this.CONFIG_KEY, JSON.stringify(config));
+    }
+  }
+
+  // Public methods for theme management
   setTheme(theme: Theme): void {
+    if (this.isTransitioning()) {
+      return; // Prevent theme changes during transition
+    }
     this.currentTheme.set(theme);
   }
 
   toggleTheme(): void {
+    if (this.isTransitioning()) {
+      return; // Prevent theme changes during transition
+    }
+    
     const current = this.currentTheme();
     
     switch (current) {
@@ -127,7 +200,44 @@ export class ThemeService {
     }
   }
 
-  isDarkMode(): boolean {
-    return this.effectiveTheme() === 'dark';
+  // Public methods for configuration
+  updateConfig(partialConfig: Partial<ThemeConfig>): void {
+    this.config.set({ ...this.config(), ...partialConfig });
+  }
+
+  resetConfig(): void {
+    this.config.set({
+      enableTransitions: true,
+      transitionDuration: 200,
+      persistPreference: true
+    });
+  }
+
+  // Utility methods
+  getNextTheme(): Theme {
+    const current = this.currentTheme();
+    switch (current) {
+      case 'light': return 'dark';
+      case 'dark': return 'system';
+      case 'system': return 'light';
+    }
+  }
+
+  getThemeIcon(): string {
+    const current = this.currentTheme();
+    switch (current) {
+      case 'light': return 'sun';
+      case 'dark': return 'moon';
+      case 'system': return 'monitor';
+    }
+  }
+
+  getThemeLabel(): string {
+    const current = this.currentTheme();
+    switch (current) {
+      case 'light': return 'Modo Claro';
+      case 'dark': return 'Modo Oscuro';
+      case 'system': return 'Sistema';
+    }
   }
 }

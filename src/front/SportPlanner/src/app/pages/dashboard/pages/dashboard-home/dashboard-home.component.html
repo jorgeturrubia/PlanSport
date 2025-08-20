@@ -1,16 +1,25 @@
 <div class="dashboard-home space-y-6">
-  <!-- Welcome Header -->
-  <div class="welcome-header bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200/20 dark:border-gray-700/20">
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-      ¡Bienvenido, {{ currentUser()?.firstName || 'Usuario' }}!
-    </h1>
-    <p class="text-gray-600 dark:text-gray-400 text-lg">
-      Aquí tienes un resumen de tu actividad deportiva
-    </p>
+  <!-- Professional Welcome Header -->
+  <div class="professional-card welcome-header bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-text-primary mb-2 animate-fade-in">
+          ¡Bienvenido, {{ currentUser()?.firstName || 'Usuario' }}!
+        </h1>
+        <p class="text-text-secondary text-lg animate-fade-in-delay">
+          Aquí tienes un resumen de tu actividad deportiva
+        </p>
+      </div>
+      <div class="hidden sm:block">
+        <div class="professional-badge bg-primary/10 text-primary border-primary/20">
+          Dashboard
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Enhanced Statistics Grid with New Components -->
-  <div class="statistics-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <!-- Professional Statistics Grid -->
+  <div class="statistics-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-stagger-in">
     <!-- Total Teams Card -->
     <app-statistics-card
       title="Total Equipos"
@@ -57,24 +66,28 @@
     ></app-statistics-card>
   </div>
 
-  <!-- Enhanced Quick Actions Hub -->
-  <div class="quick-actions-hub relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-900/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-2xl p-6">
-    <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+  <!-- Professional Quick Actions Hub -->
+  <div class="professional-card quick-actions-hub bg-gradient-to-br from-surface/50 to-surface backdrop-blur-xl border-border/50">
+    <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent"></div>
     <div class="relative z-10">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Acciones Rápidas</h2>
-        <app-sport-icon 
-          sport="other" 
-          color="green" 
-          size="medium">
-        </app-sport-icon>
+        <h2 class="text-xl font-semibold text-text-primary">Acciones Rápidas</h2>
+        <div class="professional-badge bg-success/10 text-success border-success/20">
+          <app-sport-icon 
+            sport="other" 
+            color="green" 
+            size="small"
+            class="mr-1">
+          </app-sport-icon>
+          Activo
+        </div>
       </div>
       <div class="actions-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <button 
           routerLink="/dashboard/teams"
-          class="action-button group relative overflow-hidden bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl p-4 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/25"
+          class="professional-button professional-button-primary group relative overflow-hidden"
         >
-          <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 theme-transition"></div>
           <div class="relative z-10 flex items-center justify-center">
             <app-sport-icon 
               sport="football" 
@@ -87,10 +100,10 @@
         </button>
         
         <button 
-          class="action-button group relative overflow-hidden bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl p-4 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          class="professional-button professional-button-secondary group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           disabled
         >
-          <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 theme-transition"></div>
           <div class="relative z-10 flex items-center justify-center">
             <app-sport-icon 
               sport="athletics" 
@@ -101,17 +114,17 @@
             Programar Entrenamiento
           </div>
           <div class="absolute top-2 right-2">
-            <span class="inline-flex items-center px-2 py-1 rounded-md bg-blue-800/50 text-xs font-medium text-blue-100">
+            <span class="professional-badge bg-info/20 text-info border-info/30 text-xs">
               Pronto
             </span>
           </div>
         </button>
         
         <button 
-          class="action-button group relative overflow-hidden bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl p-4 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          class="professional-button professional-button-accent group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           disabled
         >
-          <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 theme-transition"></div>
           <div class="relative z-10 flex items-center justify-center">
             <app-sport-icon 
               sport="other" 
@@ -122,7 +135,7 @@
             Ver Estadísticas
           </div>
           <div class="absolute top-2 right-2">
-            <span class="inline-flex items-center px-2 py-1 rounded-md bg-purple-800/50 text-xs font-medium text-purple-100">
+            <span class="professional-badge bg-warning/20 text-warning border-warning/30 text-xs">
               Pronto
             </span>
           </div>
@@ -131,51 +144,60 @@
     </div>
   </div>
 
-  <!-- Recent Teams with Sport Icons -->
-  <div class="recent-teams bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200/20 dark:border-gray-700/20" *ngIf="recentTeams().length > 0">
-    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-      Equipos Recientes
-    </h2>
+  <!-- Professional Recent Teams -->
+  <div class="professional-card recent-teams" *ngIf="recentTeams().length > 0">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-lg font-semibold text-text-primary">
+        Equipos Recientes
+      </h2>
+      <div class="professional-badge bg-info/10 text-info border-info/20">
+        {{ recentTeams().length }} equipos
+      </div>
+    </div>
     <div class="teams-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <div 
         *ngFor="let team of recentTeams()" 
-        class="team-card border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-all duration-200 hover:scale-105"
+        class="professional-card team-card hover:scale-105 hover:shadow-lg cursor-pointer group border-border/50 hover:border-primary/30"
       >
         <div class="flex items-center mb-3">
-          <app-sport-icon
-            [sport]="team.sport"
-            [color]="getTeamColorTheme(team.color)"
-            size="medium"
-            class="mr-3"
-          ></app-sport-icon>
-          <h3 class="text-sm font-medium text-gray-900 dark:text-white">{{ team.name }}</h3>
+          <div class="professional-avatar mr-3">
+            <app-sport-icon
+              [sport]="team.sport"
+              [color]="getTeamColorTheme(team.color)"
+              size="medium"
+            ></app-sport-icon>
+          </div>
+          <h3 class="text-sm font-medium text-text-primary group-hover:text-primary theme-transition">{{ team.name }}</h3>
         </div>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ team.sport | titlecase }}</p>
-        <p class="text-xs text-gray-500 dark:text-gray-400">{{ team.playersCount }} jugadores</p>
+        <div class="space-y-1">
+          <p class="text-xs text-text-secondary">{{ team.sport | titlecase }}</p>
+          <p class="text-xs text-text-muted">{{ team.playersCount }} jugadores</p>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Enhanced Empty State -->
+  <!-- Professional Empty State -->
   <div 
     *ngIf="totalTeams() === 0" 
-    class="empty-state bg-white dark:bg-gray-800 rounded-xl shadow-sm p-12 text-center border border-gray-200/20 dark:border-gray-700/20"
+    class="professional-card empty-state text-center p-12 bg-gradient-to-br from-surface/30 to-background border-border/30"
   >
-    <app-sport-icon 
-      sport="football" 
-      color="gray" 
-      size="xlarge"
-      class="mx-auto mb-6">
-    </app-sport-icon>
-    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
+    <div class="professional-avatar mx-auto mb-6 w-20 h-20">
+      <app-sport-icon 
+        sport="football" 
+        color="gray" 
+        size="xlarge">
+      </app-sport-icon>
+    </div>
+    <h3 class="text-lg font-medium text-text-primary mb-2 animate-fade-in">
       ¡Comienza creando tu primer equipo!
     </h3>
-    <p class="text-gray-600 dark:text-gray-400 mb-6">
+    <p class="text-text-secondary mb-6 max-w-md mx-auto animate-fade-in-delay">
       Los equipos te ayudarán a organizar y gestionar a tus jugadores de manera eficiente.
     </p>
     <button 
       routerLink="/dashboard/teams"
-      class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium"
+      class="professional-button professional-button-primary inline-flex items-center animate-fade-in-delay-2"
     >
       <app-sport-icon 
         sport="football" 

@@ -4,7 +4,7 @@ export interface NavigationItem {
   icon: string;
   route: string;
   isActive: boolean;
-  badge?: number;
+  badge?: string | number;
   children?: NavigationItem[];
 }
 

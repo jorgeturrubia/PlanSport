@@ -1,14 +1,16 @@
-import { Component, signal, computed, inject, OnInit } from '@angular/core';
+import { Component, signal, computed, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgIcon } from '@ng-icons/core';
+import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../../../features/auth/services/auth.service';
 import { AuthUser } from '../../../../features/auth/models/auth.interfaces';
 import { ThemeService } from '../../services/theme.service';
 import { TeamsService } from '../../services/teams.service';
 import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 import { UserMenuComponent } from '../user-menu/user-menu.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 import { NavigationItem, SidebarState } from '../../interfaces/navigation.interface';
 import { User } from '../../interfaces/user.interface';
 
@@ -22,15 +24,17 @@ import { User } from '../../interfaces/user.interface';
     FormsModule,
     NgIcon,
     ThemeToggleComponent,
-    UserMenuComponent
+    UserMenuComponent,
+    SidebarComponent
   ],
   templateUrl: './dashboard-layout.component.html',
   styleUrls: ['./dashboard-layout.component.css']
 })
-export class DashboardLayoutComponent implements OnInit {
+export class DashboardLayoutComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private themeService = inject(ThemeService);
   private teamsService = inject(TeamsService);
+  private destroy$ = new Subject<void>();
 
   // Sidebar state management
   sidebarState = signal<SidebarState>({
@@ -83,6 +87,15 @@ export class DashboardLayoutComponent implements OnInit {
     
     // Listen for window resize
     window.addEventListener('resize', () => this.checkMobileView());
+    
+    // Theme transitions are handled automatically by the ThemeService
+    // No manual subscription needed as we're using signals
+  }
+  
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    window.removeEventListener('resize', () => this.checkMobileView());
   }
 
   toggleSidebar(): void {
@@ -129,5 +142,17 @@ export class DashboardLayoutComponent implements OnInit {
     this.searchQuery.set(query);
     // TODO: Implement search functionality
     console.log('Searching for:', query);
+  }
+  
+  onSidebarNavigationClick(item: NavigationItem): void {
+    this.onNavigationClick(item);
+    
+    // Close sidebar on mobile after navigation
+    if (this.isMobile()) {
+      this.sidebarState.update(state => ({
+        ...state,
+        isCollapsed: true
+      }));
+    }
   }
 }

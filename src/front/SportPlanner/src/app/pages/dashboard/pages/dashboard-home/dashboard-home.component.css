@@ -1,202 +1,174 @@
-/* Dashboard Home Styles */
+/* Professional Dashboard Home Styles */
 .dashboard-home {
   @apply space-y-6;
 }
 
-/* Welcome section */
-.welcome-section {
-  @apply bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg p-6 shadow-sm;
+/* Professional welcome section */
+.welcome-header {
+  @apply relative overflow-hidden;
 }
 
-.welcome-title {
-  @apply text-2xl font-bold mb-2;
+.welcome-header::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none;
 }
 
-.welcome-subtitle {
-  @apply text-primary-100 opacity-90;
-}
-
-/* Stats grid */
-.stats-grid {
+/* Professional statistics grid */
+.statistics-grid {
   @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6;
 }
 
-.stat-card {
-  @apply bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-200 hover:shadow-md;
+/* Enhanced statistics cards with professional styling */
+.statistics-grid > * {
+  @apply transform hover:scale-105 theme-transition;
 }
 
-.stat-header {
-  @apply flex items-center justify-between mb-4;
+.statistics-grid > *:nth-child(1) {
+  animation-delay: 0.1s;
 }
 
-.stat-icon {
-  @apply w-8 h-8 text-primary-600 dark:text-primary-400;
+.statistics-grid > *:nth-child(2) {
+  animation-delay: 0.2s;
 }
 
-.stat-value {
-  @apply text-3xl font-bold text-gray-900 dark:text-white;
+.statistics-grid > *:nth-child(3) {
+  animation-delay: 0.3s;
 }
 
-.stat-label {
-  @apply text-sm text-gray-600 dark:text-gray-400 font-medium;
+.statistics-grid > *:nth-child(4) {
+  animation-delay: 0.4s;
 }
 
-.stat-change {
-  @apply text-xs font-medium flex items-center gap-1 mt-2;
+/* Professional quick actions hub */
+.quick-actions-hub {
+  @apply relative overflow-hidden;
 }
 
-.stat-change.positive {
-  @apply text-green-600 dark:text-green-400;
+.quick-actions-hub::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-br from-primary/3 to-transparent pointer-events-none;
 }
 
-.stat-change.negative {
-  @apply text-red-600 dark:text-red-400;
-}
-
-.stat-change.neutral {
-  @apply text-gray-500 dark:text-gray-400;
-}
-
-/* Quick actions section */
-.quick-actions-section {
-  @apply bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700;
-}
-
-.section-title {
-  @apply text-lg font-semibold text-gray-900 dark:text-white mb-4;
-}
-
-.quick-actions-grid {
+.actions-grid {
   @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4;
 }
 
-.quick-action {
-  @apply flex items-center gap-3 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer group;
+/* Enhanced action buttons */
+.actions-grid > button {
+  @apply transform hover:scale-105 hover:shadow-xl theme-transition;
 }
 
-.quick-action:hover {
-  @apply border-primary-300 dark:border-primary-600;
+.actions-grid > button:nth-child(1) {
+  animation-delay: 0.1s;
 }
 
-.quick-action-icon {
-  @apply w-6 h-6 text-primary-600 dark:text-primary-400 group-hover:scale-110 transition-transform duration-200;
+.actions-grid > button:nth-child(2) {
+  animation-delay: 0.2s;
 }
 
-.quick-action-content {
-  @apply flex-1;
+.actions-grid > button:nth-child(3) {
+  animation-delay: 0.3s;
 }
 
-.quick-action-title {
-  @apply font-medium text-gray-900 dark:text-white;
+/* Professional recent teams section */
+.recent-teams {
+  @apply relative;
 }
 
-.quick-action-description {
-  @apply text-sm text-gray-600 dark:text-gray-400;
+.teams-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4;
 }
 
-/* Recent teams section */
-.recent-teams-section {
-  @apply bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700;
+/* Enhanced team cards */
+.team-card {
+  @apply relative overflow-hidden;
+  transition: all var(--theme-transition-duration) var(--theme-transition-timing);
 }
 
-.teams-list {
-  @apply space-y-3;
+.team-card::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 pointer-events-none;
+  transition: opacity var(--theme-transition-duration) var(--theme-transition-timing);
 }
 
-.team-item {
-  @apply flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer;
+.team-card:hover::before {
+  @apply opacity-100;
 }
 
-.team-avatar {
-  @apply w-10 h-10 rounded-full flex items-center justify-center text-white font-medium text-sm flex-shrink-0;
+.teams-grid > .team-card:nth-child(1) {
+  animation-delay: 0.1s;
 }
 
-.team-info {
-  @apply flex-1 min-w-0;
+.teams-grid > .team-card:nth-child(2) {
+  animation-delay: 0.2s;
 }
 
-.team-name {
-  @apply font-medium text-gray-900 dark:text-white truncate;
+.teams-grid > .team-card:nth-child(3) {
+  animation-delay: 0.3s;
 }
 
-.team-details {
-  @apply text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2;
-}
-
-.team-sport {
-  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300;
-}
-
-.team-players {
-  @apply text-gray-500 dark:text-gray-400;
-}
-
-/* Empty states */
+/* Professional empty state */
 .empty-state {
-  @apply text-center py-12;
+  @apply relative overflow-hidden;
 }
 
-.empty-state-icon {
-  @apply w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4;
+.empty-state::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-br from-surface/20 to-transparent pointer-events-none;
 }
 
-.empty-state-title {
-  @apply text-lg font-medium text-gray-900 dark:text-white mb-2;
+/* Enhanced empty state animations */
+.empty-state .professional-avatar {
+  @apply animate-bounce;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
 }
 
-.empty-state-description {
-  @apply text-gray-600 dark:text-gray-400 mb-6;
-}
-
-.empty-state-action {
-  @apply inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200;
-}
-
-/* Loading states */
+/* Professional loading states */
 .loading-skeleton {
   @apply animate-pulse;
 }
 
 .skeleton-text {
-  @apply bg-gray-200 dark:bg-gray-700 rounded h-4;
+  @apply bg-surface/50 rounded h-4;
 }
 
 .skeleton-circle {
-  @apply bg-gray-200 dark:bg-gray-700 rounded-full;
+  @apply bg-surface/50 rounded-full;
 }
 
 .skeleton-rect {
-  @apply bg-gray-200 dark:bg-gray-700 rounded;
+  @apply bg-surface/50 rounded;
 }
 
-/* Mobile responsive */
+/* Professional mobile responsive */
 @media (max-width: 640px) {
-  .welcome-section {
+  .welcome-header {
     @apply p-4;
   }
   
-  .welcome-title {
+  .welcome-header h1 {
     @apply text-xl;
   }
   
-  .stat-card {
-    @apply p-4;
+  .statistics-grid {
+    @apply grid-cols-1 gap-4;
   }
   
-  .stat-value {
-    @apply text-2xl;
-  }
-  
-  .quick-actions-grid {
+  .actions-grid {
     @apply grid-cols-1;
   }
   
-  .team-item {
-    @apply p-2;
+  .teams-grid {
+    @apply grid-cols-1;
+  }
+  
+  .empty-state {
+    @apply p-8;
   }
 }
 
-/* Animations */
+/* Professional animations */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -208,18 +180,52 @@
   }
 }
 
-.dashboard-home > * {
-  animation: fadeInUp 0.5s ease-out;
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-.dashboard-home > *:nth-child(2) {
+/* Enhanced dashboard animations */
+.dashboard-home > * {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.dashboard-home > *:nth-child(1) {
   animation-delay: 0.1s;
 }
 
-.dashboard-home > *:nth-child(3) {
+.dashboard-home > *:nth-child(2) {
   animation-delay: 0.2s;
 }
 
-.dashboard-home > *:nth-child(4) {
+.dashboard-home > *:nth-child(3) {
   animation-delay: 0.3s;
+}
+
+.dashboard-home > *:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+/* Professional hover effects */
+.dashboard-home .professional-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Enhanced focus states */
+.dashboard-home .professional-button:focus {
+  @apply ring-2 ring-primary/50 ring-offset-2 ring-offset-background;
+}
+
+/* Smooth theme transitions */
+.dashboard-home * {
+  transition: background-color var(--theme-transition-duration) var(--theme-transition-timing),
+              color var(--theme-transition-duration) var(--theme-transition-timing),
+              border-color var(--theme-transition-duration) var(--theme-transition-timing);
 }
